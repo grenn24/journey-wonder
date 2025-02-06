@@ -12,6 +12,9 @@ export async function getAllUsers(request: Request, response: Response) {
 
 export async function getUserByID(request: Request, response: Response) {
 	const userID = getObjectID(request, response);
+	if (!userID) {
+		return;
+	}
 	try {
 		const user = await userService.getUserByID(userID);
 		if (!user) {
@@ -34,7 +37,7 @@ export async function createUser(request: Request, response: Response) {
 			response
 				.status(400)
 				.send({ message: "Missing required fields", errorDetail: err });
-		} else if (err.errorResponse.code === 11000) {
+		} else if (err.errorResponse?.code === 11000) {
 			response
 				.status(400)
 				.send({ message: "Duplicate keys", errorDetail: err });
@@ -47,16 +50,30 @@ export async function createUser(request: Request, response: Response) {
 // query existing user, update its fields, save
 export async function updateUser(request: Request, response: Response) {
 	const userID = getObjectID(request, response);
-	try {
-		const existingUser = await userService.getUserByID(userID);
-		if (!existingUser) {
-			return response.status(404).json({ message: "User not found" });
-		}
-        
-	} catch (err) {
-		response.status(500).send(err);
+	if (!userID) {
+		return;
 	}
-	
+	let user = request.body;
+	try {
+		user = await userService.updateUser(user, userID);
+		response.send(user);
+	} catch (err: any) {
+		if (err instanceof mongoose.Error.DocumentNotFoundError) {
+			response
+				.status(400)
+				.send({ message: "User not found", errorDetail: err });
+		} else if (err instanceof mongoose.Error.ValidationError) {
+			response
+				.status(400)
+				.send({ message: "Missing required fields", errorDetail: err });
+		} else if (err.errorResponse?.code === 11000) {
+			response
+				.status(400)
+				.send({ message: "Duplicate keys", errorDetail: err });
+		} else {
+			response.status(500).send(err);
+		}
+	}
 }
 
 export async function deleteUserByID(request: Request, response: Response) {

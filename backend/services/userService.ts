@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import User from "../models/userModel";
 
 class UserService {
@@ -22,9 +23,23 @@ class UserService {
 		}
 	}
 
+	async updateUser(user: typeof User, userID: string) {
+		try {
+			let existingUser = await this.getUserByID(userID);
+            // user not found
+			if (!existingUser) {
+				throw new mongoose.Error.DocumentNotFoundError("User not found");
+			}
+			Object.assign(existingUser, user);
+			return await existingUser.save();
+		} catch (err) {
+			throw err;
+		}
+	}
+
 	async deleteUserByID(userID: string) {
 		try {
-			return await User.deleteOne({_id:userID});
+			return await User.deleteOne({ _id: userID });
 		} catch (err) {
 			throw err;
 		}
