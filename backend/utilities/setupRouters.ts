@@ -1,10 +1,10 @@
 import express, { Express } from "express";
-import route1 from "../routes/route1";
+import route1 from "../routes/userRoute";
 
 const setupRouters = (app: Express) => {
 	const apiRouter = express.Router();
 	
-	apiRouter.use("/route1", route1);
+	apiRouter.use("/user", route1);
 
     // Handle missed api routes
 	apiRouter.use((_, res) => {

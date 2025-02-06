@@ -12,6 +12,7 @@
 		"start": "nodemon app.ts"
 	},
 	"dependencies": {
+		"@types/mongoose": "^5.11.96",
 		"config": "^3.3.12",
 		"debug": "^4.4.0",
 		"dotenv": "^16.4.7",
