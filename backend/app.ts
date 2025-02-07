@@ -6,6 +6,8 @@ import morgan from "morgan";
 import config from "config";
 import createDebug from "debug";
 import mongoose from "mongoose";
+const Joi = require("joi");
+Joi.ObjectID = require("joi-objectid")(Joi);
 
 const startupDebug = createDebug("app:startup");
 const dbDebug = createDebug("db");
