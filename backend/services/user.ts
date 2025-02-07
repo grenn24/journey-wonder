@@ -11,11 +11,13 @@ class UserService {
 
 	async getUserByID(userID: string) {
 		try {
-			const user = await User.findById(userID);
+			const user = await User.findById(userID).select({
+				passwordHash: 0,
+			});
 			if (!user) {
 				throw new mongoose.Error.DocumentNotFoundError("User not found");
 			}
-			return lodash.pick(user, ["_id", "name", "email", "createdAt"]);;
+			return user;
 		} catch (err) {
 			throw err;
 		}
@@ -40,11 +42,13 @@ class UserService {
 		try {
 			const updatedUser = await User.findByIdAndUpdate(userID, user, {
 				new: true,
+			}).select({
+				passwordHash: 0,
 			});
 			if (!updatedUser) {
 				throw new mongoose.Error.DocumentNotFoundError("User not found");
 			}
-			return lodash.pick(updatedUser, ["_id", "name", "email", "createdAt"]);
+			return updatedUser;
 		} catch (err) {
 			throw err;
 		}
@@ -52,11 +56,13 @@ class UserService {
 
 	async deleteUserByID(userID: string) {
 		try {
-			const deletedUser = await User.findByIdAndDelete(userID);
+			const deletedUser = await User.findByIdAndDelete(userID).select({
+				passwordHash: 0,
+			});
 			if (!deletedUser) {
 				throw new mongoose.Error.DocumentNotFoundError("User not found");
 			}
-			return lodash.pick(deletedUser, ["_id", "name", "email", "createdAt"]);
+			return deletedUser;
 		} catch (err) {
 			throw err;
 		}

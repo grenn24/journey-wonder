@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import User from "../models/user";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import config from "config";
 
 class AuthService {
 	async login(email: string, password: string) {
@@ -14,7 +16,8 @@ class AuthService {
 		if (!isValid) {
 			throw new mongoose.Error("Invalid email or password");
 		}
-		return true;
+		
+		return {accessToken: user.generateAccessToken()};
 	}
 }
 

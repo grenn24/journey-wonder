@@ -1,30 +1,34 @@
 import Joi from "joi";
-import jwt from "jsonwebtoken";
 import AuthService from "../services/auth";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 
-const authService = new AuthService();
-
-export async function login(request: Request, response: Response) {
-	const login = request.body;
-	const error = validateLogin(login);
-	if (error) {
-		return response.status(400).send(error);
-	}
-	try {
-		if (await authService.login(login.email, login.password)) {
+export default class AuthController {
+	authService = new AuthService();
+	
+	async login(request: Request, response: Response) {
+		const login = request.body;
+		const error = validateLogin(login);
+		if (error) {
+			return response.status(400).send(error);
+		}
+		try {
 			// Return JSON Web Token
-			jwt.sign
-            response.status(200).send({message:"Success"});
-        }
-	} catch (err) {
-		console.log(err);
-		if (err instanceof mongoose.Error) {
-			response.status(400).send({ message: err.message });
-		} else {
-            response.status(500).send(err);
-        }
+			const { accessToken } = await this.authService.login(
+				login.email,
+				login.password
+			);
+			response
+				.status(200)
+				.header("X-Access-Token", accessToken)
+				.send({ message: "Success" });
+		} catch (err) {
+			if (err instanceof mongoose.Error) {
+				response.status(400).send({ message: err.message });
+			} else {
+				response.status(500).send(err);
+			}
+		}
 	}
 }
 

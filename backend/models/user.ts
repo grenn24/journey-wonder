@@ -1,42 +1,60 @@
 import Joi from "joi";
 import mongoose from "mongoose";
 import JoiPasswordComplexity from "joi-password-complexity";
+import jwt from "jsonwebtoken";
+import config from "config";
 
-const userSchema = new mongoose.Schema({
-	name: {
-		type: String,
-		required: [true, "Name is required"],
+const secretKey : string = config.get("SECRET_KEY");
+const userSchema = new mongoose.Schema(
+	{
+		name: {
+			type: String,
+			required: [true, "Name is required"],
+		},
+		email: {
+			type: String,
+			required: [true, "Email is required"],
+			unique: true,
+			lowercase: true,
+		},
+		passwordHash: {
+			type: String,
+			required: [true, "Password is required"],
+		},
+		birthday: Date,
+		membershipTier: {
+			type: String,
+			enum: ["Free", "Basic", "Premium"],
+			default: "Free",
+		},
+		membershipStartDate: { type: Date },
+		membershipEndDate: { type: Date },
+		billingCycle: {
+			type: String,
+			enum: ["Monthly", "Annually"],
+		},
+		role: {
+			type: String,
+			enum: ["User", "Admin"],
+			default: "User",
+		},
+		createdAt: { type: Date, default: Date.now },
 	},
-	email: {
-		type: String,
-		required: [true, "Email is required"],
-		unique: true,
-		lowercase: true,
-	},
-	passwordHash: {
-		type: String,
-		required: [true, "Password is required"],
-	},
-	birthday: Date,
-
-	membershipTier: {
-		type: String,
-		enum: ["Free", "Basic", "Premium"],
-		default: "Free",
-	},
-	membershipStartDate: { type: Date },
-	membershipEndDate: { type: Date },
-	billingCycle: {
-		type: String,
-		enum: ["Monthly", "Annually"],
-	},
-	role: {
-		type: String,
-		enum: ["User", "Admin"],
-		default: "User",
-	},
-	createdAt: { type: Date, default: Date.now },
-});
+	{
+		methods: {
+			generateAccessToken() {
+				return jwt.sign({ userID: this._id, name: this.name, role: this.role }, secretKey, {
+					expiresIn: "15m",
+				});
+			},
+			generateRefreshToken() {
+				return jwt.sign({ }, secretKey, {
+					expiresIn: "90d",
+				});
+			},
+		},
+	}
+);
 
 const User = mongoose.model("users", userSchema);
 
