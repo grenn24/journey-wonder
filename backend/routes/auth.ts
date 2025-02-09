@@ -5,8 +5,6 @@ const router = express.Router();
 const authController = new AuthController();
 
 // Define the route handlers
-router.post("/log-in", (request, response)=>{
-    authController.login(request, response);
-})
+router.post("/log-in", authController.login.bind(authController));
 
 export default router;

@@ -4,7 +4,7 @@ import JoiPasswordComplexity from "joi-password-complexity";
 import jwt from "jsonwebtoken";
 import config from "config";
 
-const secretKey : string = config.get("SECRET_KEY");
+const secretKey: string = config.get("SECRET_KEY");
 const userSchema = new mongoose.Schema(
 	{
 		name: {
@@ -38,17 +38,22 @@ const userSchema = new mongoose.Schema(
 			enum: ["User", "Admin"],
 			default: "User",
 		},
+		avatar: Buffer,
 		createdAt: { type: Date, default: Date.now },
 	},
 	{
 		methods: {
 			generateAccessToken() {
-				return jwt.sign({ userID: this._id, name: this.name, role: this.role }, secretKey, {
-					expiresIn: "15m",
-				});
+				return jwt.sign(
+					{ userID: this._id, name: this.name, role: this.role },
+					secretKey,
+					{
+						expiresIn: "15m",
+					}
+				);
 			},
 			generateRefreshToken() {
-				return jwt.sign({ }, secretKey, {
+				return jwt.sign({}, secretKey, {
 					expiresIn: "90d",
 				});
 			},
@@ -56,23 +61,23 @@ const userSchema = new mongoose.Schema(
 	}
 );
 
-const User = mongoose.model("users", userSchema);
+// Add a validate method to the model
+userSchema.statics.validate = validatePost;
 
-const passwordOptions = {
-	min: 8,
-	max: 64,
-	lowerCase: 1,
-	upperCase: 1,
-	numeric: 1,
-	symbol: 1,
-};
-
-export function validateUser(user: any) {
+export function validatePost(user: any) {
 	const userSchema = Joi.object({
 		name: Joi.string().required(),
 		email: Joi.string().email().required(),
 		password: Joi.string().min(8).max(64).required(),
 	});
+	const passwordOptions = {
+		min: 8,
+		max: 64,
+		lowerCase: 1,
+		upperCase: 1,
+		numeric: 1,
+		symbol: 1,
+	};
 	let result = userSchema.validate(user);
 	if (result.error) {
 		return { message: result.error.details[0].message };
@@ -85,5 +90,7 @@ export function validateUser(user: any) {
 		};
 	}
 }
+
+const User = mongoose.model("users", userSchema);
 
 export default User;

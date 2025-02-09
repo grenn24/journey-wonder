@@ -1,8 +1,7 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import UserService from "../services/user";
 import mongoose from "mongoose";
-import { getObjectID } from "../utilities/httpRequest";
-import { validateUser } from "../models/user";
+import User from "../models/user";
 
 class UserController {
 	userService = new UserService();
@@ -13,111 +12,67 @@ class UserController {
 	}
 
 	async getUserByID(request: Request, response: Response) {
-		const userID = getObjectID(request, response);
-		if (!userID) {
-			return;
-		}
-		try {
-			response.send(await this.userService.getUserByID(userID));
-		} catch (err) {
-			if (err instanceof mongoose.Error.DocumentNotFoundError) {
-				response.status(400).send({ message: "User not found" });
-			} else {
-				response.status(500).send(err);
-			}
-		}
+		const userID = response.locals._id;
+		response.send(await this.userService.getUserByID(userID));
 	}
 
 	async getCurrentUser(request: Request, response: Response) {
 		const userID = response.locals.currentUser.userID;
-		try {
-			response.send(await this.userService.getUserByID(userID));
-		} catch (err) {
-			if (err instanceof mongoose.Error.DocumentNotFoundError) {
-				response.status(400).send({ message: "User not found" });
-			} else {
-				response.status(500).send(err);
-			}
-		}
+		response.send(await this.userService.getUserByID(userID));
 	}
 
-	async createUser(request: Request, response: Response) {
+	async createUser(request: any, response: Response) {
 		const user = request.body;
-		const error = validateUser(user);
+		const error = User.validate(user);
+
 		if (error) {
-			return response.status(400).send(error);
+			response.status(400).send(error);
+			return;
 		}
-		try {
-			response.send(await this.userService.createUser(user));
-		} catch (err: any) {
-			// Validation Error
-			if (err instanceof mongoose.Error.ValidationError) {
-				response.status(400).send({ message: err.message });
-				// Duplicate Keys in Existing Document
-			} else if (err.errorResponse?.code === 11000) {
-				response.status(400).send({
-					message: "Duplicate keys in existing document",
-					errorDetail: err,
-				});
-			} else {
-				response.status(500).send(err);
-			}
-		}
+		user.avatar = request.file;
+		response.send(await this.userService.createUser(user));
 	}
 
 	// query existing user, update its fields, save
 	async updateUser(request: Request, response: Response) {
-		const userID = getObjectID(request, response);
-		if (!userID) {
-			return;
-		}
+		const userID = response.locals._id;
 		let user = request.body;
-		try {
-			user = await this.userService.updateUser(user, userID);
-			response.send(user);
-		} catch (err: any) {
-			if (err instanceof mongoose.Error.DocumentNotFoundError) {
-				response.status(400).send({ message: "User not found" });
-				// Validation Error
-			} else if (err instanceof mongoose.Error.ValidationError) {
-				response.status(400).send({ message: err.message });
-				// Duplicate Keys in Existing Document
-			} else if (err.errorResponse?.code === 11000) {
-				response.status(400).send({
-					message: "Duplicate keys in existing document",
-					errorDetail: err,
-				});
-			} else {
-				response.status(500).send(err);
-			}
-		}
+		user = await this.userService.updateUser(user, userID);
+		response.send(user);
 	}
 
 	async deleteUserByID(request: Request, response: Response) {
-		const userID = getObjectID(request, response);
-		if (!userID) {
-			return;
-		}
-		try {
-			const deletedUser = await this.userService.deleteUserByID(userID);
-
-			response.status(200).send(deletedUser);
-		} catch (err) {
-			if (err instanceof mongoose.Error.DocumentNotFoundError) {
-				response.status(400).send({ message: "User not found" });
-			} else {
-				response.status(500).send(err);
-			}
-		}
+		const userID = response.locals._id;
+		const deletedUser = await this.userService.deleteUserByID(userID);
+		response.status(200).send(deletedUser);
 	}
 
 	async deleteAllUsers(request: Request, response: Response) {
-		try {
-			const { deletedCount } = await this.userService.deleteAllUsers();
-			response.status(200).send({ usersDeleted: deletedCount });
-		} catch (err) {
-			response.status(500).send(err);
-		}
+		const { deletedCount } = await this.userService.deleteAllUsers();
+		response.status(200).send({ usersDeleted: deletedCount });
+	}
+
+	catchErrors(handler: any) {
+		return async (request: Request, response: Response, next: NextFunction) => {
+			try {
+				await handler(request, response);
+			} catch (err: any) {
+				if (err instanceof mongoose.Error.DocumentNotFoundError) {
+					response.status(400).send({ message: "User not found" });
+					// Validation Error
+				} else if (err instanceof mongoose.Error.ValidationError) {
+					response.status(400).send({ message: err.message });
+					// Duplicate Keys in Existing Document
+				} else if (err.errorResponse?.code === 11000) {
+					response.status(400).send({
+						message: "Duplicate keys in existing document",
+						errorDetail: err,
+					});
+				} else {
+					next(err);
+				}
+			}
+		};
 	}
 }
 

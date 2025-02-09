@@ -5,6 +5,10 @@ const itinerarySchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "users",
 	},
+	travellers: [{
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "users",
+	}],
 	title: {
 		type: String,
 		required: true,
@@ -14,7 +18,7 @@ const itinerarySchema = new mongoose.Schema({
 	},
 	destination: {
 		type: String,
-        required:true
+		required: true,
 	},
 	startDate: {
 		type: Date,
@@ -24,12 +28,13 @@ const itinerarySchema = new mongoose.Schema({
 		type: Date,
 		required: true,
 	},
-	activities: [
+	events: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "activities",
+			ref: "events",
 		},
 	],
+	picture: Buffer,
 	createdAt: {
 		type: Date,
 		default: Date.now,

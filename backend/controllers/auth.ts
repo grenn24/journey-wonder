@@ -1,16 +1,17 @@
 import Joi from "joi";
 import AuthService from "../services/auth";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 
 export default class AuthController {
 	authService = new AuthService();
 	
-	async login(request: Request, response: Response) {
+	async login(request: Request, response: Response, next: NextFunction) {
 		const login = request.body;
 		const error = validateLogin(login);
 		if (error) {
-			return response.status(400).send(error);
+			response.status(400).send(error);
+			return;
 		}
 		try {
 			// Return JSON Web Token
@@ -26,7 +27,7 @@ export default class AuthController {
 			if (err instanceof mongoose.Error) {
 				response.status(400).send({ message: err.message });
 			} else {
-				response.status(500).send(err);
+				next(err);
 			}
 		}
 	}
