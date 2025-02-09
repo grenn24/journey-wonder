@@ -2,9 +2,10 @@ FROM node:lts-jod
 
 WORKDIR /app
 
-COPY ./backend .
-
+COPY ./backend/package*.json .
 RUN npm install
+
+COPY ./backend .
 
 RUN useradd app
 

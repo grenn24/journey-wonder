@@ -6,7 +6,9 @@ import fs from "fs";
 
 class UserService {
 	async getAllUsers() {
-		const users = await User.find();
+		const users = await User.find().select({
+				passwordHash: 0,
+			});
 		return users;
 	}
 
