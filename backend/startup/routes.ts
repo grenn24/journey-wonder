@@ -3,13 +3,15 @@ import user from "../routes/user";
 import auth from "../routes/auth";
 import error from "../middlewares/error";
 import morgan from "morgan";
+import cors from "../middlewares/cors";
 const Joi = require("joi");
 Joi.ObjectID = require("joi-objectid")(Joi);
 
 const routes = (app: Express) => {
 	const apiRouter = express.Router();
 
-    // Api middlewares
+    // middlewares
+	app.use(cors);
     apiRouter.use(express.json());
     apiRouter.use(express.urlencoded({ extended: true }));
     if (app.get("env") === "development") {

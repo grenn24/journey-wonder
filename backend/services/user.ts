@@ -3,6 +3,7 @@ import User from "../models/user";
 import lodash from "lodash";
 import bcrypt from "bcrypt";
 import fs from "fs";
+import { HttpError } from "../middlewares/error";
 
 class UserService {
 	async getAllUsers() {
@@ -28,6 +29,16 @@ class UserService {
 
 	async createUser(user: any) {
 		try {
+			const existingUser = await User.findOne({ email: user.email });
+			console.log(existingUser);
+			if (existingUser) {
+	
+				throw new HttpError(
+					"User already exists",
+					"DUPLICATE_USER"
+				);
+			}
+
 			const salt = await bcrypt.genSalt(10);
 			user.passwordHash = await bcrypt.hash(user.password, salt);
 			if (user.avatar) {

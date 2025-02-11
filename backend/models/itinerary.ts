@@ -35,6 +35,11 @@ const itinerarySchema = new mongoose.Schema({
 		},
 	],
 	picture: Buffer,
+	visibility:{
+		type: String,
+		enum:["Private", "Public"],
+		default:"Private"
+	},
 	createdAt: {
 		type: Date,
 		default: Date.now,

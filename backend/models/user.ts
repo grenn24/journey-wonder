@@ -45,17 +45,12 @@ const userSchema = new mongoose.Schema(
 		methods: {
 			generateAccessToken() {
 				return jwt.sign(
-					{ userID: this._id, name: this.name, role: this.role },
+					{ userID: this._id, name: this.name, role: this.role, type:"accessToken" },
 					secretKey,
 					{
 						expiresIn: "15m",
 					}
 				);
-			},
-			generateRefreshToken() {
-				return jwt.sign({}, secretKey, {
-					expiresIn: "90d",
-				});
 			},
 		},
 	}

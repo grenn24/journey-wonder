@@ -2,16 +2,26 @@ import jwt from "jsonwebtoken";
 import config from "config";
 
 const auth =
-	(role: "User" | "Admin") =>
-	(request:any, response:any, next: any) => {
+	(role: "User" | "Admin") => (request: any, response: any, next: any) => {
 		const accessToken = request.header("X-Access-Token");
 		if (!accessToken) {
-			return response.status(401).send({ message: "Access token missing" });
+			return response
+				.status(401)
+				.send({ message: "Access token missing" });
 		} else {
 			try {
-				const payload = jwt.verify(accessToken, config.get("SECRET_KEY"));
-				if (typeof payload !== "string" && payload.role==="User" && role==="Admin") {
-					return response.status(403).send({ message: "Access denied" });
+				const payload = jwt.verify(
+					accessToken,
+					config.get("SECRET_KEY")
+				);
+				if (
+					typeof payload !== "string" &&
+					payload.role === "User" &&
+					role === "Admin"
+				) {
+					return response
+						.status(403)
+						.send({ message: "Access denied" });
 				}
 				// Pass user payload to next controller
 				response.locals.currentUser = payload;
@@ -23,3 +33,13 @@ const auth =
 	};
 
 export default auth;
+
+export function generateRefreshToken(expiresIn: any) {
+	return jwt.sign(
+		{ type: "refreshToken" },
+		config.get("SECRET_KEY") as string,
+		{
+			expiresIn: expiresIn,
+		}
+	);
+}

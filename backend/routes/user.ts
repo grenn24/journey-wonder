@@ -19,7 +19,7 @@ router.get(
 	getID,
 	userController.catchErrors(userController.getUserByID.bind(userController))
 );
-router.post("", multer.single("avatar"),userController.createUser.bind(userController));
+router.post("", multer.single("avatar"),userController.catchErrors(userController.createUser.bind(userController)));
 router.put(
 	"/:ID",
 	auth("User"),

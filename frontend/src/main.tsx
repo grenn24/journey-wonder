@@ -1,10 +1,21 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./styles/index.css";
+import App from "./App.tsx";
+import WebFont from "webfontloader";
+import store from "./redux/store.ts";
+import { Provider } from "react-redux";
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+WebFont.load({
+	google: {
+		families: ["Liter"],
+	},
+});
+
+createRoot(document.getElementById("root")!).render(
+	<StrictMode>
+		<Provider store={store}>
+			<App />
+		</Provider>
+	</StrictMode>
+);

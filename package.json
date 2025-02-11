@@ -1,0 +1,23 @@
+{
+	"name": "journey-wonder",
+	"version": "1.0.0",
+	"description": "",
+	"homepage": "https://github.com/grenn24/Journey-Wonder#readme",
+	"bugs": {
+		"url": "https://github.com/grenn24/Journey-Wonder/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/grenn24/Journey-Wonder.git"
+	},
+	"license": "ISC",
+	"author": "Hoo Di Heng",
+	"type": "commonjs",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "docker run -p 3000:3000 -p 27017:27017 journey-wonder:1.0.1",
+		"build": "docker build -t ",
+		"bash": "docker exec -it journey-wonder:1.0.1 bash"
+	}
+}

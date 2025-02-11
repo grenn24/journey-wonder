@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import UserService from "../services/user";
 import mongoose from "mongoose";
 import User from "../models/user";
+import { HttpError } from "../middlewares/error";
 
 class UserController {
 	userService = new UserService();
@@ -57,7 +58,10 @@ class UserController {
 			try {
 				await handler(request, response);
 			} catch (err: any) {
-				if (err instanceof mongoose.Error.DocumentNotFoundError) {
+				if (err instanceof HttpError) {
+					response.status(400).send(err);
+				}
+				else if (err instanceof mongoose.Error.DocumentNotFoundError) {
 					response.status(400).send({ message: "User not found" });
 					// Validation Error
 				} else if (err instanceof mongoose.Error.ValidationError) {

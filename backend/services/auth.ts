@@ -3,21 +3,29 @@ import User from "../models/user";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import config from "config";
+import { HttpError } from "../middlewares/error";
 
 class AuthService {
 	async login(email: string, password: string) {
-		const user = await User.findOne({ email });
-		
-		if (!user) {
-			throw new mongoose.Error("Invalid email or password");
-		}
+		try {
+			const user = await User.findOne({ email });
+			
+			if (!user) {
+				throw new HttpError("Invalid email or password", "INVALID_EMAIL_PASSWORD");
+			}
 
-		const isValid = await bcrypt.compare(password, user.passwordHash);
-		if (!isValid) {
-			throw new mongoose.Error("Invalid email or password");
+			const isValid = await bcrypt.compare(password, user.passwordHash);
+			if (!isValid) {
+				throw new HttpError(
+					"Invalid email or password",
+					"INVALID_EMAIL_PASSWORD"
+				);
+			}
+
+			return { accessToken: user.generateAccessToken() };
+		} catch (err) {
+			throw err;
 		}
-		
-		return {accessToken: user.generateAccessToken()};
 	}
 }
 
