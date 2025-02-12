@@ -3,26 +3,22 @@ import authService from "../services/auth";
 import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import { HttpError } from "../middlewares/error";
-import { generateRefreshToken } from "../middlewares/auth";
 
 class AuthController {
-
 	async login(request: Request, response: Response, next: NextFunction) {
 		const login = request.body;
 		const error = validateLogin(login);
 		if (error) {
-			response.status(400).send(error);
-			return;
+			return response.status(400).send(error);
 		}
 		try {
 			// Return JSON Web Token
-			const { accessToken } = await authService.login(
+			const { accessToken, refreshToken } = await authService.login(
 				login.email,
-				login.password
+				login.password,
+				login.remember
 			);
-			const refreshToken = login.remember
-				? generateRefreshToken("30d")
-				: generateRefreshToken("5d");
+
 			response
 				.status(200)
 				.header("X-Access-Token", accessToken)
@@ -31,8 +27,37 @@ class AuthController {
 					httpOnly: true,
 					secure: true,
 					domain: request.header("Host")?.split(":")[0],
-					sameSite:"lax"
+					sameSite: "lax",
 				})
+				.send({ message: "Success" });
+		} catch (err) {
+			if (err instanceof HttpError) {
+				response.status(400).send(err);
+			} else {
+				next(err);
+			}
+		}
+	}
+
+	async refreshAccessToken(
+		request: Request,
+		response: Response,
+		next: NextFunction
+	) {
+		try {
+			const refreshToken = request.cookies["X-Refresh-Token"];
+			if (!refreshToken) {
+				return response.status(400).send({
+					status: "INVALID_REFRESH_TOKEN",
+					message: "Invalid or missing refresh tokens",
+				});
+			}
+			const accessToken = await authService.refreshAccessToken(
+				refreshToken
+			);
+			response
+				.status(200)
+				.header("X-Access-Token", accessToken)
 				.send({ message: "Success" });
 		} catch (err) {
 			if (err instanceof HttpError) {
@@ -56,5 +81,5 @@ const validateLogin = (login: any) => {
 	}
 };
 
-const authController = new AuthController;
+const authController = new AuthController();
 export default authController;

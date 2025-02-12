@@ -4,14 +4,18 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import config from "config";
 import { HttpError } from "../middlewares/error";
+import { validateRefreshToken } from "../middlewares/auth";
 
 class AuthService {
-	async login(email: string, password: string) {
+	async login(email: string, password: string, remember: boolean) {
 		try {
 			const user = await User.findOne({ email }).exec();
-			
+
 			if (!user) {
-				throw new HttpError("Invalid email or password", "INVALID_EMAIL_PASSWORD");
+				throw new HttpError(
+					"Invalid email or password",
+					"INVALID_EMAIL_PASSWORD"
+				);
 			}
 
 			const isValid = await bcrypt.compare(password, user.passwordHash);
@@ -22,10 +26,27 @@ class AuthService {
 				);
 			}
 
-			return { accessToken: user.generateAccessToken() };
+			return {
+				accessToken: user.generateAccessToken(),
+				refreshToken: user.generateRefreshToken(
+					remember ? "30d" : "5d"
+				),
+			};
 		} catch (err) {
 			throw err;
 		}
+	}
+
+	async refreshAccessToken(refreshToken : string) {
+		const payload = validateRefreshToken(refreshToken);
+		if (!payload) {
+			throw new HttpError(
+				"Invalid or missing refresh tokens",
+				"INVALID_REFRESH_TOKEN"
+			);
+		}
+		const user = await User.findById(payload?.userID).exec();
+		return user?.generateAccessToken();
 	}
 }
 

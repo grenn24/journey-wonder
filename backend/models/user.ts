@@ -1,5 +1,5 @@
 import Joi from "joi";
-import mongoose,{InferSchemaType} from "mongoose";
+import mongoose, { InferSchemaType } from "mongoose";
 import JoiPasswordComplexity from "joi-password-complexity";
 import jwt from "jsonwebtoken";
 import config from "config";
@@ -23,8 +23,8 @@ const userSchema = new mongoose.Schema(
 		passwordHash: {
 			type: String,
 			required: [true, "Password is required"],
-			minLength:8,
-			maxLength:64
+			minLength: 8,
+			maxLength: 64,
 		},
 		birthday: Date,
 		membershipTier: {
@@ -59,6 +59,15 @@ const userSchema = new mongoose.Schema(
 					secretKey,
 					{
 						expiresIn: "15m",
+					}
+				);
+			},
+			generateRefreshToken(expiresIn: any) {
+				return jwt.sign(
+					{ userID: this._id, role: this.role, type: "refreshToken" },
+					secretKey,
+					{
+						expiresIn: expiresIn,
 					}
 				);
 			},

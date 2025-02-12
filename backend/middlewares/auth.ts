@@ -34,12 +34,20 @@ const auth =
 
 export default auth;
 
-export function generateRefreshToken(expiresIn: any) {
-	return jwt.sign(
-		{ type: "refreshToken" },
-		config.get("SECRET_KEY") as string,
-		{
-			expiresIn: expiresIn,
+export function validateRefreshToken(refreshToken: string) {
+	try {
+		const payload = jwt.verify(
+			refreshToken,
+			config.get("SECRET_KEY") as string
+		);
+		if (typeof payload !== "string") {
+			if (payload.type !== "refreshToken") {
+				return false;
+			} else {
+				return payload;
+			}
 		}
-	);
+	} catch (err) {
+		return false;
+	}
 }
