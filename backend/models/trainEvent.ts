@@ -9,30 +9,38 @@ const trainEventSchema = new mongoose.Schema({
 		trainNumber: String,
 		seats: [
 			{
-				traveller: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
-				seatNumber: String,
+				traveller: {
+					type: mongoose.Schema.Types.ObjectId,
+					ref: "users",
+				},
+				seatNumber: {
+					type: String,
+					required: true,
+				},
 			},
 		],
 		class: String,
 		model: String,
 	},
 	departure: {
-		country: String,
-		station: {
+		type: {
+			country: String,
 			name: { type: String, required: true },
 			address: String,
+			platform: String,
 		},
-		platform: String,
+		required: true,
 	},
 	arrival: {
-		country: String,
-		station: {
+		type: {
+			country: String,
 			name: { type: String, required: true },
 			address: String,
+			platform: String,
 		},
-		platform: String,
+		required: true,
 	},
 });
 
-const TrainEvent = Event.discriminator("Train Event",trainEventSchema);
+const TrainEvent = Event.discriminator("Train Event", trainEventSchema);
 export default TrainEvent;

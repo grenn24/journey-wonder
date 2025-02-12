@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import User,{ UserType} from "../models/user";
+import User, { UserType } from "../models/user";
 import lodash from "lodash";
 import bcrypt from "bcrypt";
 import fs from "fs";
@@ -7,19 +7,25 @@ import { HttpError } from "../middlewares/error";
 
 class UserService {
 	async getAllUsers() {
-		const users = await User.find().select({
+		const users = await User.find()
+			.select({
 				passwordHash: 0,
-			});
+			})
+			.exec();
 		return users;
 	}
 
 	async getUserByID(userID: string) {
 		try {
-			const user = await User.findById(userID).select({
-				passwordHash: 0,
-			});
+			const user = await User.findById(userID)
+				.select({
+					passwordHash: 0,
+				})
+				.exec();
 			if (!user) {
-				throw new mongoose.Error.DocumentNotFoundError("User not found");
+				throw new mongoose.Error.DocumentNotFoundError(
+					"User not found"
+				);
 			}
 			return user;
 		} catch (err) {
@@ -29,14 +35,12 @@ class UserService {
 
 	async createUser(user: any) {
 		try {
-			const existingUser = await User.findOne({ email: user.email });
+			const existingUser = await User.findOne({
+				email: user.email,
+			}).exec();
 			console.log(existingUser);
 			if (existingUser) {
-	
-				throw new HttpError(
-					"User already exists",
-					"DUPLICATE_USER"
-				);
+				throw new HttpError("User already exists", "DUPLICATE_USER");
 			}
 
 			const salt = await bcrypt.genSalt(10);
@@ -56,11 +60,15 @@ class UserService {
 		try {
 			const updatedUser = await User.findByIdAndUpdate(userID, user, {
 				new: true,
-			}).select({
-				passwordHash: 0,
-			});
+			})
+				.select({
+					passwordHash: 0,
+				})
+				.exec();
 			if (!updatedUser) {
-				throw new mongoose.Error.DocumentNotFoundError("User not found");
+				throw new mongoose.Error.DocumentNotFoundError(
+					"User not found"
+				);
 			}
 			return updatedUser;
 		} catch (err) {
@@ -70,11 +78,15 @@ class UserService {
 
 	async deleteUserByID(userID: string) {
 		try {
-			const deletedUser = await User.findByIdAndDelete(userID).select({
-				passwordHash: 0,
-			});
+			const deletedUser = await User.findByIdAndDelete(userID)
+				.select({
+					passwordHash: 0,
+				})
+				.exec();
 			if (!deletedUser) {
-				throw new mongoose.Error.DocumentNotFoundError("User not found");
+				throw new mongoose.Error.DocumentNotFoundError(
+					"User not found"
+				);
 			}
 			return deletedUser;
 		} catch (err) {
@@ -84,12 +96,12 @@ class UserService {
 
 	async deleteAllUsers() {
 		try {
-			return await User.deleteMany({});
+			return await User.deleteMany({}).exec();
 		} catch (err) {
 			throw err;
 		}
 	}
 }
 
-const userService = new UserService;
+const userService = new UserService();
 export default userService;

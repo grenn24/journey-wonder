@@ -50,7 +50,11 @@ class UserController {
 	}
 
 	catchErrors(handler: any) {
-		return async (request: Request, response: Response, next: NextFunction) => {
+		return async (
+			request: Request,
+			response: Response,
+			next: NextFunction
+		) => {
 			try {
 				await handler(request, response);
 			} catch (err: any) {

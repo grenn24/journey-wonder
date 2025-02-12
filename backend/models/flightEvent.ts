@@ -1,52 +1,131 @@
 import mongoose from "mongoose";
-import Event from "./event";
+import Event, { eventJoiSchema } from "./event";
+import Joi from "joi";
+const JoiObjectId = require("joi-objectid")(Joi);
 
 const flightSchema = new mongoose.Schema({
-	flight: {
-		airline: String,
-		flightNumber: String,
-		seats: [
-			{
-				traveller: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
-				seatNumber: String,
-			},
-		],
-		class: String,
-		model: String,
+	bookingNumber: String,
+	distance: String,
+	airline: {
+		type: String,
+		required: true,
 	},
+	flightNumber: String,
+	seats: [
+		{
+			traveller: {
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "users",
+			},
+			seatNumber: {
+				type: String,
+				required: true,
+			},
+		}
+	],
+	class: String,
+	model: String,
 	departure: {
-		country: String,
-		airport: {
-			name: { type: String, required: true },
-			address: String,
+		type: {
+			country: {
+				type: String,
+				required: true,
+			},
+			airport: {
+				type: {
+					name: { type: String, required: true },
+					address: String,
+				},
+				required: true,
+			},
+			terminal: String,
+			gate: String,
 		},
-		terminal: String,
-		gate: String,
+		required: true,
 	},
 	arrival: {
-		country: String,
-		airport: {
-			name: { type: String, required: true },
-			address: String,
+		type: {
+			country: {
+				type: String,
+				required: true,
+			},
+			airport: {
+				type: {
+					name: { type: String, required: true },
+					address: String,
+				},
+				required: true,
+			},
+			terminal: String,
+			gate: String,
 		},
-		terminal: String,
-		gate: String,
+		required: true,
 	},
 });
-
-const Flight = mongoose.model("Flight", flightSchema);
 
 const flightEventSchema = new mongoose.Schema({
-	departure: {
-		country: String,
+	origin: {
+		type: String,
+		required: true,
 	},
-	arrival: {
-		country: String,
+	destination: {
+		type: String,
+		required: true,
 	},
-	distance: String,
-	bookingNumber: String,
-	flights: [Flight],
+	flights: {
+		type: [flightSchema],
+		validate: {
+			validator: function (v: any) {
+				return v && v.length >= 1;
+			},
+			message: "At least one flight is required",
+		},
+	},
 });
+
+export const flightEventJoiSchema = eventJoiSchema.concat(
+	Joi.object({
+		origin: Joi.string().required(),
+		destination: Joi.string().required(),
+		flights: Joi.array()
+			.items(
+				Joi.object({
+					bookingNumber: Joi.string(),
+					distance: Joi.string(),
+					airline: Joi.string().required(),
+					flightNumber: Joi.string(),
+					seats: Joi.array().items(
+						Joi.object({
+							seatNumber: Joi.string().required(),
+							traveller: JoiObjectId(),
+						})
+					),
+					class: Joi.string(),
+					model: Joi.string(),
+					departure: Joi.object({
+						country: Joi.string().required(),
+						airport: Joi.object({
+							name: Joi.string().required,
+							address: Joi.string(),
+						}).required(),
+						terminal: Joi.string(),
+						gate: Joi.string(),
+					}).required(),
+					arrival: Joi.object({
+						country: Joi.string().required(),
+						airport: Joi.object({
+							name: Joi.string().required,
+							address: Joi.string(),
+						}).required(),
+						terminal: Joi.string(),
+						gate: Joi.string(),
+					}).required(),
+				})
+			)
+			.min(1)
+			.required(),
+	})
+);
 
 const FlightEvent = Event.discriminator("Flight Event", flightEventSchema);
 export default FlightEvent;

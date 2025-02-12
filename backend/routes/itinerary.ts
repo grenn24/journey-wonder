@@ -14,6 +14,7 @@ itinerary.get(
 itinerary.get(
 	"/:ID",
 	auth("User"),
+	getID,
 	itineraryController.catchErrors(itineraryController.getItineraryByID.bind(itineraryController))
 );
 itinerary.post(
@@ -33,7 +34,10 @@ itinerary.put(
 itinerary.delete(
 	"/:ID",
 	auth("User"),
-	itineraryController.catchErrors(itineraryController.deleteItineraryByID.bind(itineraryController))
+	getID,
+	itineraryController.catchErrors(
+		itineraryController.deleteItineraryByID.bind(itineraryController)
+	)
 );
 itinerary.delete(
 	"",

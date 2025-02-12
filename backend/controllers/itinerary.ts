@@ -13,11 +13,15 @@ class ItineraryController {
 
 	async getItineraryByID(request: Request, response: any) {
 		const itineraryID = response.locals._id;
-		response.send(await itineraryService.getItineraryByID(itineraryID));
+		const fullDetails = request.query["full-details"] === "true";
+		response.send(
+			await itineraryService.getItineraryByID(itineraryID, fullDetails)
+		);
 	}
 
 	async createItinerary(request: Request, response: Response) {
-		const itinerary: ItineraryType = request.body;
+		const itinerary = request.body;
+
 		Itinerary.validate(itinerary);
 		if (request.file) {
 			itinerary.picture = fs.readFileSync(request.file.path);
@@ -32,7 +36,10 @@ class ItineraryController {
 			itinerary.picture = fs.readFileSync(request.file.path);
 		}
 
-		itinerary = await itineraryService.updateItinerary(itinerary, itineraryID);
+		itinerary = await itineraryService.updateItinerary(
+			itinerary,
+			itineraryID
+		);
 		response.send(itinerary);
 	}
 
@@ -50,7 +57,11 @@ class ItineraryController {
 	}
 
 	catchErrors(handler: any) {
-		return async (request: Request, response: Response, next: NextFunction) => {
+		return async (
+			request: Request,
+			response: Response,
+			next: NextFunction
+		) => {
 			try {
 				await handler(request, response);
 			} catch (err: any) {
@@ -60,7 +71,9 @@ class ItineraryController {
 				}
 				// Document not found
 				else if (err instanceof mongoose.Error.DocumentNotFoundError) {
-					response.status(400).send({ message: "User not found" });
+					response
+						.status(400)
+						.send({ message: "Itinerary not found" });
 					// Validation Error
 				} else if (err instanceof mongoose.Error.ValidationError) {
 					response.status(400).send({ message: err.message });

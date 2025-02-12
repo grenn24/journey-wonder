@@ -2,7 +2,7 @@ import Joi from "joi";
 import mongoose, { InferSchemaType } from "mongoose";
 
 const categories: Record<string, string[]> = {
-	Transport: ["Train", "Flight", "Cable", "Drive"],
+	Transport: ["Train", "Flight", "Cable", "Drive","Boat"],
 	Accommodation: ["Stay"],
 	Activity: ["Walk", "Food", "Sightseeing", "Theme Park"],
 };
@@ -30,7 +30,6 @@ const eventSchema = new mongoose.Schema({
 	},
 	title: {
 		type: String,
-		required: true,
 		maxLength: 256,
 	},
 	description: {
@@ -62,7 +61,7 @@ export const eventJoiSchema = Joi.object({
 	subcategory: Joi.string()
 		.valid(...Object.values(categories).flat())
 		.required(),
-	title: Joi.string().max(256).required(),
+	title: Joi.string().max(256),
 	description: Joi.string(),
 	location: Joi.object({
 		name: Joi.string().required(),
@@ -74,12 +73,9 @@ export const eventJoiSchema = Joi.object({
 	files: Joi.array().items(Joi.binary()),
 });
 
-eventSchema.statics.create = (event: any) => {
-	const subEvent = mongoose.model(`${event.subcategory} Event`);
-	return subEvent.create(event);
-}
 
-const Event = mongoose.model("event", eventSchema);
+
+const Event = mongoose.model("Event", eventSchema);
 
 export default Event;
 export type EventType = InferSchemaType<typeof eventSchema>;

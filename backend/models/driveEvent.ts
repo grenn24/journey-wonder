@@ -4,22 +4,28 @@ import Event from "./event";
 const driveEventSchema = new mongoose.Schema({
 	distance: String,
 	vehicle: {
-        type:String,
+		type: String,
 		model: String,
 	},
 	start: {
-		name: {
-			type: String,
-			required: true,
+		type: {
+			name: {
+				type: String,
+				required: true,
+			},
+			address: String,
 		},
-		address: String,
+		required: true,
 	},
 	end: {
-		name: {
-			type: String,
-			required: true,
+		type: {
+			name: {
+				type: String,
+				required: true,
+			},
+			address: String,
 		},
-		address: String,
+		required:true
 	},
 });
 

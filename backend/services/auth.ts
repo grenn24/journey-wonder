@@ -8,7 +8,7 @@ import { HttpError } from "../middlewares/error";
 class AuthService {
 	async login(email: string, password: string) {
 		try {
-			const user = await User.findOne({ email });
+			const user = await User.findOne({ email }).exec();
 			
 			if (!user) {
 				throw new HttpError("Invalid email or password", "INVALID_EMAIL_PASSWORD");

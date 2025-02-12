@@ -1,24 +1,27 @@
 import Joi from "joi";
 const JoiObjectId = require("joi-objectid")(Joi);
-import mongoose,{InferSchemaType} from "mongoose";
+import mongoose, { InferSchemaType } from "mongoose";
 import { eventJoiSchema } from "./event";
 import { HttpError } from "../middlewares/error";
+import Event from "./event";
 
 const itinerarySchema = new mongoose.Schema({
 	author: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: "users",
+		ref: "User",
 		required: true,
 	},
-	travellers: [{
-		type: mongoose.Schema.Types.ObjectId,
-		ref: "users",
-		required: true,
-	}],
+	travellers: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "User",
+			required: true,
+		},
+	],
 	title: {
 		type: String,
 		required: true,
-		maxLength:512
+		maxLength: 512,
 	},
 	description: {
 		type: String,
@@ -38,14 +41,15 @@ const itinerarySchema = new mongoose.Schema({
 	events: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "events",
+			ref: "Event",
+			default: [],
 		},
 	],
 	picture: Buffer,
-	visibility:{
+	visibility: {
 		type: String,
-		enum:["Private", "Public"],
-		default:"Private"
+		enum: ["Private", "Public"],
+		default: "Private",
 	},
 	createdAt: {
 		type: Date,
@@ -53,14 +57,40 @@ const itinerarySchema = new mongoose.Schema({
 	},
 });
 
+itinerarySchema.pre("deleteMany", async function () {
+	try {
+		const itinerariesToDelete = await Itinerary.find(this.getFilter());
+		for (const itinerary of itinerariesToDelete) {
+			if (itinerary.events.length > 0) {
+				await Event.deleteMany({ _id: { $in: itinerary.events } });
+			}
+		}
+	} catch (err) {
+		throw err;
+	}
+});
+
+itinerarySchema.pre("deleteOne", async function () {
+	try {
+		const itineraryToDelete = await Itinerary.findOne(this.getFilter());
+		if (itineraryToDelete && itineraryToDelete.events.length > 0) {
+			await Event.deleteMany({ _id: { $in: itineraryToDelete.events } });
+		}
+	} catch (err) {
+		throw err;
+	}
+});
+
+itinerarySchema.statics.validate = validateItinerary;
+
 export function validateItinerary(itinerary: any) {
 	const itinerarySchema = Joi.object({
 		title: Joi.string().max(512).required(),
-		description:Joi.string(),
+		description: Joi.string(),
 		destination: Joi.string().required(),
 		startDate: Joi.date().required(),
 		endDate: Joi.date().required(),
-		events: Joi.array().items(Joi.object(eventJoiSchema)),
+		events: Joi.array().items(Joi.object()),
 		visibility: Joi.string().valid("Private", "Public").default("Private"),
 		author: JoiObjectId().required(),
 		travellers: Joi.array().items(JoiObjectId()).min(1).required(),

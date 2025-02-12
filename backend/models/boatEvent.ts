@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 import Event from "./event";
 
-const cableEventSchema = new mongoose.Schema({
+const boatEventSchema = new mongoose.Schema({
 	distance: String,
 	bookingNumber: String,
 	cable: {
 		carrier: String,
-		cableNumber: String,
+		boatNumber: String,
 		seats: [
 			{
 				traveller: {
@@ -21,25 +21,25 @@ const cableEventSchema = new mongoose.Schema({
 	},
 	departure: {
 		type: {
-			station: {
+			port: {
 				name: { type: String, required: true },
 				address: String,
 			},
-			platform: String,
+			gate: String,
 		},
 		required: true,
 	},
 	arrival: {
 		type: {
-			station: {
+			port: {
 				name: { type: String, required: true },
 				address: String,
 			},
-			platform: String,
+			gate: String,
 		},
-		required:true
+		required: true,
 	},
 });
 
-const CableEvent = Event.discriminator("Cable Event", cableEventSchema);
-export default CableEvent;
+const BoatEvent = Event.discriminator("Boat Event", boatEventSchema);
+export default BoatEvent;

@@ -1,18 +1,30 @@
 import mongoose from "mongoose";
 import Itinerary, { ItineraryType } from "../models/itinerary";
-import Event, { EventType } from "../models/event";
+import EventModel, { EventType } from "../models/event";
+import StayEvent from "../models/stayEvent";
 
 class ItineraryService {
 	async getAllItineraries() {
-		const itineraries = await Itinerary.find();
+		const itineraries = await Itinerary.find().exec();
 		return itineraries;
 	}
 
-	async getItineraryByID(itineraryID: string) {
+	async getItineraryByID(itineraryID: string, fullDetails: boolean = false) {
 		try {
-			const itinerary = await Itinerary.findById(itineraryID);
+			const query = Itinerary.findById(itineraryID);
+			console.log(fullDetails);
+			if (fullDetails) {
+				query
+					.populate("events")
+					.populate("author", "-passwordHash")
+					.populate("travellers", "-passwordHash");
+			}
+
+			const itinerary = await query.exec();
 			if (!itinerary) {
-				throw new mongoose.Error.DocumentNotFoundError("Itinerary not found");
+				throw new mongoose.Error.DocumentNotFoundError(
+					"Itinerary not found"
+				);
 			}
 			return itinerary;
 		} catch (err) {
@@ -22,12 +34,18 @@ class ItineraryService {
 
 	async createItinerary(itinerary: any) {
 		try {
-			
-			for (let i = 0 ; i < itinerary.events.length; i++) {
-				const event = await Event.create(itinerary.events[i]);
-				itinerary.events[i] = event._id;
-			}
-
+			const eventPromises = itinerary.events.map((event: any) => {
+				const discriminators = EventModel.discriminators;
+				let SubEvent;
+				if (discriminators) {
+					SubEvent = discriminators[`${event.subcategory} Event`];
+					return SubEvent.create(event).then((event) => event._id);
+				} else {
+					SubEvent = EventModel;
+					return SubEvent.create(event).then((event) => event._id);
+				}
+			});
+			itinerary.events = await Promise.all(eventPromises);
 			return await Itinerary.create(itinerary);
 		} catch (err) {
 			throw err;
@@ -42,9 +60,11 @@ class ItineraryService {
 				{
 					new: true,
 				}
-			);
+			).exec();
 			if (!updatedItinerary) {
-				throw new mongoose.Error.DocumentNotFoundError("User not found");
+				throw new mongoose.Error.DocumentNotFoundError(
+					"User not found"
+				);
 			}
 			return updatedItinerary;
 		} catch (err) {
@@ -54,9 +74,14 @@ class ItineraryService {
 
 	async deleteItineraryByID(itineraryID: string) {
 		try {
-			const deletedItinerary = await Itinerary.findByIdAndDelete(itineraryID);
+			const deletedItinerary = await Itinerary.findById(
+				itineraryID
+			).exec();
+			await Itinerary.deleteOne({ _id: itineraryID });
 			if (!deletedItinerary) {
-				throw new mongoose.Error.DocumentNotFoundError("Itinerary not found");
+				throw new mongoose.Error.DocumentNotFoundError(
+					"Itinerary not found"
+				);
 			}
 			return deletedItinerary;
 		} catch (err) {
@@ -66,7 +91,7 @@ class ItineraryService {
 
 	async deleteAllItineraries() {
 		try {
-			return await Itinerary.deleteMany({});
+			return await Itinerary.deleteMany({}).exec();
 		} catch (err) {
 			throw err;
 		}
