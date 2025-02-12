@@ -34,7 +34,7 @@ const flightSchema = new mongoose.Schema({
 	},
 });
 
-const Flight = mongoose.model("flights", flightSchema);
+const Flight = mongoose.model("Flight", flightSchema);
 
 const flightEventSchema = new mongoose.Schema({
 	departure: {
@@ -48,5 +48,5 @@ const flightEventSchema = new mongoose.Schema({
 	flights: [Flight],
 });
 
-const FlightEvent = Event.discriminator("flightEvents", flightEventSchema);
+const FlightEvent = Event.discriminator("Flight Event", flightEventSchema);
 export default FlightEvent;

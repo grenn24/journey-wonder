@@ -1,12 +1,11 @@
 import Joi from "joi";
-import AuthService from "../services/auth";
+import authService from "../services/auth";
 import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import { HttpError } from "../middlewares/error";
 import { generateRefreshToken } from "../middlewares/auth";
 
-export default class AuthController {
-	authService = new AuthService();
+class AuthController {
 
 	async login(request: Request, response: Response, next: NextFunction) {
 		const login = request.body;
@@ -17,7 +16,7 @@ export default class AuthController {
 		}
 		try {
 			// Return JSON Web Token
-			const { accessToken } = await this.authService.login(
+			const { accessToken } = await authService.login(
 				login.email,
 				login.password
 			);
@@ -56,3 +55,6 @@ const validateLogin = (login: any) => {
 		return { message: result.error.details[0].message };
 	}
 };
+
+const authController = new AuthController;
+export default authController;

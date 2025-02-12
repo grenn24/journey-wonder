@@ -1,40 +1,39 @@
 import express from "express";
 import auth from "../middlewares/auth";
-import UserController from "../controllers/user";
+import userController from "../controllers/user";
 import { getID, multer } from "../middlewares/request";
 
-const router = express.Router();
-const userController = new UserController();
+const user = express.Router();
 
 // Define the route handlers
-router.get("",auth("Admin"), userController.getAllUsers.bind(userController));
-router.get(
+user.get("",auth("Admin"), userController.getAllUsers.bind(userController));
+user.get(
 	"/me",
 	auth("User"),
 	userController.catchErrors(userController.getCurrentUser.bind(userController))
 );
-router.get(
+user.get(
 	"/:ID",
 	auth("User"),
 	getID,
 	userController.catchErrors(userController.getUserByID.bind(userController))
 );
-router.post("", multer.single("avatar"),userController.catchErrors(userController.createUser.bind(userController)));
-router.put(
+user.post("", multer.single("avatar"),userController.catchErrors(userController.createUser.bind(userController)));
+user.put(
 	"/:ID",
 	auth("User"),
 	getID,
 	userController.catchErrors(userController.updateUser.bind(userController))
 );
-router.delete(
+user.delete(
 	"/:ID",
 	auth("User"),
 	getID,
 	userController.catchErrors(userController.deleteUserByID.bind(userController))
 );
-router.delete(
+user.delete(
 	"",auth("Admin"),
 	userController.catchErrors(userController.deleteAllUsers.bind(userController))
 );
 
-export default router;
+export default user;

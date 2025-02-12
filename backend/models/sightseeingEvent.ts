@@ -12,7 +12,7 @@ const sightseeingEventSchema = new mongoose.Schema({
 });
 
 const SightseeingEvent = Event.discriminator(
-	"sightseeingEvents",
+	"Sightseeing Event",
 	sightseeingEventSchema
 );
 export default SightseeingEvent;

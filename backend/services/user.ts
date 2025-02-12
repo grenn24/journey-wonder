@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import User from "../models/user";
+import User,{ UserType} from "../models/user";
 import lodash from "lodash";
 import bcrypt from "bcrypt";
 import fs from "fs";
@@ -41,9 +41,6 @@ class UserService {
 
 			const salt = await bcrypt.genSalt(10);
 			user.passwordHash = await bcrypt.hash(user.password, salt);
-			if (user.avatar) {
-				user.avatar = fs.readFileSync(user.avatar.path);
-			}
 			return lodash.pick(await User.create(user), [
 				"_id",
 				"name",
@@ -55,7 +52,7 @@ class UserService {
 		}
 	}
 
-	async updateUser(user: typeof User, userID: string) {
+	async updateUser(user: UserType, userID: string) {
 		try {
 			const updatedUser = await User.findByIdAndUpdate(userID, user, {
 				new: true,
@@ -94,4 +91,5 @@ class UserService {
 	}
 }
 
-export default UserService;
+const userService = new UserService;
+export default userService;

@@ -32,5 +32,5 @@ const cableEventSchema = new mongoose.Schema({
 	},
 });
 
-const CableEvent = Event.discriminator("cableEvents", cableEventSchema);
+const CableEvent = Event.discriminator("Cable Event", cableEventSchema);
 export default CableEvent;

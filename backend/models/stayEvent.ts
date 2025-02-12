@@ -7,5 +7,5 @@ const stayEventSchema = new mongoose.Schema({
 	website:String,
 });
 
-const StayEvent = Event.discriminator("stayEvents", stayEventSchema);
+const StayEvent = Event.discriminator("Stay Event", stayEventSchema);
 export default StayEvent;

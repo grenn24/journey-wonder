@@ -12,5 +12,5 @@ const foodEventSchema = new mongoose.Schema({
 	website: String,
 });
 
-const FoodEvent = Event.discriminator("foodEvents", foodEventSchema);
+const FoodEvent = Event.discriminator("Food Event", foodEventSchema);
 export default FoodEvent;

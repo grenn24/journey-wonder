@@ -23,5 +23,5 @@ const driveEventSchema = new mongoose.Schema({
 	},
 });
 
-const DriveEvent = Event.discriminator("driveEvents", driveEventSchema);
+const DriveEvent = Event.discriminator("Drive Event", driveEventSchema);
 export default DriveEvent;
