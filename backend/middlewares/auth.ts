@@ -32,7 +32,7 @@ const auth =
 		}
 	};
 
-export default auth;
+
 
 export function validateRefreshToken(refreshToken: string) {
 	try {
@@ -51,3 +51,5 @@ export function validateRefreshToken(refreshToken: string) {
 		return false;
 	}
 }
+
+export default auth;
