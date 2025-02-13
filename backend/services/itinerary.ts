@@ -96,6 +96,21 @@ class ItineraryService {
 			throw err;
 		}
 	}
+
+	// check whether itinerary author id matches the user id
+	async validateAuthor(itineraryID: string, userID: string) {
+		const itinerary = await Itinerary.findById(itineraryID).exec();
+		if (!itinerary) {
+			throw new mongoose.Error.DocumentNotFoundError(
+				"Itinerary not found"
+			);
+		}
+		if (itinerary.author.toString() !== userID) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 }
 
 const itineraryService = new ItineraryService();

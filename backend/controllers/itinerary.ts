@@ -12,11 +12,20 @@ class ItineraryController {
 	}
 
 	async getItineraryByID(request: Request, response: any) {
+		const user = response.locals.user;
 		const itineraryID = response.locals._id;
 		const fullDetails = request.query["full-details"] === "true";
-		response.send(
-			await itineraryService.getItineraryByID(itineraryID, fullDetails)
+		if (
+			user.role !== "Admin" &&
+			!itineraryService.validateAuthor(itineraryID, user.userID)
+		) {
+			return response.status(403).send({ message: "Access denied" });
+		}
+		const itinerary = await itineraryService.getItineraryByID(
+			itineraryID,
+			fullDetails
 		);
+		return response.send(itinerary);
 	}
 
 	async createItinerary(request: Request, response: Response) {
@@ -30,12 +39,15 @@ class ItineraryController {
 	}
 
 	async updateItinerary(request: Request, response: Response) {
+		const user = response.locals.user;
 		const itineraryID = response.locals._id;
 		let itinerary = request.body;
 		if (request.file) {
 			itinerary.picture = fs.readFileSync(request.file.path);
 		}
-
+		if (user.role !== "Admin" && !itineraryService.validateAuthor(itineraryID, user.userID)) {
+			return response.status(403).send({ message: "Access denied" });
+		}
 		itinerary = await itineraryService.updateItinerary(
 			itinerary,
 			itineraryID
@@ -44,7 +56,14 @@ class ItineraryController {
 	}
 
 	async deleteItineraryByID(request: Request, response: Response) {
+		const user = response.locals.user;
 		const itineraryID = response.locals._id;
+		if (
+			user.role !== "Admin" &&
+			!itineraryService.validateAuthor(itineraryID, user.userID)
+		) {
+			return response.status(403).send({ message: "Access denied" });
+		}
 		const deletedItinerary = await itineraryService.deleteItineraryByID(
 			itineraryID
 		);
