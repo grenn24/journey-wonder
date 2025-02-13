@@ -5,6 +5,7 @@ import "@ant-design/v5-patch-for-react-19";
 import { ConfigProvider, Typography, theme } from "antd";
 import Guest from "./layouts/Guest";
 import Login from "./pages/Log-In";
+import User from "./layouts/User";
 
 const { Text } = Typography;
 
@@ -19,26 +20,31 @@ const App = () => {
 					globalTheme === "light"
 						? theme.defaultAlgorithm
 						: theme.darkAlgorithm,
-				token: { fontFamily: "Liter", borderRadius: 16},
+				token: { fontFamily: "Liter", borderRadius: 16 },
 			}}
 		>
 			<BrowserRouter>
 				<Routes>
 					{/*Non-protected routes*/}
-					<Route index></Route>
+					<Route index />
 					<Route path="guest" element={<Guest />}>
-						<Route path="about"></Route>
-						<Route path="pricing"></Route>
-						<Route path="explore"></Route>
+						<Route path="about" />
+						<Route path="pricing" />
+						<Route path="explore" />
 					</Route>
 					<Route path="guest/account">
-						<Route path="log-in" element={<Login />}></Route>
-						<Route path="sign-up"></Route>
+						<Route path="log-in" element={<Login />} />
+						<Route path="sign-up" />
 					</Route>
 					{/*Protected routes*/}
-					<Route path="user">
-						<Route index></Route>
-						<Route path="settings"></Route>
+					<Route path="user" element={<User />}>
+						<Route index />
+						<Route path="create" />
+						<Route path="upcoming" />
+						<Route path="completed" />
+						<Route path="deleted" />
+						<Route path="profile" />
+						<Route path="settings" />
 					</Route>
 					{/*Missed routes*/}
 					<Route path="*" />

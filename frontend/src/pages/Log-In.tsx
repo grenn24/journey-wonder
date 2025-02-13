@@ -10,22 +10,36 @@ import {
 	theme,
 	Typography,
 } from "antd";
-import React from "react";
+import React, { useState } from "react";
 import "../styles/ant.css";
 import { GoogleOutlined } from "@ant-design/icons";
 import authService from "../services/auth";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../redux/store";
+import { setName, setUserID } from "../redux/slices/user";
+import { setTheme, Theme } from "../redux/slices/theme";
 
 const Login = () => {
+	const navigate = useNavigate();
+	const dispatch = useAppDispatch();
 	const {
 		token: { colorBgContainer, colorBorder },
 	} = theme.useToken();
 	const [form] = Form.useForm();
 	const { Text, Link } = Typography;
-	const handleFormSubmit = (values: any) => {
+	const [loading, setLoading] = useState(false);
+
+	const handleFormSubmit = (body: Object) => {
+		setLoading(false);
 		authService
-			.login(values)
-			.then(({data,headers}) => {
-				sessionStorage.setItem("accessToken",headers["x-access-token"])
+			.login(body)
+			.then(({data}) => {
+			
+				dispatch(setName(data.name));
+				dispatch(setUserID(data._id));
+			
+				setLoading(false);
+				navigate("/user");
 				form.resetFields();
 			})
 			.catch((err) => {
@@ -44,7 +58,6 @@ const Login = () => {
 				} else {
 					console.log(err);
 				}
-
 			});
 	};
 	return (
@@ -121,6 +134,7 @@ const Login = () => {
 							type="primary"
 							htmlType="submit"
 							size="large"
+							loading={loading}
 						>
 							Log In
 						</Button>

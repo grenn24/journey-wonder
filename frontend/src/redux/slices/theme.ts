@@ -1,10 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+export enum Theme{
+	Light = "light",
+	Dark = "dark"
+}
 interface themeSliceState {
-	theme: "light" | "dark";
+	theme: Theme;
 }
 const initialState: themeSliceState = {
-	theme: "light",
+	theme: Theme.Light,
 };
 export const themeSlice = createSlice({
 	// Name of slice
@@ -15,7 +19,7 @@ export const themeSlice = createSlice({
 	// Immer provides safe mutation of state fields directly
 	reducers: {
 		reset: () => initialState,
-		setTheme: (state, action: PayloadAction<"light" | "dark">) => {
+		setTheme: (state, action: PayloadAction<Theme>) => {
 			state.theme = action.payload;
 		},
 	},

@@ -1,35 +1,63 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 
-interface Response<T> extends AxiosResponse<T> {
-	body: any
+interface Response<T> {
+	response: AxiosResponse<T>;
+	abort: () => void;
 }
 
 class ApiClient {
 	private client: AxiosInstance;
 
-	constructor(baseURL: string) {
+	constructor(
+		baseURL: string,
+		requestConfigInterceptor?: (config: AxiosRequestConfig<any>) => void,
+		responseErrorInterceptor?: (status: number, body: Object) => void
+	) {
 		const client = axios.create({
 			baseURL,
 			headers: {
 				"Content-Type": "application/json",
 			},
 		});
-		client.interceptors.response.use(
-			// status code within 2xx
-			(response) => ({body:response.data, ...response}),
-			// status code outside 2xx
+		client.interceptors.request.use(
+			(config) => {
+				// Do something before request is sent
+				requestConfigInterceptor && requestConfigInterceptor(config);
+				return config;
+			},
 			(err) => {
-				// response received
+				// An error occurred while setting up the request
+				console.error(
+					"An error occurred while setting up the request:" +
+						err.message
+				);
+				return Promise.reject(err);
+			}
+		);
+		client.interceptors.response.use(
+			// http status code within 2xx
+			(response) => ({ body: response.data, ...response }),
+			// http status code outside 2xx
+			(err) => {
+				// Error response received
 				if (err.response) {
 					console.log(err);
-					return Promise.reject({body:err.response.data, status:err.response.status});		
+					responseErrorInterceptor &&
+						responseErrorInterceptor(
+							err.response.status,
+							err.response.data
+						);
+					return Promise.reject({
+						body: err.response.data,
+						status: err.response.status,
+					});
 				} else if (err.request) {
-				// Request was made but no response was received
+					// Request was made but no response was received
 					console.error("No response from server:" + err.request);
 				} else {
-				// An error occurred while setting up the request
+					// An error occurred while handling the response
 					console.error(
-						"Error while setting up request or handling the response:" +
+						"An error occurred while handling the response:" +
 							err.message
 					);
 				}
@@ -43,7 +71,11 @@ class ApiClient {
 		url: string,
 		config?: AxiosRequestConfig
 	): Promise<AxiosResponse<T>> {
-		return this.client.get<T>(url, { withCredentials: true, ...config });
+		const response = this.client.get<T>(url, {
+			withCredentials: true,
+			...config,
+		});
+		return response;
 	}
 
 	// POST request
@@ -91,4 +123,16 @@ class ApiClient {
 	}
 }
 
-export default ApiClient;
+const createApiClient = (
+	parentPath: string,
+	requestConfigInterceptor: (
+		config: AxiosRequestConfig<any>
+	) => void = () => {},
+	responseErrorInterceptor: (status: number, body: Object) => void = () => {}
+) =>
+	new ApiClient(
+		import.meta.env.VITE_BACKEND_BASEURL + parentPath,
+		requestConfigInterceptor,
+		responseErrorInterceptor
+	);
+export default createApiClient;
