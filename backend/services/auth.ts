@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import config from "config";
 import { HttpError } from "../middlewares/error";
 import { validateRefreshToken } from "../middlewares/auth";
+import lodash from "lodash";
 
 class AuthService {
 	async login(email: string, password: string, remember: boolean) {
@@ -31,6 +32,7 @@ class AuthService {
 				refreshToken: user.generateRefreshToken(
 					remember ? "30d" : "5d"
 				),
+				user: lodash.omit(user.toObject(), ["passwordHash"]),
 			};
 		} catch (err) {
 			throw err;

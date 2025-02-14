@@ -24,8 +24,9 @@ const rootReducer = combineReducers({
 	user: userSliceReducer,
 });
 
+const persistedRootReducer = persistReducer(persistConfig, rootReducer);
 const store = configureStore({
-	reducer: persistReducer(persistConfig, rootReducer),
+	reducer: persistedRootReducer,
 });
 
 export const persistor = persistStore(store);

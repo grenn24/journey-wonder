@@ -9,7 +9,7 @@ class AuthController {
 		const login = request.body;
 		validateLogin(login);
 		// Return JSON Web Token
-		const { accessToken, refreshToken } = await authService.login(
+		const { accessToken, refreshToken, user } = await authService.login(
 			login.email,
 			login.password,
 			login.remember
@@ -25,7 +25,7 @@ class AuthController {
 				domain: request.header("Host")?.split(":")[0],
 				sameSite: "lax",
 			})
-			.send({ message: "Success" });
+			.send( user );
 	}
 
 	async logout(request: Request, response: Response) {
@@ -45,10 +45,10 @@ class AuthController {
 		const refreshToken = request.cookies["X-Refresh-Token"];
 
 		if (!refreshToken) {
-			return response.status(400).send({
-				status: "INVALID_REFRESH_TOKEN",
-				message: "Invalid or missing refresh tokens",
-			});
+			throw new HttpError(
+				"Invalid or missing refresh tokens",
+				"INVALID_REFRESH_TOKEN"
+			);
 		}
 		const accessToken = await authService.refreshAccessToken(refreshToken);
 		response
@@ -81,7 +81,7 @@ class AuthController {
 const validateLogin = (login: any) => {
 	const loginSchema = Joi.object({
 		email: Joi.string().email().required(),
-		password: Joi.string().min(8).max(64).required(),
+		password: Joi.string().required(),
 		remember: Joi.boolean(),
 	});
 	const result = loginSchema.validate(login);

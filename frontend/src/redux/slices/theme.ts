@@ -2,13 +2,14 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export enum Theme{
 	Light = "light",
-	Dark = "dark"
+	Dark = "dark",
+	System = "system",
 }
 interface themeSliceState {
 	theme: Theme;
 }
 const initialState: themeSliceState = {
-	theme: Theme.Light,
+	theme: Theme.System,
 };
 export const themeSlice = createSlice({
 	// Name of slice

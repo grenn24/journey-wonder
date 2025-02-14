@@ -1,10 +1,19 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export enum Language {
-	EnglishUK = "EnglishUK",
+	EnglishUK = "English (UK)",
 	ChineseSimplified = "中文（简体）",
 	Japanese = "日本語",
 }
+
+export const languageCodeMap: Record<Language, string> = {
+	[Language.EnglishUK]: "en",
+	[Language.ChineseSimplified]: "zh",
+	[Language.Japanese]: "ja",
+};
+
+export const getLanguageCode = (language: Language) =>
+	languageCodeMap[language];
 
 interface languageSliceState {
 	language: Language;
@@ -22,7 +31,6 @@ export const languageSlice = createSlice({
 	reducers: {
 		reset: () => initialState,
 		setLanguage: (state, action: PayloadAction<Language>) => {
-			
 			state.language = action.payload;
 		},
 	},

@@ -45,11 +45,9 @@ class UserService {
 
 			const salt = await bcrypt.genSalt(10);
 			user.passwordHash = await bcrypt.hash(user.password, salt);
-			return lodash.pick(await User.create(user), [
-				"_id",
-				"name",
-				"email",
-				"createdAt",
+			const createdUser = await User.create(user);
+			return lodash.omit(createdUser.toObject(), [
+				"passwordHash"
 			]);
 		} catch (err) {
 			throw err;

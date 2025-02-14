@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import Itinerary, { ItineraryType } from "../models/itinerary";
 import EventModel, { EventType } from "../models/event";
-import StayEvent from "../models/stayEvent";
+import StayEvent from "../models/events/accomodationEvents/stayEvent";
 
 class ItineraryService {
 	async getAllItineraries() {

@@ -6,6 +6,7 @@ import { ConfigProvider, Typography, theme } from "antd";
 import Guest from "./layouts/Guest";
 import Login from "./pages/Log-In";
 import User from "./layouts/User";
+import { Theme } from "./redux/slices/theme";
 
 const { Text } = Typography;
 
@@ -17,10 +18,18 @@ const App = () => {
 		<ConfigProvider
 			theme={{
 				algorithm:
-					globalTheme === "light"
+					globalTheme === Theme.Light
 						? theme.defaultAlgorithm
-						: theme.darkAlgorithm,
-				token: { fontFamily: "Liter", borderRadius: 16 },
+						: window.matchMedia("(prefers-color-scheme: dark)")
+								.matches
+						? theme.darkAlgorithm
+						: theme.defaultAlgorithm,
+				token: {
+					fontFamily: "Liter",
+					borderRadius: 16,
+					borderRadiusSM: 20,
+					borderRadiusLG: 20,
+				},
 			}}
 		>
 			<BrowserRouter>
@@ -39,10 +48,17 @@ const App = () => {
 					{/*Protected routes*/}
 					<Route path="user" element={<User />}>
 						<Route index />
-						<Route path="create" />
-						<Route path="upcoming" />
-						<Route path="completed" />
-						<Route path="deleted" />
+						<Route path="explore" />
+
+						<Route path="journey">
+							<Route path=":journeyID" />
+
+							<Route path="upcoming" />
+							<Route path="completed" />
+							<Route path="deleted" />
+						</Route>
+					
+
 						<Route path="profile" />
 						<Route path="settings" />
 					</Route>

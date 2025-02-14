@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/store";
 import { setName, setUserID } from "../redux/slices/user";
 import { setTheme, Theme } from "../redux/slices/theme";
+import i18n from "../i18n";
 
 const Login = () => {
 	const navigate = useNavigate();
@@ -37,7 +38,7 @@ const Login = () => {
 			
 				dispatch(setName(data.name));
 				dispatch(setUserID(data._id));
-			
+				dispatch(setUserID(data.membershipTier));
 				setLoading(false);
 				navigate("/user");
 				form.resetFields();
@@ -48,11 +49,11 @@ const Login = () => {
 					form.setFields([
 						{
 							name: "email",
-							errors: ["Invalid email or password"],
+							errors: [i18n.t("Invalid email or password")],
 						},
 						{
 							name: "password",
-							errors: ["Invalid email or password"],
+							errors: [i18n.t("Invalid email or password")],
 						},
 					]);
 				} else {
@@ -69,19 +70,19 @@ const Login = () => {
 			<Card style={{ width: 420, border: `1.5px solid ${colorBorder}` }}>
 				<Form form={form} onFinish={handleFormSubmit} layout="vertical">
 					<Form.Item
-						label="Email"
+						label={i18n.t("Email")}
 						name="email"
 						rules={[
 							{
 								required: true,
-								message: "Please enter your email",
+								message: i18n.t("Please enter your email"),
 							},
 							{
 								validator: (_, value) => {
 									const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 									if (!regex.test(value)) {
 										return Promise.reject(
-											"Invalid email format"
+											i18n.t("Invalid email format")
 										);
 									}
 
@@ -97,12 +98,12 @@ const Login = () => {
 						/>
 					</Form.Item>
 					<Form.Item
-						label="Password"
+						label={i18n.t("Password")}
 						name="password"
 						rules={[
 							{
 								required: true,
-								message: "Please enter your password",
+								message: i18n.t("Please enter your password"),
 							},
 						]}
 					>
@@ -119,12 +120,12 @@ const Login = () => {
 								noStyle
 							>
 								<Checkbox className="custom-checkbox">
-									Remember Me
+									{i18n.t("Remember Me")}
 								</Checkbox>
 							</Form.Item>
 
 							<Link href="" target="_self">
-								Forgot Password
+								{i18n.t("Forgot Password")}
 							</Link>
 						</Flex>
 					</Form.Item>
@@ -136,17 +137,17 @@ const Login = () => {
 							size="large"
 							loading={loading}
 						>
-							Log In
+							{i18n.t("Log In")}
 						</Button>
 					</Form.Item>
 					<Form.Item style={{ textAlign: "center" }}>
-						<Text>Don't have an account yet? </Text>
+						<Text>{i18n.t("Don't have an account yet? ")}</Text>
 						<Link href="sign-up" target="_self">
-							Create One
+							{i18n.t("Create One")}
 						</Link>
 					</Form.Item>
 				</Form>
-				<Divider plain>or</Divider>
+				<Divider plain>{i18n.t("or")}</Divider>
 				<Button
 					icon={<GoogleOutlined />}
 					iconPosition="start"
@@ -154,7 +155,7 @@ const Login = () => {
 					size="large"
 					color="default"
 				>
-					Log In with Google
+					{i18n.t("Log In with Google")}
 				</Button>
 			</Card>
 		</Flex>
