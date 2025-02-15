@@ -156,7 +156,7 @@ const useProfileMenu = (
 				<Menu.Item
 					onClick={() => {
 						setOpenProfileMenu(false);
-						setTimeout(() => setOpenLogOutModal(true), 500);
+						setTimeout(() => setOpenLogOutModal(true), 300);
 					}}
 				>
 					<Flex gap={18}>

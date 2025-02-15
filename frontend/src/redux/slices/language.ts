@@ -12,8 +12,17 @@ export const languageCodeMap: Record<Language, string> = {
 	[Language.Japanese]: "ja",
 };
 
+export const languageFontMap: Record<string, string> = {
+	[Language.EnglishUK]: "Liter",
+	[Language.ChineseSimplified]: "Noto Sans SC",
+	[Language.Japanese]: "Noto Sans JP",
+};
+
 export const getLanguageCode = (language: Language) =>
 	languageCodeMap[language];
+
+export const getLanguageFont = (language: Language) =>
+	languageFontMap[language];
 
 interface languageSliceState {
 	language: Language;

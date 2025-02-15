@@ -1,17 +1,18 @@
 import { Menu } from "antd";
 import { Footer } from "antd/es/layout/layout";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useMobileFooterMenuItems from "./menus/mobileFooterMenuItems";
 import CreateModal from "./CreateModal";
 
 const MobileFooterMenu = () => {
-	const selectedMobileFooterMenuItem =
-		location.pathname.split("/").slice(2).length !== 0
-			? location.pathname.split("/").slice(2)[0]
-			: "home";
 	const [openCreateModal, setOpenCreateModal] = useState(false);
+	const selectedMobileFooterMenuItem = 
+	 !openCreateModal ? location.pathname.split("/").slice(2).length !== 0
+			? location.pathname.split("/").slice(2)[0]
+			: "home" : "create";
+	
 	const mobileFooterMenuItems = useMobileFooterMenuItems(setOpenCreateModal);
-
+	
 	return (
 		<>
 			<Footer
@@ -24,7 +25,7 @@ const MobileFooterMenu = () => {
 			>
 				<Menu
 					mode="inline"
-					defaultSelectedKeys={[selectedMobileFooterMenuItem]}
+					selectedKeys={[selectedMobileFooterMenuItem]}
 					items={mobileFooterMenuItems}
 					style={{
 						paddingTop: 0,
@@ -33,7 +34,10 @@ const MobileFooterMenu = () => {
 					}}
 				/>
 			</Footer>
-            <CreateModal openCreateModal={openCreateModal} setOpenCreateModal={setOpenCreateModal}/>
+			<CreateModal
+				openCreateModal={openCreateModal}
+				setOpenCreateModal={setOpenCreateModal}
+			/>
 		</>
 	);
 };

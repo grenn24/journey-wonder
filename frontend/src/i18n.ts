@@ -18,7 +18,7 @@ const resources = {
 			Profile: "帐户",
 			Appearance: "外貌",
 			Language: "语文",
-			"JourneyWonder Pro": "旅途奇遇 专业版",
+			"JourneyWonder Pro": "JourneyWonder 专业版",
 			Settings: "设置",
 			"Switch Accounts": "切转帐户",
 			"Log Out": "退出",
@@ -44,6 +44,7 @@ const resources = {
 			"Please enter your email": "请输入你的电邮",
 			"Please enter your password": "请输入你的密码",
 			"Invalid email format": "电邮格式不正确",
+			"Ask JourneyWonder AI": "讯问 JourneyWonder AI",
 		},
 	},
 	ja: {
@@ -56,7 +57,7 @@ const resources = {
 			Profile: "プロフィール",
 			Appearance: "外観",
 			Language: "言語",
-			"JourneyWonder Pro": "旅路の奇跡 プロ版",
+			"JourneyWonder Pro": "JourneyWonder プロ版",
 			Settings: "設定",
 			"Switch Accounts": "アカウントの切り替え",
 			"Log Out": "ログアウト",
@@ -85,6 +86,7 @@ const resources = {
 			"Please enter your email": "メールアドレスを入力してください",
 			"Please enter your password": "パスワードを入力してください",
 			"Invalid email format": "メールアドレスの形式が正しくありません",
+			"Ask JourneyWonder AI": "JourneyWonder AI に尋ねる",
 		},
 	},
 };

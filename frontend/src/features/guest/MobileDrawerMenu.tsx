@@ -183,7 +183,7 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 						<Button
 							size="large"
 							variant="solid"
-							color="green"
+							color="primary"
 							style={{ fontWeight: fontWeightStrong }}
 							iconPosition="end"
 							icon={

@@ -1,37 +1,18 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { useAppSelector } from "./redux/store";
 import "./styles/App.css";
 import "@ant-design/v5-patch-for-react-19";
 import { ConfigProvider, Typography, theme } from "antd";
 import Guest from "./layouts/Guest";
 import Login from "./pages/Log-In";
 import User from "./layouts/User";
-import { Theme } from "./redux/slices/theme";
+import useTheme from "./styles/useTheme";
 
 const { Text } = Typography;
 
 const App = () => {
-	const { globalTheme } = useAppSelector((state) => ({
-		globalTheme: state.theme.theme,
-	}));
+	const theme = useTheme();
 	return (
-		<ConfigProvider
-			theme={{
-				algorithm:
-					globalTheme === Theme.Light
-						? theme.defaultAlgorithm
-						: window.matchMedia("(prefers-color-scheme: dark)")
-								.matches
-						? theme.darkAlgorithm
-						: theme.defaultAlgorithm,
-				token: {
-					fontFamily: "Liter",
-					borderRadius: 16,
-					borderRadiusSM: 20,
-					borderRadiusLG: 20,
-				},
-			}}
-		>
+		<ConfigProvider theme={theme}>
 			<BrowserRouter>
 				<Routes>
 					{/*Non-protected routes*/}
@@ -57,7 +38,6 @@ const App = () => {
 							<Route path="completed" />
 							<Route path="deleted" />
 						</Route>
-					
 
 						<Route path="profile" />
 						<Route path="settings" />

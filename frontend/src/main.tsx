@@ -10,7 +10,13 @@ import { PersistGate } from "redux-persist/integration/react";
 
 WebFont.load({
 	google: {
-		families: ["Liter","Roboto"],
+		families: [
+			"Liter",
+			"Roboto",
+			"Noto Sans",
+			"Noto Sans JP",
+			"Noto Sans SC",
+		],
 	},
 });
 

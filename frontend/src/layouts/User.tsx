@@ -12,6 +12,7 @@ import {
 	Modal,
 	Splitter,
 	theme,
+	Tooltip,
 	Typography,
 } from "antd";
 import { Content, Footer, Header } from "antd/es/layout/layout";
@@ -25,6 +26,7 @@ import UserHeader from "../features/user/Header";
 import MobileFooterMenu from "../features/user/MobileFooterMenu";
 import CreateModal from "../features/user/CreateModal";
 import i18next from "i18next";
+import ExploreJourneysDrawer from "../components/ExploreJourneysDrawer";
 
 const User = () => {
 	const dispatch = useDispatch();
@@ -45,6 +47,7 @@ const User = () => {
 	const leftMenuItems = useLeftMenuItems(splitterSize, setSplitterSize);
 	const { Text } = Typography;
 	const [openCreateModal, setOpenCreateModal] = useState(false);
+
 
 	const selectedLeftMenuItem =
 		location.pathname
@@ -90,17 +93,19 @@ const User = () => {
 				{breakpoints.smallerThan("md") && <MobileFooterMenu />}
 			</Layout>
 			{breakpoints.largerThan("md") && (
+				<Tooltip title={i18next.t("Create a Journey")}  color="primary" placement="left" >
 				<FloatButton
 					style={{ width: 50, height: 50 }}
 					icon={<PlusOutlined />}
 					onClick={() => setOpenCreateModal(true)}
-					tooltip={i18next.t("Create a Journey")}
-				/>
+				
+				/></Tooltip>
 			)}
 			<CreateModal
 				openCreateModal={openCreateModal}
 				setOpenCreateModal={setOpenCreateModal}
 			/>
+		
 		</>
 	);
 };
