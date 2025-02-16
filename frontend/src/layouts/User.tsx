@@ -20,13 +20,14 @@ import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import useBreakpoints from "../utilities/breakpoints";
-import useMobileFooterMenuItems from "../features/user/menus/mobileFooterMenuItems";
-import useLeftMenuItems from "../features/user/menus/leftMenuItems";
-import UserHeader from "../features/user/Header";
-import MobileFooterMenu from "../features/user/MobileFooterMenu";
-import CreateModal from "../features/user/CreateModal";
+import useMobileFooterMenuItems from "../features/user layout/menus/mobileFooterMenuItems";
+import useLeftMenuItems from "../features/user layout/menus/leftMenuItems";
+import UserHeader from "../features/user layout/Header";
+import MobileFooterMenu from "../features/user layout/MobileFooterMenu";
+import CreateModal from "../features/createJourney/CreateModal";
 import i18next from "i18next";
 import ExploreJourneysDrawer from "../components/ExploreJourneysDrawer";
+import { ChevronLeftRounded, ChevronRightRounded } from "@mui/icons-material";
 
 const User = () => {
 	const dispatch = useDispatch();
@@ -44,10 +45,9 @@ const User = () => {
 	]);
 
 	const breakpoints = useBreakpoints();
-	const leftMenuItems = useLeftMenuItems(splitterSize, setSplitterSize);
+	const leftMenuItems = useLeftMenuItems(splitterSize);
 	const { Text } = Typography;
 	const [openCreateModal, setOpenCreateModal] = useState(false);
-
 
 	const selectedLeftMenuItem =
 		location.pathname
@@ -57,6 +57,10 @@ const User = () => {
 					.split("/")
 					.slice(location.pathname.split("/").length - 1)[0]
 			: "home";
+	const handleMenuButtonClick = () =>
+		Number(splitterSize[0]) > 100
+			? setSplitterSize([100, window.innerWidth - 100])
+			: setSplitterSize([280, "100%"]);
 
 	return (
 		<>
@@ -69,15 +73,54 @@ const User = () => {
 						<Splitter.Panel
 							size={splitterSize[0]}
 							resizable
-							min="10%"
+							min={100}
 							max="25%"
 						>
-							<Menu
-								mode="vertical"
-								defaultSelectedKeys={[selectedLeftMenuItem]}
-								items={leftMenuItems}
-								style={{ paddingTop: 0 }}
-							/>
+							<Flex
+								vertical
+								align="center"
+								style={{
+									height: "100%",
+									paddingTop: 20,
+									paddingBottom: 20,
+								}}
+							>
+								<Button
+									size="large"
+									shape="circle"
+									icon={
+										Number(splitterSize[0]) > 100 ? (
+											<ChevronLeftRounded />
+										) : (
+											<ChevronRightRounded />
+										)
+									}
+									onClick={handleMenuButtonClick}
+								/>
+								<Flex
+									justify="center"
+									align="center"
+									style={{ flexGrow: 1, width: "100%" }}
+								>
+									<Menu
+										mode="vertical"
+										defaultSelectedKeys={[
+											selectedLeftMenuItem,
+										]}
+										items={leftMenuItems}
+										style={{
+											border: 0,
+											width: "auto",
+											height: "60%",
+											display: "flex",
+											justifyContent: "space-evenly",
+											flexDirection: "column",
+											position: "relative",
+											bottom: 30,
+										}}
+									/>
+								</Flex>
+							</Flex>
 						</Splitter.Panel>
 					)}
 
@@ -93,19 +136,22 @@ const User = () => {
 				{breakpoints.smallerThan("md") && <MobileFooterMenu />}
 			</Layout>
 			{breakpoints.largerThan("md") && (
-				<Tooltip title={i18next.t("Create a Journey")}  color="primary" placement="left" >
-				<FloatButton
-					style={{ width: 50, height: 50 }}
-					icon={<PlusOutlined />}
-					onClick={() => setOpenCreateModal(true)}
-				
-				/></Tooltip>
+				<Tooltip
+					title={i18next.t("Create a Journey")}
+					color="primary"
+					placement="left"
+				>
+					<FloatButton
+						style={{ width: 50, height: 50 }}
+						icon={<PlusOutlined />}
+						onClick={() => setOpenCreateModal(true)}
+					/>
+				</Tooltip>
 			)}
 			<CreateModal
 				openCreateModal={openCreateModal}
 				setOpenCreateModal={setOpenCreateModal}
 			/>
-		
 		</>
 	);
 };

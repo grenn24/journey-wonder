@@ -4,11 +4,15 @@ import dayjs, { Dayjs } from "dayjs";
 import { arrayContains } from "../../utilities/array";
 
 interface createJourneyState {
+	currentStage: number,
+	title: string;
 	selectedDestinations: { label: JSX.Element; key: number; value: string }[];
 	startDate: Dayjs | null;
 	endDate: Dayjs | null;
 }
 const initialState: createJourneyState = {
+	currentStage:0,
+	title: "",
 	selectedDestinations: [],
 	startDate: null,
 	endDate: null,
@@ -22,6 +26,9 @@ export const createJourneySlice = createSlice({
 	// Immer provides safe mutation of state fields directly
 	reducers: {
 		reset: () => initialState,
+		setTitle: (state, action: PayloadAction<string>) => {
+			state.title = action.payload;
+		},
 		setSelectedDestinations: (
 			state,
 			action: PayloadAction<
@@ -70,12 +77,19 @@ export const createJourneySlice = createSlice({
 			state.endDate = null;
 			state.startDate = null;
 		},
+		incrementStage: (state) => {
+			state.currentStage < 1 && state.currentStage++;
+		},
+		decrementStage: (state) => {
+			state.currentStage >0  && state.currentStage--;
+		},
 	},
 });
 
 // Action creators are automatically generated for each reducer function using create slice
 export const {
 	reset,
+	setTitle,
 	setSelectedDestinations,
 	addSelectedDestination,
 	removeSelectedDestination,
@@ -83,6 +97,8 @@ export const {
 	setStartDate,
 	setDates,
 	resetDates,
+	incrementStage,
+	decrementStage
 } = createJourneySlice.actions;
 
 const createJourneyReducer = createJourneySlice.reducer;

@@ -2,11 +2,15 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface userSliceState {
 	userID: string;
-	name:string;
+	name: string;
+	email: string;
+	membershipTier: "Free" | "Basic" | "Premium" | undefined;
 }
 const initialState: userSliceState = {
 	userID: "",
-	name:""
+	name: "",
+	email: "",
+	membershipTier: undefined,
 };
 export const userSlice = createSlice({
 	// Name of slice
@@ -23,11 +27,21 @@ export const userSlice = createSlice({
 		setName: (state, action: PayloadAction<string>) => {
 			state.name = action.payload;
 		},
+		setEmail: (state, action: PayloadAction<string>) => {
+			state.email = action.payload;
+		},
+		setMembershipTier: (
+			state,
+			action: PayloadAction<"Free" | "Basic" | "Premium">
+		) => {
+			state.membershipTier = action.payload;
+		},
 	},
 });
 
 // Action creators are automatically generated for each reducer function using create slice
-export const { reset, setUserID, setName } = userSlice.actions;
+export const { reset, setUserID, setName, setEmail, setMembershipTier } =
+	userSlice.actions;
 
 const userSliceReducer = userSlice.reducer;
 

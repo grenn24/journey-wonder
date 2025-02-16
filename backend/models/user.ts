@@ -53,6 +53,7 @@ const userSchema = new mongoose.Schema(
 					{
 						userID: this._id,
 						name: this.name,
+						email:this.email,
 						membershipTier: this.membershipTier,
 						role: this.role,
 						type: "accessToken",

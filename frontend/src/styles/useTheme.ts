@@ -24,6 +24,7 @@ const useTheme = () => {
 			borderRadiusSM: 20,
 			borderRadiusLG: 20,
 			fontWeightStrong:1000,
+			fontSizeHeading4:19,
 			colorPrimary: "#7cb305",
 			colorPrimaryText: "#7cb305", // text
 			colorInfo: "#5b8c00", // button text, links

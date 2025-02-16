@@ -10,14 +10,12 @@ import {
 	theme,
 	Typography,
 } from "antd";
-import React, { useState } from "react";
+import { useState } from "react";
 import "../styles/ant.css";
 import { GoogleOutlined } from "@ant-design/icons";
 import authService from "../services/auth";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/store";
-import { setName, setUserID } from "../redux/slices/user";
-import { setTheme, Theme } from "../redux/slices/theme";
 import i18n from "../i18n";
 
 const Login = () => {
@@ -26,6 +24,7 @@ const Login = () => {
 	const {
 		token: { colorBgContainer, colorBorder },
 	} = theme.useToken();
+	const state = useAppSelector((state) => state.user);
 	const [form] = Form.useForm();
 	const { Text, Link } = Typography;
 	const [loading, setLoading] = useState(false);
@@ -33,12 +32,9 @@ const Login = () => {
 	const handleFormSubmit = (body: Object) => {
 		setLoading(false);
 		authService
-			.login(body)
-			.then(({data}) => {
-			
-				dispatch(setName(data.name));
-				dispatch(setUserID(data._id));
-				dispatch(setUserID(data.membershipTier));
+			.login(body, dispatch)
+			.then(({ data }) => {
+					
 				setLoading(false);
 				navigate("/user");
 				form.resetFields();
