@@ -8,14 +8,25 @@ import {
 	Typography,
 	DatePicker,
 	Tag,
-	GlobalToken,
 } from "antd";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { JSX, useEffect, useMemo, useState } from "react";
 import i18n from "../../i18n";
 import { ClearRounded } from "@mui/icons-material";
 import dayjs, { Dayjs } from "dayjs";
 import { InputAdornment, TextField } from "@mui/material";
 import searchDestinations from "../createJourney/searchDestinations";
+import { useAppDispatch, useAppSelector } from "../../redux/store.ts";
+import {
+	setStartDate,
+	setEndDate,
+	setSelectedDestinations,
+	resetDates,
+	addSelectedDestination,
+	removeSelectedDestination,
+	setDates,
+} from "../../redux/slices/createJourney.ts";
+import CloseButton from "../../components/CloseButton.tsx";
+import { arrayContains } from "../../utilities/array.ts";
 
 interface Prop {
 	openCreateModal: boolean;
@@ -33,6 +44,7 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 		colorText,
 		fontWeightStrong,
 		fontSizeHeading4,
+		fontSizeHeading3,
 		colorTextHeading,
 		colorPrimary,
 		colorPrimaryBg,
@@ -43,39 +55,55 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 		colorBgTextActive,
 		colorBgSolid,
 	} = token;
-	const [selectedDates, setSelectedDates] = useState<
-		[start: Dayjs | null | undefined, end: Dayjs | null | undefined] | null
-	>([null, null]);
+
+	const dispatch = useAppDispatch();
 	const [panelMode, setPanelMode] = useState<"start" | "end">("start");
 	const [destination, setDestination] = useState("");
-	const [selectedDestinations, setSelectedDestinations] = useState<{ label: any; key: string; value: string }[]>([]);
-
-	const [options, setOptions] =
-		useState<{ label: any; key: string; value: string }[]>();
+	const { selectedDestinations, startDate, endDate } = useAppSelector(
+		(state) => ({
+			selectedDestinations: state.createJourney.selectedDestinations,
+			startDate: state.createJourney.startDate,
+			endDate: state.createJourney.endDate,
+		})
+	);
+	const [options, setOptions] = useState<
+		{ label: JSX.Element; key: number; value: string }[]
+	>([]);
+	const handleDestinationSelect = (
+		_: any,
+		option: { label: JSX.Element; key: number; value: string }
+	) => {
+		const selectedDestination = {
+			label: option.label,
+			key: option.key,
+			value: option.value,
+		};
+		dispatch(addSelectedDestination(selectedDestination));
+	};
 	return (
 		<Modal
 			open={openCreateModal}
 			onCancel={() => setOpenCreateModal(false)}
 			closeIcon={
-				<Button
-					variant="filled"
-					color="default"
-					icon={
-						<ClearRounded
-							style={{ marginTop: 2, marginLeft: 0 }}
-							onClick={() => setOpenCreateModal(false)}
-						/>
-					}
+				<CloseButton
+					handleButtonClick={() => setOpenCreateModal(false)}
 				/>
 			}
 			title={
-				<Flex justify="center">
-					<Text style={{ fontSize: fontSizeHeading4 }}>
-						{i18n.t("Plan a new Journey")}
+				<Flex justify="center" style={{ marginBottom: 35 }}>
+					<Text
+						style={{
+							fontSize: fontSizeHeading3,
+							fontFamily: "Roboto",
+							fontWeight: fontWeightStrong,
+						}}
+					>
+						{i18n.t("Plan a new journey")}
 					</Text>
 				</Flex>
 			}
 			width={650}
+			footer={false}
 		>
 			<Flex vertical justify="center" align="center">
 				<AutoComplete
@@ -84,12 +112,7 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 					options={options}
 					allowClear={false}
 					value={destination}
-					onSelect={(_, option) =>
-						setSelectedDestinations([
-							...selectedDestinations,
-							option,
-						])
-					}
+					onSelect={handleDestinationSelect}
 				>
 					<TextField
 						label="Destination"
@@ -128,12 +151,15 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 							input: {
 								endAdornment: (
 									<InputAdornment position="end">
-										<Button
-											variant="text"
-											color="default"
-											icon={<ClearRounded />}
-											onClick={() => setDestination("")}
-										/>
+										{destination && (
+											<CloseButton
+												variant="text"
+												handleButtonClick={() => {
+													setDestination("");
+													setOptions([]);
+												}}
+											/>
+										)}
 									</InputAdornment>
 								),
 							},
@@ -150,10 +176,8 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 								/>
 							}
 							onClose={() =>
-								setSelectedDestinations(
-									selectedDestinations.filter(
-										(value) => value.key !== destination.key
-									)
+								dispatch(
+									removeSelectedDestination(destination.key)
 								)
 							}
 							style={{
@@ -170,7 +194,7 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 						</Tag>
 					))}
 				</Flex>
-
+				<br />
 				<RangePicker
 					variant="outlined"
 					color="default"
@@ -179,8 +203,15 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 					picker="date"
 					minDate={dayjs()}
 					format="D MMMM YYYY"
-					value={selectedDates}
-					onChange={(value) => setSelectedDates(value)}
+					value={[startDate, endDate]}
+					onChange={(value) => {
+						if (value) {
+							dispatch(setStartDate(value[0]));
+							dispatch(setEndDate(value[1]));
+						} else {
+							dispatch(resetDates());
+						}
+					}}
 					suffixIcon={null}
 					renderExtraFooter={() => (
 						<Flex justify="center">
@@ -189,17 +220,13 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 								variant="text"
 								onClick={() => {
 									if (panelMode === "start") {
-										setSelectedDates([
-											dayjs(),
-											selectedDates && selectedDates[1],
-										]);
+										dispatch(setStartDate(dayjs()));
+										dispatch(setEndDate(endDate));
 										setPanelMode("end");
 									}
 									if (panelMode === "end") {
-										setSelectedDates([
-											selectedDates && selectedDates[0],
-											dayjs(),
-										]);
+										dispatch(setStartDate(startDate));
+										dispatch(setEndDate(dayjs()));
 										setPanelMode("start");
 									}
 								}}
@@ -210,7 +237,8 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 								color="primary"
 								variant="text"
 								onClick={() => {
-									setSelectedDates([null, null]);
+									dispatch(setStartDate(null));
+									dispatch(setEndDate(null));
 								}}
 							>
 								Reset

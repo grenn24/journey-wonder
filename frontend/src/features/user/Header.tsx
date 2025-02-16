@@ -7,6 +7,7 @@ import {
 	Image,
 	Input,
 	Modal,
+	Popover,
 	theme,
 	Typography,
 } from "antd";
@@ -21,6 +22,7 @@ import authService from "../../services/auth";
 import { useNavigate } from "react-router-dom";
 import i18next from "i18next";
 import ExploreJourneysDrawer from "../../components/ExploreJourneysDrawer";
+import NotificationButton from "./NotificationButton";
 
 const { Text } = Typography;
 const UserHeader = () => {
@@ -41,6 +43,7 @@ const UserHeader = () => {
 	const breakpoints = useBreakpoints();
 	const [openLogOutModal, setOpenLogOutModal] = useState(false);
 	const [openProfileMenu, setOpenProfileMenu] = useState(false);
+
 	const [openExploreJourneysDrawer, setOpenExploreJourneysDrawer] =
 		useState(false);
 	const [profileMenuSection, setProfileMenuSection] =
@@ -84,17 +87,7 @@ const UserHeader = () => {
 									)}
 									variant="filled"
 								/>
-								<Button
-									size="large"
-									variant="filled"
-									color="default"
-									icon={
-										<NotificationsNoneRounded
-											style={{ fontSize: 22 }}
-										/>
-									}
-									style={{ flexShrink: 0 }}
-								/>
+								<NotificationButton />
 								<Dropdown
 									dropdownRender={
 										profileMenu[profileMenuSection]
@@ -112,7 +105,6 @@ const UserHeader = () => {
 								>
 									<Avatar
 										size="large"
-										
 										style={{
 											backgroundColor: "green",
 											verticalAlign: "middle",
@@ -134,17 +126,7 @@ const UserHeader = () => {
 										setOpenExploreJourneysDrawer(true)
 									}
 								/>
-								<Button
-									size="large"
-									variant="filled"
-									color="default"
-									icon={
-										<NotificationsNoneRounded
-											style={{ fontSize: 22 }}
-										/>
-									}
-									style={{ flexShrink: 0 }}
-								/>
+							<NotificationButton />
 							</>
 						)}
 					</Flex>

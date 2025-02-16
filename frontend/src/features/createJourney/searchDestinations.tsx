@@ -1,10 +1,13 @@
 import { Flex, GlobalToken, Tag, Typography } from "antd";
-import countriesData from "../../data/destinations/countries";
-import regionsData from "../../data/destinations/regions";
-import statesData from "../../data/destinations/states";
-import citiesData from "../../data/destinations/cities";
+import countriesData from "../../data/destinations/countries.json";
+import regionsData from "../../data/destinations/regions.json";
+import statesData from "../../data/destinations/states.json";
+import citiesRawData from "../../data/destinations/cities.json";
 
 const {Text}=Typography;
+const citiesData = citiesRawData as {name:string,
+	id:number
+}[];
 const searchDestinations = (destination: string, token: GlobalToken) => {
 	const countries = countriesData
 		.filter((country) =>
@@ -14,7 +17,11 @@ const searchDestinations = (destination: string, token: GlobalToken) => {
 			value: country.name,
 			key: country.id,
 			label: (
-				<Flex justify="space-between">
+				<Flex
+					justify="space-between"
+					align="center"
+					style={{ height: 32 }}
+				>
 					<Text>{country.name}</Text>
 					<Tag
 						bordered={false}
@@ -35,12 +42,13 @@ const searchDestinations = (destination: string, token: GlobalToken) => {
 			value: region.name,
 			key: region.id,
 			label: (
-				<Flex justify="space-between">
+				<Flex justify="space-between" align="center" style={{height:32}}>
 					<Text>{region.name}</Text>
 					<Tag
 						bordered={false}
 						style={{
 							backgroundColor: token.colorBgTextActive,
+
 						}}
 					>
 						Region
@@ -55,12 +63,13 @@ const searchDestinations = (destination: string, token: GlobalToken) => {
 			value: state.name,
 			key: state.id,
 			label: (
-				<Flex justify="space-between">
+				<Flex justify="space-between" align="center" style={{height:32}}>
 					<Text>{state.name}</Text>
 					<Tag
 						bordered={false}
 						style={{
 							backgroundColor: token.colorBgTextActive,
+
 						}}
 					>
 						State
@@ -68,6 +77,7 @@ const searchDestinations = (destination: string, token: GlobalToken) => {
 				</Flex>
 			),
 		}));
+
 		const cities = citiesData
 			.filter((state) =>
 				state.name.match(new RegExp(`^${destination}`, "i"))
@@ -76,7 +86,11 @@ const searchDestinations = (destination: string, token: GlobalToken) => {
 				value: state.name,
 				key: state.id,
 				label: (
-					<Flex justify="space-between">
+					<Flex
+						justify="space-between"
+						align="center"
+						style={{ height: 32 }}
+					>
 						<Text>{state.name}</Text>
 						<Tag
 							bordered={false}
@@ -89,6 +103,7 @@ const searchDestinations = (destination: string, token: GlobalToken) => {
 					</Flex>
 				),
 			}));
-	return countries.concat(regions).concat(states).concat(cities);
+
+	return destination ? countries.concat(regions).concat(states).concat(cities) : [];
 };
 export default searchDestinations;

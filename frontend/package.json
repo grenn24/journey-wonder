@@ -1,7 +1,7 @@
 {
   "name": "frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.2",
   "type": "module",
   "scripts": {
     "start": "vite",
@@ -28,6 +28,7 @@
     "react-i18next": "^15.4.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.1.5",
+    "react-speech-recognition": "^3.10.0",
     "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
     "webfontloader": "^1.6.28"
@@ -38,6 +39,7 @@
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "@types/webfontloader": "^1.6.38",
+    "@typescript-eslint/eslint-plugin": "^8.24.0",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9.19.0",
     "eslint-plugin-react-hooks": "^5.1.0",

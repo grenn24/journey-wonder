@@ -58,7 +58,7 @@ const useProfileMenu = (
 	return {
 		Home: () => (
 			<Menu>
-				<Menu.Item onClick={() => setOpenProfileMenu(false)}>
+				<Menu.Item key={0} onClick={() => setOpenProfileMenu(false)}>
 					<Flex gap={18}>
 						<UserOutlined style={{ fontSize: fontSizeHeading5 }} />
 						<Text
@@ -73,6 +73,7 @@ const useProfileMenu = (
 				<Menu.Divider style={{ borderWidth: 50 }} />
 
 				<Menu.Item
+					key={1}
 					onClick={(e: any) => {
 						e.domEvent.preventDefault();
 
@@ -93,6 +94,7 @@ const useProfileMenu = (
 					</Flex>
 				</Menu.Item>
 				<Menu.Item
+					key={2}
 					onClick={(e) => {
 						e.domEvent.preventDefault();
 						setProfileMenuSection("Language");
@@ -112,7 +114,7 @@ const useProfileMenu = (
 					</Flex>
 				</Menu.Item>
 				<Menu.Divider style={{ borderWidth: 50 }} />
-				<Menu.Item onClick={() => setOpenProfileMenu(false)}>
+				<Menu.Item key={3} onClick={() => setOpenProfileMenu(false)}>
 					<Flex gap={18}>
 						<StarOutlined style={{ fontSize: fontSizeHeading5 }} />
 						<Text
@@ -125,7 +127,7 @@ const useProfileMenu = (
 					</Flex>
 				</Menu.Item>
 				<Menu.Divider style={{ borderWidth: 50 }} />
-				<Menu.Item onClick={() => setOpenProfileMenu(false)}>
+				<Menu.Item key={4} onClick={() => setOpenProfileMenu(false)}>
 					<Flex gap={18}>
 						<SettingOutlined
 							style={{ fontSize: fontSizeHeading5 }}
@@ -139,7 +141,7 @@ const useProfileMenu = (
 						</Text>
 					</Flex>
 				</Menu.Item>
-				<Menu.Item onClick={() => setOpenProfileMenu(false)}>
+				<Menu.Item key={5} onClick={() => setOpenProfileMenu(false)}>
 					<Flex gap={18}>
 						<UserSwitchOutlined
 							style={{ fontSize: fontSizeHeading5 }}
@@ -154,6 +156,7 @@ const useProfileMenu = (
 					</Flex>
 				</Menu.Item>
 				<Menu.Item
+					key={6}
 					onClick={() => {
 						setOpenProfileMenu(false);
 						setTimeout(() => setOpenLogOutModal(true), 300);

@@ -2,7 +2,11 @@
   border-radius: 0;
 }
 
-
+.notification-popver .ant-popover-content .ant-popover-inner, .ant-popover-inner {
+  padding: 20px !important;
+  width:400px;
+  background-color: red;
+}
 
 .navbar-header {
   font-family: "Roboto"

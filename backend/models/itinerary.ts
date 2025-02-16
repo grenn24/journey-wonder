@@ -13,9 +13,17 @@ const itinerarySchema = new mongoose.Schema({
 	},
 	travellers: [
 		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "User",
-			required: true,
+			email: {
+				type: String,
+				required: true,
+				lowercase: true,
+				maxLength: 255,
+			},
+			permission: {
+				type: String,
+				enum: ["Read","Edit"],
+				required: true,
+			},
 		},
 	],
 	title: {

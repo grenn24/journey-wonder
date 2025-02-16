@@ -8,6 +8,7 @@ import themeSliceReducer from "./slices/theme";
 import languageSliceReducer from "./slices/language";
 import userSliceReducer from "./slices/user";
 import { persistStore } from "redux-persist";
+import createJourneyReducer from "./slices/createJourney.ts";
 
 // Enable map state variables
 enableMapSet();
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
 	theme: themeSliceReducer,
 	language: languageSliceReducer,
 	user: userSliceReducer,
+	createJourney: createJourneyReducer
 });
 
 const persistedRootReducer = persistReducer(persistConfig, rootReducer);
