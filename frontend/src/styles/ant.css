@@ -1,13 +1,34 @@
 .custom-checkbox .ant-checkbox-inner {
-  border-radius: 0;
+	border-radius: 0;
 }
 
-.notification-popver .ant-popover-content .ant-popover-inner, .ant-popover-inner {
-  padding: 20px !important;
-  width:400px;
-  background-color: red;
+.notification-popver .ant-popover-content .ant-popover-inner,
+.ant-popover-inner {
+	padding: 20px !important;
+	width: 400px;
+	background-color: red;
 }
 
 .navbar-header {
-  font-family: "Roboto"
+	font-family: "Roboto";
+}
+
+.ant-upload.ant-upload-select , .ant-upload-list-item , .ant-upload-list{
+	width: 200px !important;
+	height: 200px !important
+}
+
+.ant-picker-input input {
+	font-size: 18px !important;
+}
+
+/*
+.ant-picker-input input::placeholder {
+  color: rgba(0, 0, 0, 0.47)  !important;  Standard for modern browsers 
+}
+*/
+
+.ant-upload-picture-card-wrapper {
+	width:100%;
+	height:180px
 }

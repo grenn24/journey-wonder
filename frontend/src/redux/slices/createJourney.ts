@@ -2,20 +2,25 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { JSX } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { arrayContains } from "../../utilities/array";
+import { UploadFile } from "antd";
 
 interface createJourneyState {
-	currentStage: number,
+	currentStage: number;
 	title: string;
 	selectedDestinations: { label: JSX.Element; key: number; value: string }[];
 	startDate: Dayjs | null;
 	endDate: Dayjs | null;
+	image: UploadFile | null;
+	selectedTravellers: string[];
 }
 const initialState: createJourneyState = {
-	currentStage:0,
+	currentStage: 0,
 	title: "",
 	selectedDestinations: [],
 	startDate: null,
 	endDate: null,
+	image: null,
+	selectedTravellers: [],
 };
 export const createJourneySlice = createSlice({
 	// Name of slice
@@ -63,6 +68,19 @@ export const createJourneySlice = createSlice({
 				(value) => value.key !== action.payload
 			);
 		},
+		addTraveller: (state, action: PayloadAction<string>) => {
+			if (!state.selectedTravellers.includes(action.payload)) {
+				state.selectedTravellers = [
+					...state.selectedTravellers,
+					action.payload,
+				];
+			}
+		},
+		removeTraveller: (state, action: PayloadAction<string>) => {
+			state.selectedTravellers = state.selectedTravellers.filter(
+				(email) => email !== action.payload
+			);
+		},
 		setStartDate: (state, action: PayloadAction<Dayjs | null>) => {
 			state.startDate = action.payload;
 		},
@@ -81,7 +99,14 @@ export const createJourneySlice = createSlice({
 			state.currentStage < 1 && state.currentStage++;
 		},
 		decrementStage: (state) => {
-			state.currentStage >0  && state.currentStage--;
+			state.currentStage > 0 && state.currentStage--;
+		},
+		setImage: (state, action: PayloadAction<UploadFile | null>) => {
+			state.image = action.payload;
+			action.payload?.uid;
+		},
+		deleteImage: (state) => {
+			state.image = null;
 		},
 	},
 });
@@ -98,7 +123,11 @@ export const {
 	setDates,
 	resetDates,
 	incrementStage,
-	decrementStage
+	decrementStage,
+	setImage,
+	deleteImage,
+	addTraveller,
+	removeTraveller,
 } = createJourneySlice.actions;
 
 const createJourneyReducer = createJourneySlice.reducer;

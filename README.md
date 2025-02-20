@@ -11,3 +11,7 @@ docker run -p 3000:3000 -p 27017:27017 journey-wonder
 - Theme not persisting
 - Pushing Docker image to GitHub container registry
 - GitHub action workflows
+
+# Possible Features
+- Semi transparent modal
+- login input validation real time

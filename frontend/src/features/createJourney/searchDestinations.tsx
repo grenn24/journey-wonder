@@ -16,6 +16,7 @@ const searchDestinations = (destination: string, token: GlobalToken) => {
 		.map((country) => ({
 			value: country.name,
 			key: country.id,
+			type: "country",
 			label: (
 				<Flex
 					justify="space-between"
@@ -41,6 +42,7 @@ const searchDestinations = (destination: string, token: GlobalToken) => {
 		.map((region) => ({
 			value: region.name,
 			key: region.id,
+			type:"region",
 			label: (
 				<Flex justify="space-between" align="center" style={{height:32}}>
 					<Text>{region.name}</Text>
@@ -62,14 +64,18 @@ const searchDestinations = (destination: string, token: GlobalToken) => {
 		.map((state) => ({
 			value: state.name,
 			key: state.id,
+			type: "state",
 			label: (
-				<Flex justify="space-between" align="center" style={{height:32}}>
+				<Flex
+					justify="space-between"
+					align="center"
+					style={{ height: 32 }}
+				>
 					<Text>{state.name}</Text>
 					<Tag
 						bordered={false}
 						style={{
 							backgroundColor: token.colorBgTextActive,
-
 						}}
 					>
 						State
@@ -85,6 +91,7 @@ const searchDestinations = (destination: string, token: GlobalToken) => {
 			.map((state) => ({
 				value: state.name,
 				key: state.id,
+				type: "city",
 				label: (
 					<Flex
 						justify="space-between"

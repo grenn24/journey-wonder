@@ -22,10 +22,11 @@ import { ArrowForwardIosRounded } from "@mui/icons-material";
 import { useState } from "react";
 import useLanguageMenuItems from "./menus/languageMenuItems";
 import useHeaderMenuItems from "./menus/headerMenuItems";
-import journeyWonder from "../../assets/images/journey-wonder.png";
+import journeyWonderIcon from "../../assets/images/journey-wonder-icon/svg/journey-wonder-icon-white-background-normal.svg";
 import MobileDrawerMenu from "./MobileDrawerMenu";
 import i18n from "../../i18n";
 import ExploreJourneysDrawer from "../../components/ExploreJourneysDrawer";
+import LanguageMenu from "./LanguageMenu";
 
 const options = [
 	{
@@ -46,10 +47,10 @@ const GuestHeader = () => {
 	const breakpoints = useBreakpoints();
 	const navigate = useNavigate();
 	const [openMobileDrawerMenu, setOpenMobileDrawerMenu] = useState(false);
-		const [openExploreJourneysDrawer, setOpenExploreJourneysDrawer] =
-			useState(false);
-    const languageMenuItems = useLanguageMenuItems();
-    const headerMenuItems = useHeaderMenuItems();
+	const [openExploreJourneysDrawer, setOpenExploreJourneysDrawer] =
+		useState(false);
+	const languageMenuItems = useLanguageMenuItems();
+	const headerMenuItems = useHeaderMenuItems();
 	const {
 		token: {
 			colorBgContainer,
@@ -62,16 +63,16 @@ const GuestHeader = () => {
 	const { language } = useAppSelector((state) => ({
 		language: state.language.language,
 	}));
-    	const selectedItem =
-			location.pathname.split("/").slice(2).length !== 0
-				? location.pathname.split("/").slice(2)[0]
-				: "home";
+	const selectedItem =
+		location.pathname.split("/").slice(2).length !== 0
+			? location.pathname.split("/").slice(2)[0]
+			: "home";
 	return (
 		<>
 			<Header
 				style={{
 					backgroundColor: colorBgContainer,
-					padding: "0px 25px",
+					padding: "0px 20px",
 					display: "flex",
 					justifyContent: "center",
 				}}
@@ -79,18 +80,20 @@ const GuestHeader = () => {
 				<Flex
 					justify="space-between"
 					align="center"
-					style={{ width: 1400 }}
+					style={{ width: 1200 }}
 				>
-					<Space style={{ fontWeight: 400 }}>
+					<Flex gap={20}>
 						<a
 							href="/guest"
 							target="_self"
 							rel="noopener noreferrer"
+							title="Journey Wonder"
 						>
 							<Image
-								width={70}
-								src={journeyWonder}
+								width={50}
+								src={journeyWonderIcon}
 								preview={false}
+								style={{ marginBottom: 2 }}
 							/>
 						</a>
 						{breakpoints.largerThan("lg") && (
@@ -101,92 +104,87 @@ const GuestHeader = () => {
 								disabledOverflow
 							/>
 						)}
-					</Space>
-					{breakpoints.largerThan("lg") ? (
-						<Flex gap={10} align="center">
-							<AutoComplete
-								popupClassName="certain-category-search-dropdown"
-								popupMatchSelectWidth
-								style={{ width: 170, alignItems: "center" }}
-								options={options}
-							>
-								<Input
-									prefix={
-										<SearchOutlined
-											style={{ marginRight: 5 }}
+					</Flex>
+					<Flex gap={17} align="center">
+						{breakpoints.largerThan("xl") ? (
+							<>
+								<AutoComplete
+									popupClassName="certain-category-search-dropdown"
+									popupMatchSelectWidth
+									style={{ width: 200, alignItems: "center" }}
+									options={options}
+								>
+									<Input
+										prefix={
+											<SearchOutlined
+												style={{ marginRight: 5 }}
+											/>
+										}
+										size="large"
+										placeholder={i18n.t(
+											"Ask JourneyWonder AI"
+										)}
+										variant="filled"
+									/>
+								</AutoComplete>
+								<LanguageMenu />
+								<Button
+									variant="text"
+									color="default"
+									size="large"
+									onClick={() => navigate("account/log-in")}
+									style={{ fontWeight: "bold" }}
+									iconPosition="end"
+									icon={
+										<ArrowForwardIosRounded
+											style={{
+												fontSize: 14,
+											}}
 										/>
 									}
+								>
+									{i18n.t("Log In")}
+								</Button>
+								<Button
+									variant="solid"
+									color="primary"
 									size="large"
-									placeholder={i18n.t("Ask JourneyWonder AI")}
-									variant="filled"
-								/>
-							</AutoComplete>
-							<Dropdown
-								menu={{
-									items: languageMenuItems,
-									selectedKeys: [language],
-								}}
-								placement="bottom"
-							>
+									style={{ fontWeight: "bold" }}
+									iconPosition="end"
+									icon={
+										<ArrowForwardIosRounded
+											style={{
+												fontSize: 14,
+											}}
+										/>
+									}
+								>
+									{i18n.t("Sign Up")}
+								</Button>
+							</>
+						) : (
+							<>
 								<Button
 									variant="filled"
 									color="default"
 									size="large"
-									icon={<GlobalOutlined />}
+									icon={<SearchOutlined />}
+									onClick={() =>
+										setOpenExploreJourneysDrawer(true)
+									}
 								/>
-							</Dropdown>
-							<Button
-								variant="text"
-								color="default"
-								size="large"
-								onClick={() => navigate("account/log-in")}
-								style={{ fontWeight: fontWeightStrong }}
-								iconPosition="end"
-								icon={
-									<ArrowForwardIosRounded
-										style={{
-											fontSize: 14,
-										}}
-									/>
-								}
-							>
-								{i18n.t("Log In")}
-							</Button>
-							<Button
-								variant="solid"
-								color="primary"
-								size="large"
-								style={{ fontWeight: fontWeightStrong }}
-								iconPosition="end"
-								icon={
-									<ArrowForwardIosRounded
-										style={{
-											fontSize: 14,
-										}}
-									/>
-								}
-							>
-								{i18n.t("Sign Up")}
-							</Button>
-						</Flex>
-					) : (
-						<Flex gap={15} align="center">
-							<Button
-								variant="filled"
-								color="default"
-								size="large"
-								icon={<SearchOutlined />}
-								onClick={()=>setOpenExploreJourneysDrawer(true)}
-							/>
-							<Button
-								variant="solid"
-								color="primary"
-								size="large"
-								icon={<MenuOutlined />}
-								onClick={() => setOpenMobileDrawerMenu(true)}
-							/>
-						</Flex>
-					)}
+								<Button
+									variant="solid"
+									color="primary"
+									size="large"
+									icon={<MenuOutlined />}
+									onClick={() =>
+										setOpenMobileDrawerMenu(true)
+									}
+								/>
+							</>
+						)}{" "}
+					</Flex>
 				</Flex>
 			</Header>
 			<MobileDrawerMenu

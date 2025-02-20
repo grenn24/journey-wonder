@@ -13,7 +13,7 @@ export const languageCodeMap: Record<Language, string> = {
 };
 
 export const languageFontMap: Record<string, string> = {
-	[Language.EnglishUK]: "Roboto",
+	[Language.EnglishUK]: "Outfit",
 	[Language.ChineseSimplified]: "Noto Sans SC",
 	[Language.Japanese]: "Noto Sans JP",
 };

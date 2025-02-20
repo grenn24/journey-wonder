@@ -78,9 +78,9 @@ const userSchema = new mongoose.Schema(
 );
 
 // Add a validate method to the model
-userSchema.statics.validate = validatePost;
+userSchema.statics.validate = validateUserPost;
 
-export function validatePost(user: any) {
+export function validateUserPost(user: any) {
 	const userSchema = Joi.object({
 		name: Joi.string().max(70).required(),
 		email: Joi.string().max(255).email().required(),

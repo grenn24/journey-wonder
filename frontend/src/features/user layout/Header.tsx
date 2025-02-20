@@ -17,7 +17,7 @@ import useBreakpoints from "../../utilities/breakpoints";
 import { NotificationsNoneRounded } from "@mui/icons-material";
 import useProfileMenu from "./menus/profileMenu";
 import { useState } from "react";
-import journeyWonder from "../../assets/images/journey-wonder.png";
+import journeyWonderIcon from "../../assets/images/journey-wonder-icon/svg/journey-wonder-icon-white-background-normal.svg";
 import authService from "../../services/auth";
 import { useNavigate } from "react-router-dom";
 import i18next from "i18next";
@@ -61,7 +61,7 @@ const UserHeader = () => {
 			<HeaderBase
 				style={{
 					backgroundColor: colorBgContainer,
-					padding: "0 25px",
+					padding: "0 20px",
 					display: "flex",
 					justifyContent: "center",
 				}}
@@ -69,10 +69,22 @@ const UserHeader = () => {
 				<Flex
 					justify="space-between"
 					align="center"
-					style={{ width: 1200 }}
+					style={{ width: 1000 }}
 				>
-					<Image width={70} src={journeyWonder} preview={false} />
-					<Flex gap={15} align="center">
+					<a
+						href="/user"
+						target="_self"
+						rel="noopener noreferrer"
+						title="Journey Wonder"
+					>
+						<Image
+							width={50}
+							src={journeyWonderIcon}
+							preview={false}
+							style={{ marginBottom: 2 }}
+						/>
+					</a>
+					<Flex gap={17} align="center">
 						{breakpoints.largerThan("md") ? (
 							<>
 								<Input
@@ -109,6 +121,7 @@ const UserHeader = () => {
 											backgroundColor: "green",
 											verticalAlign: "middle",
 											flexShrink: 0,
+											cursor: "pointer",
 										}}
 									>
 										{name.charAt(0).toUpperCase()}
@@ -126,13 +139,14 @@ const UserHeader = () => {
 										setOpenExploreJourneysDrawer(true)
 									}
 								/>
-							<NotificationButton />
+								<NotificationButton />
 							</>
 						)}
 					</Flex>
 				</Flex>
 			</HeaderBase>
 			<Modal
+				closable={false}
 				open={openLogOutModal}
 				title={i18next.t("Log Out")}
 				onOk={handleLogOut}
@@ -140,6 +154,11 @@ const UserHeader = () => {
 				centered
 				okText={i18next.t("Yes")}
 				cancelText={i18next.t("No")}
+				styles={{
+					wrapper: {
+						backdropFilter: `blur(5px)`,
+					},
+				}}
 			>
 				<Text>{i18next.t("Are you sure you want to log out?")}</Text>
 			</Modal>

@@ -23,7 +23,7 @@ const resources = {
 			"Switch Accounts": "切转帐户",
 			"Log Out": "退出",
 			"Explore Journeys": "探索旅程",
-			"Create a Journey": "创建旅程",
+			"Create a new journey": "创建新旅程",
 			"Are you sure you want to log out?": "你是否确定退出？",
 			Yes: "是",
 			No: "不",
@@ -62,7 +62,7 @@ const resources = {
 			"Switch Accounts": "アカウントの切り替え",
 			"Log Out": "ログアウト",
 			"Explore Journeys": "旅を探索する",
-			"Create a Journey": "旅を創る",
+			"Create a new journey": "新たな旅を創る",
 			"Are you sure you want to log out?":
 				"サインアウトしてもよろしいですか?",
 			Yes: "はい",

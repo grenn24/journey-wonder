@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/store";
 import i18n from "../i18n";
 
+const { Title } = Typography;
 const Login = () => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
@@ -34,7 +35,6 @@ const Login = () => {
 		authService
 			.login(body, dispatch)
 			.then(({ data }) => {
-					
 				setLoading(false);
 				navigate("/user");
 				form.resetFields();
@@ -63,7 +63,18 @@ const Login = () => {
 			align="center"
 			style={{ background: colorBgContainer, height: "100vh" }}
 		>
-			<Card style={{ width: 420, border: `1.5px solid ${colorBorder}` }}>
+			<Card
+				style={{
+					width: 450,
+					border: `1.5px solid ${colorBorder}`,
+					padding: 9,
+				}}
+				title={
+					<Title level={3} style={{ marginBottom: 3, marginLeft: 5 }}>
+						Log In
+					</Title>
+				}
+			>
 				<Form form={form} onFinish={handleFormSubmit} layout="vertical">
 					<Form.Item
 						label={i18n.t("Email")}
@@ -88,10 +99,7 @@ const Login = () => {
 							},
 						]}
 					>
-						<Input
-							autoComplete="email"
-							style={{ borderRadius: 9 }}
-						/>
+						<Input size="large" autoComplete="email" />
 					</Form.Item>
 					<Form.Item
 						label={i18n.t("Password")}
@@ -103,10 +111,7 @@ const Login = () => {
 							},
 						]}
 					>
-						<Input.Password
-							autoComplete="password"
-							style={{ borderRadius: 9 }}
-						/>
+						<Input.Password size="large" autoComplete="password" />
 					</Form.Item>
 					<Form.Item label={null}>
 						<Flex justify="space-between" align="center">

@@ -6,6 +6,9 @@ import Guest from "./layouts/Guest";
 import Login from "./pages/Log-In";
 import User from "./layouts/User";
 import useTheme from "./styles/useTheme";
+import ProtectedRoutes from "./components/ProtectedRoutes";
+import NotFound from "./pages/NotFound";
+import Home from "./pages/Home";
 
 const { Text } = Typography;
 
@@ -16,7 +19,7 @@ const App = () => {
 			<BrowserRouter>
 				<Routes>
 					{/*Non-protected routes*/}
-					<Route index />
+					<Route index element={<Home />}/>
 					<Route path="guest" element={<Guest />}>
 						<Route path="about" />
 						<Route path="pricing" />
@@ -27,23 +30,25 @@ const App = () => {
 						<Route path="sign-up" />
 					</Route>
 					{/*Protected routes*/}
-					<Route path="user" element={<User />}>
-						<Route index />
-						<Route path="explore" />
+					<Route element={<ProtectedRoutes />}>
+						<Route path="user" element={<User />}>
+							<Route index />
+							<Route path="explore" />
 
-						<Route path="journey">
-							<Route path=":journeyID" />
+							<Route path="journey">
+								<Route path=":journeyID" />
 
-							<Route path="upcoming" />
-							<Route path="completed" />
-							<Route path="deleted" />
+								<Route path="upcoming" />
+								<Route path="completed" />
+								<Route path="deleted" />
+							</Route>
+
+							<Route path="profile" />
+							<Route path="settings" />
 						</Route>
-
-						<Route path="profile" />
-						<Route path="settings" />
 					</Route>
 					{/*Missed routes*/}
-					<Route path="*" />
+					<Route path="*" element={<NotFound />} />
 				</Routes>
 			</BrowserRouter>
 		</ConfigProvider>

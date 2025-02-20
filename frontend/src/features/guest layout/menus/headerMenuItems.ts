@@ -7,7 +7,6 @@ const useHeaderMenuItems =()=> {
     	 const {
 				token: {
 					colorBgContainer,
-					fontWeightStrong,
 					fontSizeHeading5,
 					colorText,
 				},
@@ -18,8 +17,8 @@ const useHeaderMenuItems =()=> {
 			key: "home",
 			onClick: () => navigate(""),
 			style: {
-				fontFamily: "Roboto",
-				fontWeight: fontWeightStrong,
+				fontFamily: "Outfit",
+				fontWeight: 600,
 				fontSize: fontSizeHeading5,
 			},
 		},
@@ -28,8 +27,8 @@ const useHeaderMenuItems =()=> {
 			key: "explore",
 			onClick: () => navigate("explore"),
 			style: {
-				fontFamily: "Roboto",
-				fontWeight: fontWeightStrong,
+				fontFamily: "Outfit",
+				fontWeight: 600,
 				fontSize: fontSizeHeading5,
 			},
 		},
@@ -38,8 +37,8 @@ const useHeaderMenuItems =()=> {
 			key: "pricing",
 			onClick: () => navigate("pricing"),
 			style: {
-				fontFamily: "Roboto",
-				fontWeight: fontWeightStrong,
+				fontFamily: "Outfit",
+				fontWeight: 600,
 				fontSize: fontSizeHeading5,
 			},
 		},
@@ -48,8 +47,8 @@ const useHeaderMenuItems =()=> {
 			key: "about",
 
 			style: {
-				fontFamily: "Roboto",
-				fontWeight: fontWeightStrong,
+				fontFamily: "Outfit",
+				fontWeight: 600,
 				fontSize: fontSizeHeading5,
 			},
 			children: [

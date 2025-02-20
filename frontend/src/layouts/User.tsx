@@ -40,13 +40,13 @@ const User = () => {
 		},
 	} = theme.useToken();
 	const [splitterSize, setSplitterSize] = useState<(number | string)[]>([
-		280,
+		0.10 * document.documentElement.clientWidth,
 		"100%",
 	]);
 
 	const breakpoints = useBreakpoints();
 	const leftMenuItems = useLeftMenuItems(splitterSize);
-	const { Text } = Typography;
+
 	const [openCreateModal, setOpenCreateModal] = useState(false);
 
 	const selectedLeftMenuItem =
@@ -137,9 +137,11 @@ const User = () => {
 			</Layout>
 			{breakpoints.largerThan("md") && (
 				<Tooltip
-					title={i18next.t("Create a Journey")}
+					title={i18next.t("Create a new journey")}
 					color="primary"
 					placement="left"
+					arrow={false}
+					styles={{body:{position:"relative", right:15}}}
 				>
 					<FloatButton
 						style={{ width: 50, height: 50 }}

@@ -24,3 +24,5 @@ config
 *.sln
 *.sw?
 .env
+
+src/assets

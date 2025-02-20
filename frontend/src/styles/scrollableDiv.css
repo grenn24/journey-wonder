@@ -1,0 +1,9 @@
+.left-button, .right-button {
+    opacity:0;
+    transition: opacity 0.5s ease;
+}
+
+.scrollable-div:hover .left-button,
+.scrollable-div:hover .right-button {
+    opacity: 1;
+}

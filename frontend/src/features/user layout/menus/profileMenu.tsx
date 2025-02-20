@@ -32,7 +32,7 @@ import { Language, setLanguage } from "../../../redux/slices/language";
 import { setTheme, Theme } from "../../../redux/slices/theme";
 import i18next from "i18next";
 
-const { Text } = Typography;
+const { Text,Title} = Typography;
 
 const useProfileMenu = (
 	setOpenProfileMenu: (value: boolean) => void,
@@ -187,7 +187,9 @@ const useProfileMenu = (
 						onClick={() => setProfileMenuSection("Home")}
 					/>
 
-					<Text>{i18next.t("Language")}</Text>
+					<Title level={5} style={{ margin: 0 }}>
+						{i18next.t("Language")}
+					</Title>
 				</Flex>
 				<Menu.Divider />
 				{Object.values(Language).map((language) => (
@@ -221,7 +223,9 @@ const useProfileMenu = (
 						onClick={() => setProfileMenuSection("Home")}
 					/>
 
-					<Text>{i18next.t("Appearance")}</Text>
+					<Title level={5} style={{ margin: 0 }}>
+						{i18next.t("Appearance")}
+					</Title>
 				</Flex>
 				<Menu.Divider />
 				<Segmented
@@ -229,7 +233,7 @@ const useProfileMenu = (
 					onChange={(value) => dispatch(setTheme(value))}
 					shape="round"
 					block
-					style={{marginTop:10, marginBottom:10}}
+					style={{ marginTop: 10, marginBottom: 10 }}
 					options={[
 						{
 							value: Theme.System,

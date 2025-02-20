@@ -8,6 +8,7 @@ import store, { persistor } from "./redux/store.ts";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
+/*
 WebFont.load({
 	google: {
 		families: [
@@ -16,9 +17,11 @@ WebFont.load({
 			"Noto Sans",
 			"Noto Sans JP",
 			"Noto Sans SC",
+			"Nunito"
 		],
 	},
 });
+*/
 
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>

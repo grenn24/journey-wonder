@@ -17,6 +17,7 @@ import {
 } from "antd";
 import { Content, Header } from "antd/es/layout/layout";
 import React, { useRef, useState } from "react";
+import CloseButton from "./CloseButton";
 
 const data = [
 	"Racing car sprays burning fuel into crowd.",
@@ -77,7 +78,7 @@ const ExploreJourneysDrawer = ({
 							color="default"
 							icon={<WestRounded />}
 							onClick={() => setOpenExploreJourneysDrawer(false)}
-							style={{flexShrink:0}}
+							style={{ flexShrink: 0 }}
 						/>
 
 						<Input
@@ -89,13 +90,9 @@ const ExploreJourneysDrawer = ({
 							placeholder="Ask JourneyWonder AI"
 						/>
 						{inputValue ? (
-							<Button
+							<CloseButton
 								size="large"
-								variant="filled"
-								color="default"
-								style={{ flexShrink: 0 }}
-								icon={<ClearRounded style={{fontSize:22, marginTop:3, marginLeft:1}}/>}
-								onClick={() => setInputValue("")}
+								handleButtonClick={() => setInputValue("")}
 							/>
 						) : (
 							<Button
@@ -114,12 +111,7 @@ const ExploreJourneysDrawer = ({
 						footer={<div>Footer</div>}
 						bordered
 						dataSource={data}
-						renderItem={(item) => (
-							<List.Item>
-							
-								{item}
-							</List.Item>
-						)}
+						renderItem={(item) => <List.Item>{item}</List.Item>}
 					/>
 				</Content>
 			</Layout>
