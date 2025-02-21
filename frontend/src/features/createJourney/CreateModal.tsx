@@ -28,6 +28,7 @@ import {
 	reset,
 } from "../../redux/slices/createJourney.ts";
 import { createElement, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 
 interface Prop {
 	openCreateModal: boolean;
@@ -119,18 +120,17 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 				}
 				style={{
 					header: {
-						padding: 4,	
+						padding: 2,
 					},
 					body: {
-						padding: 4,
-						height: 330,
+						padding: 2,
+						height: 370,
 					},
 					footer: {
-						padding: 4,
+						padding: 0,
 					},
 				}}
 				width={600}
-		
 				footer={
 					<Flex justify="center">
 						{currentStage !== 1 ? (
@@ -161,7 +161,9 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 					</Flex>
 				}
 			>
-				{createElement(stages[currentStage])}
+			
+						{createElement(stages[currentStage])}
+				
 			</Modal>
 			<Modal
 				centered

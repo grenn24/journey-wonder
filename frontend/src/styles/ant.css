@@ -13,9 +13,11 @@
 	font-family: "Roboto";
 }
 
-.ant-upload.ant-upload-select , .ant-upload-list-item , .ant-upload-list{
+.ant-upload.ant-upload-select,
+.ant-upload-list-item,
+.ant-upload-list {
 	width: 200px !important;
-	height: 200px !important
+	height: 200px !important;
 }
 
 .ant-picker-input input {
@@ -29,6 +31,16 @@
 */
 
 .ant-upload-picture-card-wrapper {
-	width:100%;
-	height:180px
+	width: 100%;
+	height: 180px;
+}
+
+
+.draggable-upload-image .ant-upload-drag,  .draggable-upload-image{
+    height:200px;
+	width:100%
+}
+
+.invisible-upload-image {
+	display:none !important
 }

@@ -24,13 +24,21 @@ import {
 import { UploadFileStatus } from "antd/es/upload/interface";
 import "../../styles/ant.css";
 import { useMuiTheme } from "../../styles/useTheme";
-import Image from "../../components/Image";
-import { ClearRounded, DeleteOutlineRounded } from "@mui/icons-material";
+import ImageViewer from "../../components/Image";
+import {
+	ClearRounded,
+	DeleteOutlineRounded,
+	DeleteRounded,
+	PanoramaRounded,
+} from "@mui/icons-material";
 import Dragger from "antd/es/upload/Dragger";
 import "../../styles/ant.css";
 import CloseButton from "../../components/CloseButton";
 import ScrollableDiv from "../../components/ScrollableDiv";
 import userService from "../../services/user";
+import { AnimatePresence, motion } from "motion/react";
+import ImageUpload from "../../components/Image/ImageUpload";
+import Image from "../../components/Image";
 
 const { Text } = Typography;
 const StageTwo = () => {
@@ -46,6 +54,7 @@ const StageTwo = () => {
 	}));
 
 	const [isTravellersExpanded, setIsTravellersExpanded] = useState(false);
+	const [fileList, setFileList] = useState<UploadFile<any>[]>([]);
 
 	return (
 		<Flex vertical justify="space-between" style={{ height: "100%" }}>
@@ -61,97 +70,138 @@ const StageTwo = () => {
 					}}
 					style={{ borderWidth: 2, borderColor: colorBorder }}
 				>
-					{isTravellersExpanded ? (
-						<Flex vertical gap={10}>
-							<Text style={{ textAlign: "left", width: "100%" }}>
-								Travellers
-							</Text>
-							<Input
-								type="email"
-								status={
-									isEmailValid || !traveller
-										? undefined
-										: "error"
-								}
-								size="large"
-								placeholder="Send an email invite to your friends"
-								value={traveller}
-								onClick={(e) => e.stopPropagation()}
-								onChange={(e) => {
-									setTraveller(e.target.value);
-									setIsEmailValid(
-										!userService.validateEmail(
-											e.target.value
-										)
-									);
-								}}
-								onKeyDown={(e) => {
-									if (e.key === "Enter" && isEmailValid) {
-										dispatch(addTraveller(traveller));
-										setTraveller("");
-									}
-								}}
-								required
-								style={{ width: "100%" }}
-								suffix={
-									<CloseButton
-										variant="text"
-										handleButtonClick={(e) => {
-											e.stopPropagation();
-											setTraveller("");
-										}}
-										style={{
-											opacity: traveller ? 1 : 0,
-											cursor: "pointer",
-										}}
-									/>
-								}
-							/>
-							<ScrollableDiv
-								height={35}
-								style={{
-									display:
-										selectedTravellers.length === 0
-											? "none"
-											: "flex",
+					<AnimatePresence>
+						{isTravellersExpanded ? (
+							<motion.div
+								key="expanded"
+								initial={{ height: 0, opacity: 0, y: -25 }}
+								animate={{ height: "auto", opacity: 1, y: 0 }}
+								exit={{ height: 0, opacity: 0, y: -30 }}
+								transition={{
+									duration: 0.3,
+									ease: "easeInOut",
 								}}
 							>
-								{selectedTravellers?.map((email) => (
-									<Tag
-										bordered
-										closeIcon={
-											<ClearRounded
+								<Flex vertical gap={10}>
+									<Text
+										style={{
+											textAlign: "left",
+											width: "100%",
+										}}
+									>
+										Travellers
+									</Text>
+									<Input
+										type="email"
+										status={
+											isEmailValid || !traveller
+												? undefined
+												: "error"
+										}
+										size="middle"
+										placeholder="Send an email invite to your friends"
+										value={traveller}
+										onClick={(e) => e.stopPropagation()}
+										onChange={(e) => {
+											setTraveller(e.target.value);
+											setIsEmailValid(
+												!userService.validateEmail(
+													e.target.value
+												)
+											);
+										}}
+										onKeyDown={(e) => {
+											if (
+												e.key === "Enter" &&
+												isEmailValid
+											) {
+												dispatch(
+													addTraveller(traveller)
+												);
+												setTraveller("");
+											}
+										}}
+										required
+										style={{ width: "100%" }}
+										suffix={
+											<CloseButton
+												variant="text"
+												handleButtonClick={(e) => {
+													e.stopPropagation();
+													setTraveller("");
+												}}
 												style={{
-													fontSize: 16,
-													marginLeft: 8,
+													opacity: traveller ? 1 : 0,
+													cursor: "pointer",
 												}}
 											/>
 										}
-										onClose={() =>
-											dispatch(removeTraveller(email))
-										}
-										onClick={(e) => e.stopPropagation()}
+									/>
+									<ScrollableDiv
+										height={35}
 										style={{
-											borderColor: colorBorder,
-											backgroundColor: colorBgContainer,
-
-											padding: "5px 12px",
-
-											display: "flex",
-											alignItems: "center",
+											display:
+												selectedTravellers.length === 0
+													? "none"
+													: "flex",
 										}}
 									>
-										{email}
-									</Tag>
-								))}
-							</ScrollableDiv>
-						</Flex>
-					) : (
-						<Flex justify="space-between">
-							<Text>Travellers</Text>
-							<Text>{selectedTravellers.length} Travellers</Text>
-						</Flex>
-					)}
+										{selectedTravellers?.map((email) => (
+											<Tag
+												bordered
+												closeIcon={
+													<ClearRounded
+														style={{
+															fontSize: 16,
+															marginLeft: 8,
+														}}
+													/>
+												}
+												onClose={() =>
+													dispatch(
+														removeTraveller(email)
+													)
+												}
+												onClick={(e) =>
+													e.stopPropagation()
+												}
+												style={{
+													borderColor: colorBorder,
+													backgroundColor:
+														colorBgContainer,
+
+													padding: "5px 12px",
+
+													display: "flex",
+													alignItems: "center",
+												}}
+											>
+												{email}
+											</Tag>
+										))}
+									</ScrollableDiv>
+								</Flex>
+							</motion.div>
+						) : (
+							<motion.div
+								key="collapsed"
+								initial={{ height: 0, opacity: 0, y: 0 }}
+								animate={{ height: "auto", opacity: 1, y: 0 }}
+								exit={{ height: 0, opacity: 0, y: 0 }}
+								transition={{
+									duration: 0.3,
+									ease: "easeInOut",
+								}}
+							>
+								<Flex justify="space-between">
+									<Text>Travellers</Text>
+									<Text>
+										{selectedTravellers.length} Travellers
+									</Text>
+								</Flex>
+							</motion.div>
+						)}
+					</AnimatePresence>
 					<Button
 						onClick={() => setIsTravellersExpanded(false)}
 						variant="text"
@@ -167,60 +217,47 @@ const StageTwo = () => {
 					/>
 				</Card>
 			</Flex>
-
-			<ImgCrop rotationSlider showGrid aspect={16 / 9}>
-				{image ? (
-					<Image
-						image={image.originFileObj}
-						width="100%"
-						height={200}
-						buttons={[
-							<Button
-								icon={
-									<DeleteOutlineRounded
-										sx={{
-											fontSize: 24,
-										}}
-									/>
-								}
-								variant="text"
-								color="default"
-								style={{
-									backgroundColor: "rgb(255,255,255,0.6)",
-								}}
-								onClick={() => dispatch(deleteImage())}
-							/>,
-						]}
-					/>
-				) : (
-					<Dragger
-						maxCount={1}
-						listType="picture-card"
-						onChange={({ fileList }) => {
-							if (fileList.length !== 0) {
-								fileList[0].status = "done" as UploadFileStatus;
-								dispatch(setImage({ ...fileList[0] }));
-							} else {
-								dispatch(setImage(null));
-							}
-						}}
-						showUploadList={{
-							showPreviewIcon: false,
-							showRemoveIcon: true,
-						}}
-					>
-						<button
-							style={{ border: 0, background: "none" }}
-							type="button"
-						>
-							<PlusOutlined />{" "}
-							<Text style={{ marginTop: 8 }}>
-								Click or drag a cover photo
-							</Text>
-						</button>{" "}
-					</Dragger>
-				)}
-			</ImgCrop>
+		
+				<ImageUpload
+					className="draggable-upload-image"
+					aspectRatio={16 / 9}
+					images={image ? [image] : []}
+					defaultImageRenderType="block"
+					maxUploads={1}
+					setImages={(images) =>
+						images.length === 0
+							? dispatch(setImage(null))
+							: dispatch(setImage(images[0]))
+					}
+					CustomImageRender={({ image, handleDelete }) => (
+						<Image
+							image={image}
+							buttons={[
+								<Button
+									variant="filled"
+									color="default"
+									style={{
+										backgroundColor: "rgb(255,255,255,0.1)",
+									}}
+									icon={
+										<DeleteOutlineRounded
+											style={{ color: colorBgContainer }}
+										/>
+									}
+									onClick={() => handleDelete()}
+								/>,
+							]}
+						/>
+					)}
+					message={
+						<Flex vertical justify="center" align="center">
+							<PanoramaRounded style={{ fontSize: 38 }} />
+							<Text>Add a picture</Text>
+						</Flex>
+					}
+					acceptedFileTypes="image/jpeg, image/png, image/gif"
+				/>
+	
 		</Flex>
 	);
 };

@@ -10,7 +10,7 @@ interface createJourneyState {
 	selectedDestinations: { label: JSX.Element; key: number; value: string }[];
 	startDate: Dayjs | null;
 	endDate: Dayjs | null;
-	image: UploadFile | null;
+	image: File | null;
 	selectedTravellers: string[];
 }
 const initialState: createJourneyState = {
@@ -101,9 +101,8 @@ export const createJourneySlice = createSlice({
 		decrementStage: (state) => {
 			state.currentStage > 0 && state.currentStage--;
 		},
-		setImage: (state, action: PayloadAction<UploadFile | null>) => {
+		setImage: (state, action: PayloadAction<File | null>) => {
 			state.image = action.payload;
-			action.payload?.uid;
 		},
 		deleteImage: (state) => {
 			state.image = null;

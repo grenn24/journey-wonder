@@ -28,6 +28,7 @@ import dayjs from "dayjs";
 import { useMuiTheme } from "../../styles/useTheme";
 import ScrollableDiv from "../../components/ScrollableDiv";
 import "../../styles/ant.css";
+import { AnimatePresence , motion} from "motion/react";
 
 const { RangePicker } = DatePicker;
 const { Text } = Typography;
@@ -90,45 +91,80 @@ const StageOne = () => {
 						padding: 15,
 					},
 				}}
-				style={{ borderWidth: 2, borderColor: colorBorder }}
+				style={{
+					borderWidth: 2,
+					borderColor: colorBorder,
+					position: "relative",
+				}}
 			>
-				{isTitleExpanded ? (
-					<Flex vertical gap={10}>
-						<Text style={{ textAlign: "left", width: "100%" }}>
-							Title
-						</Text>
-						<Input
-							size="large"
-							placeholder="My trip to ..."
-							value={title}
-							onClick={(e) => e.stopPropagation()}
-							onChange={(e) => dispatch(setTitle(e.target.value))}
-							onKeyDown={(e) =>
-								e.key === "Enter" && setIsTitleExpanded(false)
-							}
-							required
-							style={{ width: "100%" }}
-							suffix={
-								<CloseButton
-									variant="text"
-									handleButtonClick={(e) => {
-										e.stopPropagation();
-										dispatch(setTitle(""));
-									}}
-									style={{
-										opacity: title ? 1 : 0,
-										cursor: "pointer",
-									}}
-								/>
-							}
-						/>
-					</Flex>
-				) : (
-					<Flex justify="space-between">
-						<Text>Title</Text>
-						<Text>{title}</Text>
-					</Flex>
-				)}
+				<AnimatePresence>
+					{isTitleExpanded ? (
+						<>
+							<motion.div
+								key="expanded"
+								initial={{ height: 0, opacity: 0, y: -25 }}
+								animate={{ height: "auto", opacity: 1, y: 0 }}
+								exit={{ height: 0, opacity: 0, y: -25 }}
+								transition={{
+									duration: 0.3,
+									ease: "easeInOut",
+								}}
+							>
+								<Flex vertical gap={10}>
+									<Text
+										style={{
+											textAlign: "left",
+											width: "100%",
+										}}
+									>
+										Title
+									</Text>
+									<Input
+										size="large"
+										placeholder="My trip to ..."
+										value={title}
+										onClick={(e) => e.stopPropagation()}
+										onChange={(e) =>
+											dispatch(setTitle(e.target.value))
+										}
+										onKeyDown={(e) =>
+											e.key === "Enter" &&
+											setIsTitleExpanded(false)
+										}
+										required
+										style={{ width: "100%" }}
+										suffix={
+											<CloseButton
+												variant="text"
+												handleButtonClick={(e) => {
+													e.stopPropagation();
+													dispatch(setTitle(""));
+												}}
+												style={{
+													opacity: title ? 1 : 0,
+													cursor: "pointer",
+												}}
+											/>
+										}
+									/>
+								</Flex>
+							</motion.div>
+						</>
+					) : (
+						<motion.div
+							key="collapsed"
+							initial={{ height: 0, opacity: 0, y: 0 }}
+							animate={{ height: "auto", opacity: 1, y: 0 }}
+							exit={{ height: 0, opacity: 0, y: 0 }}
+							transition={{ duration: 0.3, ease: "easeInOut" }}
+						>
+							<Flex justify="space-between">
+								<Text>Title</Text>
+								<Text>{title}</Text>
+							</Flex>
+						</motion.div>
+					)}
+				</AnimatePresence>
 				<Button
 					onClick={() => setIsTitleExpanded(false)}
 					variant="text"
@@ -156,118 +192,149 @@ const StageOne = () => {
 				}}
 				style={{ borderWidth: 2, borderColor: colorBorder }}
 			>
-				{isDestinationExpanded ? (
-					<Flex vertical gap={10}>
-						<Text style={{ textAlign: "left", width: "100%" }}>
-							Destination(s)
-						</Text>
-						<div onClick={(e) => e.stopPropagation()}>
-							<AutoComplete
-								style={{
-									width: "100%",
-									height:50,
-									color: "red",
-						
-								}}
-								options={options}
-								allowClear={false}
-								value={destination}
-								onSelect={handleDestinationSelect}
-							>
-								<Input
-									placeholder="Japan, China, USA ..."
-									size="large"
-									value={destination}
-									onChange={(e) => {
-										setDestination(e.target.value);
-										setOptions(
-											searchDestinations(
-												e.target.value,
-												token
-											)
-										);
-									}}
-									type="text"
-									required
-									suffix={
-										<CloseButton
-											variant="text"
-											handleButtonClick={(e) => {
-												e.stopPropagation();
-												setDestination("");
-												setOptions([]);
-											}}
-											style={{
-												opacity: destination ? 1 : 0,
-												cursor: "pointer",
-											}}
-										/>
-									}
-								/>
-							</AutoComplete>
-						</div>
-						<ScrollableDiv
-							height={50}
-							style={{
-								display:
-									selectedDestinations.length === 0
-										? "none"
-										: "flex",
+				<AnimatePresence>
+					{isDestinationExpanded ? (
+						<motion.div
+							key="expanded"
+							initial={{ height: 0, opacity: 0, y: -25 }}
+							animate={{ height: "auto", opacity: 1, y: 0 }}
+							exit={{ height: 0, opacity: 0, y: -25 }}
+							transition={{
+								duration: 0.3,
+								ease: "easeInOut",
 							}}
 						>
-							{selectedDestinations?.map((destination) => (
-								<Tag
-									bordered
-									closeIcon={
-										<ClearRounded
-											style={{
-												fontSize: 16,
-												marginLeft: 8,
+							<Flex vertical gap={10}>
+								<Text
+									style={{ textAlign: "left", width: "100%" }}
+								>
+									Destination(s)
+								</Text>
+								<div onClick={(e) => e.stopPropagation()}>
+									<AutoComplete
+										style={{
+											width: "100%",
+											height: 50,
+											color: "red",
+										}}
+										options={options}
+										allowClear={false}
+										value={destination}
+										onSelect={handleDestinationSelect}
+									>
+										<Input
+											placeholder="Japan, China, USA ..."
+											size="large"
+											value={destination}
+											onChange={(e) => {
+												setDestination(e.target.value);
+												setOptions(
+													searchDestinations(
+														e.target.value,
+														token
+													)
+												);
 											}}
+											type="text"
+											required
+											suffix={
+												<CloseButton
+													variant="text"
+													handleButtonClick={(e) => {
+														e.stopPropagation();
+														setDestination("");
+														setOptions([]);
+													}}
+													style={{
+														opacity: destination
+															? 1
+															: 0,
+														cursor: "pointer",
+													}}
+												/>
+											}
 										/>
-									}
-									onClose={() =>
-										dispatch(
-											removeSelectedDestination(
-												destination.key
-											)
-										)
-									}
-									onClick={(e) => e.stopPropagation()}
+									</AutoComplete>
+								</div>
+								<ScrollableDiv
+									height={50}
 									style={{
-										borderColor: colorBorder,
-										backgroundColor: colorBgContainer,
-
-										padding: "5px 12px",
-
-										display: "flex",
-										alignItems: "center",
+										display:
+											selectedDestinations.length === 0
+												? "none"
+												: "flex",
 									}}
 								>
-									{destination.value}
-								</Tag>
-							))}
-						</ScrollableDiv>
-					</Flex>
-				) : (
-					<Flex justify="space-between">
-						<Text>Destination(s)</Text>
-						<Text>{selectedDestinations.length} Places</Text>
-					</Flex>
-				)}
-				<Button
-					onClick={() => setIsDestinationExpanded(false)}
-					variant="text"
-					color="default"
-					style={{
-						position: "absolute",
-						display: isDestinationExpanded ? "flex" : "none",
-						top: 10,
-						right: 10,
-					}}
-					size="small"
-					icon={<ClearRounded />}
-				/>
+									{selectedDestinations?.map(
+										(destination) => (
+											<Tag
+												bordered
+												closeIcon={
+													<ClearRounded
+														style={{
+															fontSize: 16,
+															marginLeft: 8,
+														}}
+													/>
+												}
+												onClose={() =>
+													dispatch(
+														removeSelectedDestination(
+															destination.key
+														)
+													)
+												}
+												onClick={(e) =>
+													e.stopPropagation()
+												}
+												style={{
+													borderColor: colorBorder,
+													backgroundColor:
+														colorBgContainer,
+
+													padding: "5px 12px",
+
+													display: "flex",
+													alignItems: "center",
+												}}
+											>
+												{destination.value}
+											</Tag>
+										)
+									)}
+								</ScrollableDiv>
+							</Flex>
+						</motion.div>
+					) : (
+						<motion.div
+							key="collapsed"
+							initial={{ height: 0, opacity: 0, y: 0 }}
+							animate={{ height: "auto", opacity: 1, y: 0 }}
+							exit={{ height: 0, opacity: 0, y: 0 }}
+							transition={{ duration: 0.3, ease: "easeInOut" }}
+						>
+							<Flex justify="space-between">
+								<Text>Destination(s)</Text>
+								<Text>
+									{selectedDestinations.length} Places
+								</Text>
+							</Flex>
+						</motion.div>
+					)}
+					<Button
+						onClick={() => setIsDestinationExpanded(false)}
+						variant="text"
+						color="default"
+						style={{
+							position: "absolute",
+							display: isDestinationExpanded ? "flex" : "none",
+							top: 10,
+							right: 10,
+						}}
+						size="small"
+						icon={<ClearRounded />}
+					/>
+				</AnimatePresence>
 			</Card>
 			<Card
 				onClick={() => {
@@ -282,87 +349,131 @@ const StageOne = () => {
 				}}
 				style={{ borderWidth: 2, borderColor: colorBorder }}
 			>
-				{isDatesExpanded ? (
-					<>
-						<Text style={{ textAlign: "left", width: "100%" }}>
-							Dates
-						</Text>
-						<div onClick={(e) => e.stopPropagation()}>
-							<RangePicker
-								required
-								variant="outlined"
-								color="default"
-								size="large"
-								style={{ width: "100%", marginTop: 10 }}
-								picker="date"
-								minDate={dayjs()}
-								format="D MMMM YYYY"
-								value={[startDate, endDate]}
-								onClick={(e) => e.stopPropagation()}
-								onChange={(value) => {
-									if (value) {
-										dispatch(setStartDate(value[0]));
-										dispatch(setEndDate(value[1]));
-									} else {
-										dispatch(resetDates());
-									}
+				<AnimatePresence>
+					{isDatesExpanded ? (
+						<>
+							<motion.div
+								key="expanded"
+								initial={{ height: 0, opacity: 0, y: -25 }}
+								animate={{ height: "auto", opacity: 1, y: 0 }}
+								exit={{ height: 0, opacity: 0, y: -25 }}
+								transition={{
+									duration: 0.3,
+									ease: "easeInOut",
 								}}
-								suffixIcon={null}
-								renderExtraFooter={() => (
-									<Flex justify="center">
-										<Button
-											color="primary"
-											variant="text"
-											onClick={() => {
-												if (panelMode === "start") {
-													dispatch(
-														setStartDate(dayjs())
-													);
-													dispatch(
-														setEndDate(endDate)
-													);
-													setPanelMode("end");
-												}
-												if (panelMode === "end") {
-													dispatch(
-														setStartDate(startDate)
-													);
-													dispatch(
-														setEndDate(dayjs())
-													);
-													setPanelMode("start");
-												}
-											}}
-										>
-											Today
-										</Button>
-										<Button
-											color="primary"
-											variant="text"
-											onClick={() => {
-												dispatch(setStartDate(null));
-												dispatch(setEndDate(null));
-											}}
-										>
-											Reset
-										</Button>
-									</Flex>
+							>
+								<Text
+									style={{ textAlign: "left", width: "100%" }}
+								>
+									Dates
+								</Text>
+								<div onClick={(e) => e.stopPropagation()}>
+									<RangePicker
+										required
+										variant="outlined"
+										color="default"
+										size="large"
+										style={{ width: "100%", marginTop: 10 }}
+										picker="date"
+										minDate={dayjs()}
+										format="D MMMM YYYY"
+										value={[startDate, endDate]}
+										onClick={(e) => e.stopPropagation()}
+										onChange={(value) => {
+											if (value) {
+												dispatch(
+													setStartDate(value[0])
+												);
+												dispatch(setEndDate(value[1]));
+											} else {
+												dispatch(resetDates());
+											}
+										}}
+										suffixIcon={null}
+										renderExtraFooter={() => (
+											<Flex justify="center">
+												<Button
+													color="primary"
+													variant="text"
+													onClick={() => {
+														if (
+															panelMode ===
+															"start"
+														) {
+															dispatch(
+																setStartDate(
+																	dayjs()
+																)
+															);
+															dispatch(
+																setEndDate(
+																	endDate
+																)
+															);
+															setPanelMode("end");
+														}
+														if (
+															panelMode === "end"
+														) {
+															dispatch(
+																setStartDate(
+																	startDate
+																)
+															);
+															dispatch(
+																setEndDate(
+																	dayjs()
+																)
+															);
+															setPanelMode(
+																"start"
+															);
+														}
+													}}
+												>
+													Today
+												</Button>
+												<Button
+													color="primary"
+													variant="text"
+													onClick={() => {
+														dispatch(
+															setStartDate(null)
+														);
+														dispatch(
+															setEndDate(null)
+														);
+													}}
+												>
+													Reset
+												</Button>
+											</Flex>
+										)}
+									/>
+								</div>
+							</motion.div>
+						</>
+					) : (
+						<motion.div
+							key="collapsed"
+							initial={{ height: 0, opacity: 0, y: 0 }}
+							animate={{ height: "auto", opacity: 1, y: 0 }}
+							exit={{ height: 0, opacity: 0, y: 0 }}
+							transition={{ duration: 0.3, ease: "easeInOut" }}
+						>
+							<Flex justify="space-between">
+								<Text>Dates</Text>
+								{startDate && endDate && (
+									<Text style={{ whiteSpace: "pre-wrap" }}>
+										{startDate?.format("D MMMM YYYY") +
+											"  -  " +
+											endDate?.format("D MMMM YYYY")}
+									</Text>
 								)}
-							/>
-						</div>
-					</>
-				) : (
-					<Flex justify="space-between">
-						<Text>Dates</Text>
-						{startDate && endDate && (
-							<Text style={{ whiteSpace: "pre-wrap" }}>
-								{startDate?.format("D MMMM YYYY") +
-									"  -  " +
-									endDate?.format("D MMMM YYYY")}
-							</Text>
-						)}
-					</Flex>
-				)}
+							</Flex>
+						</motion.div>
+					)}
+				</AnimatePresence>
 				<Button
 					onClick={() => setIsDatesExpanded(false)}
 					variant="text"

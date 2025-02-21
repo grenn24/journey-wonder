@@ -41,39 +41,40 @@ const useLeftMenuItems = (
 	return [
 		{
 			label: (
-				<Flex align="center" justify="center" gap={10}>
-					<Tooltip
-						title="Home"
-						placement="bottom"
-						arrow={false}
-						color="grey"
-						styles={{
-							body: {
-								opacity: 0.7,
-								position: "relative",
-								top: 14,
-							},
-						}}
-					>
+				<Tooltip
+					title="Home"
+					placement="bottom"
+					arrow={false}
+					color="grey"
+					styles={{
+						body: {
+							opacity: 0.7,
+							position: "relative",
+							top: 14,
+						},
+					}}
+				>
+					<Flex align="center" justify="center" gap={10}>
 						{selectedLeftMenuItem === "home" ? (
 							<HomeRoundedIcon style={{ fontSize: 35 }} />
 						) : (
 							<HomeOutlinedIcon style={{ fontSize: 35 }} />
 						)}
-					</Tooltip>
-					{(splitterSize[0] as number) > 290 && (
-						<Title
-							level={4}
-							style={{
-								fontFamily: "Poppins",
-								fontWeight: 600,
-								marginBottom: 0,
-							}}
-						>
-							{i18next.t("Home")}
-						</Title>
-					)}
-				</Flex>
+
+						{(splitterSize[0] as number) > 290 && (
+							<Title
+								level={4}
+								style={{
+									fontFamily: "Poppins",
+									fontWeight: 600,
+									marginBottom: 0,
+								}}
+							>
+								{i18next.t("Home")}
+							</Title>
+						)}
+					</Flex>{" "}
+				</Tooltip>
 			),
 			key: "home",
 			style: { height: "auto", padding: 11 },
@@ -81,39 +82,40 @@ const useLeftMenuItems = (
 		},
 		{
 			label: (
-				<Flex align="center" justify="center" gap={10}>
-					<Tooltip
-						title="Explore"
-						placement="bottom"
-						arrow={false}
-						color="grey"
-						styles={{
-							body: {
-								opacity: 0.7,
-								position: "relative",
-								top: 14,
-							},
-						}}
-					>
+				<Tooltip
+					title="Explore"
+					placement="bottom"
+					arrow={false}
+					color="grey"
+					styles={{
+						body: {
+							opacity: 0.7,
+							position: "relative",
+							top: 14,
+						},
+					}}
+				>
+					<Flex align="center" justify="center" gap={10}>
 						{selectedLeftMenuItem === "explore" ? (
 							<ExploreRoundedIcon style={{ fontSize: 35 }} />
 						) : (
 							<ExploreOutlinedIcon style={{ fontSize: 35 }} />
 						)}
-					</Tooltip>
-					{(splitterSize[0] as number) > 290 && (
-						<Title
-							level={4}
-							style={{
-								fontFamily: "Poppins",
-								fontWeight: 600,
-								marginBottom: 0,
-							}}
-						>
-							{i18next.t("Explore")}
-						</Title>
-					)}
-				</Flex>
+
+						{(splitterSize[0] as number) > 290 && (
+							<Title
+								level={4}
+								style={{
+									fontFamily: "Poppins",
+									fontWeight: 600,
+									marginBottom: 0,
+								}}
+							>
+								{i18next.t("Explore")}
+							</Title>
+						)}
+					</Flex>
+				</Tooltip>
 			),
 			key: "explore",
 			style: { height: "auto", padding: 11 },
@@ -121,39 +123,40 @@ const useLeftMenuItems = (
 		},
 		{
 			label: (
-				<Flex align="center" justify="center" gap={10}>
-					<Tooltip
-						title="Upcoming Journeys"
-						placement="bottom"
-						arrow={false}
-						color="grey"
-						styles={{
-							body: {
-								opacity: 0.7,
-								position: "relative",
-								top: 14,
-							},
-						}}
-					>
+				<Tooltip
+					title="Upcoming Journeys"
+					placement="bottom"
+					arrow={false}
+					color="grey"
+					styles={{
+						body: {
+							opacity: 0.7,
+							position: "relative",
+							top: 14,
+						},
+					}}
+				>
+					<Flex align="center" justify="center" gap={10}>
 						{selectedLeftMenuItem === "upcoming" ? (
 							<UpcomingRoundedIcon style={{ fontSize: 35 }} />
 						) : (
 							<UpcomingOutlinedIcon style={{ fontSize: 35 }} />
 						)}
-					</Tooltip>
-					{(splitterSize[0] as number) > 290 && (
-						<Title
-							level={4}
-							style={{
-								fontFamily: "Poppins",
-								fontWeight: 600,
-								marginBottom: 0,
-							}}
-						>
-							{i18next.t("Upcoming Journeys")}
-						</Title>
-					)}
-				</Flex>
+
+						{(splitterSize[0] as number) > 290 && (
+							<Title
+								level={4}
+								style={{
+									fontFamily: "Poppins",
+									fontWeight: 600,
+									marginBottom: 0,
+								}}
+							>
+								{i18next.t("Upcoming Journeys")}
+							</Title>
+						)}
+					</Flex>
+				</Tooltip>
 			),
 			key: "upcoming",
 			style: { height: "auto", padding: 11 },
@@ -161,20 +164,20 @@ const useLeftMenuItems = (
 		},
 		{
 			label: (
-				<Flex align="center" justify="center" gap={10}>
-					<Tooltip
-						title="Completed Journeys"
-						placement="bottom"
-						arrow={false}
-						color="grey"
-						styles={{
-							body: {
-								opacity: 0.7,
-								position: "relative",
-								top: 14,
-							},
-						}}
-					>
+				<Tooltip
+					title="Completed Journeys"
+					placement="bottom"
+					arrow={false}
+					color="grey"
+					styles={{
+						body: {
+							opacity: 0.7,
+							position: "relative",
+							top: 14,
+						},
+					}}
+				>
+					<Flex align="center" justify="center" gap={10}>
 						{selectedLeftMenuItem === "completed" ? (
 							<CheckCircleRoundedIcon style={{ fontSize: 35 }} />
 						) : (
@@ -182,20 +185,21 @@ const useLeftMenuItems = (
 								style={{ fontSize: 35 }}
 							/>
 						)}
-					</Tooltip>
-					{(splitterSize[0] as number) > 290 && (
-						<Title
-							level={4}
-							style={{
-								fontFamily: "Poppins",
-								fontWeight: 600,
-								marginBottom: 0,
-							}}
-						>
-							{i18next.t("Completed Journeys")}
-						</Title>
-					)}
-				</Flex>
+
+						{(splitterSize[0] as number) > 290 && (
+							<Title
+								level={4}
+								style={{
+									fontFamily: "Poppins",
+									fontWeight: 600,
+									marginBottom: 0,
+								}}
+							>
+								{i18next.t("Completed Journeys")}
+							</Title>
+						)}
+					</Flex>{" "}
+				</Tooltip>
 			),
 			key: "completed",
 			style: { height: "auto", padding: 11 },
@@ -203,20 +207,20 @@ const useLeftMenuItems = (
 		},
 		{
 			label: (
-				<Flex align="center" justify="center" gap={11}>
-					<Tooltip
-						title="Deleted Journeys"
-						placement="bottom"
-						arrow={false}
-						color="grey"
-						styles={{
-							body: {
-								opacity: 0.7,
-								position: "relative",
-								top: 14,
-							},
-						}}
-					>
+				<Tooltip
+					title="Deleted Journeys"
+					placement="bottom"
+					arrow={false}
+					color="grey"
+					styles={{
+						body: {
+							opacity: 0.7,
+							position: "relative",
+							top: 14,
+						},
+					}}
+				>
+					<Flex align="center" justify="center" gap={11}>
 						{selectedLeftMenuItem === "deleted" ? (
 							<DeleteRoundedIcon style={{ fontSize: 35 }} />
 						) : (
@@ -224,20 +228,21 @@ const useLeftMenuItems = (
 								style={{ fontSize: 35 }}
 							/>
 						)}
-					</Tooltip>
-					{(splitterSize[0] as number) > 290 && (
-						<Title
-							level={4}
-							style={{
-								fontFamily: "Poppins",
-								fontWeight: 600,
-								marginBottom: 0,
-							}}
-						>
-							{i18next.t("Deleted Journeys")}{" "}
-						</Title>
-					)}
-				</Flex>
+
+						{(splitterSize[0] as number) > 290 && (
+							<Title
+								level={4}
+								style={{
+									fontFamily: "Poppins",
+									fontWeight: 600,
+									marginBottom: 0,
+								}}
+							>
+								{i18next.t("Deleted Journeys")}{" "}
+							</Title>
+						)}
+					</Flex>{" "}
+				</Tooltip>
 			),
 			key: "deleted",
 			style: { height: "auto", padding: 11 },

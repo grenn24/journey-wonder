@@ -45,7 +45,8 @@ class ItineraryController {
 		if (request.file) {
 			itinerary.picture = fs.readFileSync(request.file.path);
 		}
-		if (user.role !== "Admin" && !itineraryService.validateAuthor(itineraryID, user.userID)) {
+		// Verify that user created the itinerary
+		if (!itineraryService.validateAuthor(itineraryID, user.userID)) {
 			return response.status(403).send({ message: "Access denied" });
 		}
 		itinerary = await itineraryService.updateItinerary(

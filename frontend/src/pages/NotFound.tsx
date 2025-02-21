@@ -14,7 +14,7 @@ const NotFound = () => {
 				status="404"
 				title="Sorry, this page isn't available."
 				subTitle="You may have followed the wrong link, or the page may have been removed"
-				extra={<Button type="primary" onClick={()=>navigate("/user")}>Return to Journey Wonder</Button>}
+				extra={<Button type="primary" onClick={()=>navigate("/")}>Return to Journey Wonder</Button>}
 			/>
 		</Flex>
   );

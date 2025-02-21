@@ -4,8 +4,9 @@ import { AnimatePresence, motion } from "motion/react";
 import { JSX, useEffect, useRef, useState } from "react";
 import { Image as ImageBase } from "antd";
 import useTheme from "../styles/useTheme";
+import "../styles/image.css"
 interface Prop {
-	image?: string | File | RcFile;
+	image: string | File;
 	buttons?: JSX.Element[];
     width?: string | number;
     height?: string | number;
@@ -46,7 +47,7 @@ const Image = ({ image, buttons, width, height = 200, style}: Prop) => {
 				borderRadius: borderRadius,
 				height: height,
 				overflow: "hidden",
-                ...style
+				...style,
 			}}
 		>
 			<img
@@ -75,31 +76,20 @@ const Image = ({ image, buttons, width, height = 200, style}: Prop) => {
 					overflow: "hidden",
 				}}
 			/>
-			<AnimatePresence>
-				{showButtons && (
-					<motion.div
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-						exit={{ opacity: 0 }}
-						transition={{ duration: 0.2, ease: "easeInOut" }}
-					>
-						<div
-							style={{
-								boxSizing: "border-box",
-								width: "100%",
-								position: "absolute",
-								padding: 9,
-								zIndex: 2,
-							}}
-						>
-							<Flex gap={5} justify="flex-end" align="center">
-								{buttons}
-							</Flex>
-		
-						</div>
-					</motion.div>
-				)}
-			</AnimatePresence>
+			<div
+			className="buttons-container"
+				style={{
+					width: "100%",
+					height:"100%",
+					position: "absolute",
+					padding: 9,
+					zIndex: 2,
+				}}
+			>
+				<Flex gap={5} justify="flex-end" align="center">
+					{buttons}
+				</Flex>
+			</div>
 		</div>
 	);
 };

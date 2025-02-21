@@ -9,6 +9,7 @@ import useTheme from "./styles/useTheme";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import NotFound from "./pages/NotFound";
 import Home from "./pages/Home";
+import UserHome from "./pages/user/Home";
 
 const { Text } = Typography;
 
@@ -32,7 +33,7 @@ const App = () => {
 					{/*Protected routes*/}
 					<Route element={<ProtectedRoutes />}>
 						<Route path="user" element={<User />}>
-							<Route index />
+							<Route index element={<UserHome />} />
 							<Route path="explore" />
 
 							<Route path="journey">

@@ -7,6 +7,7 @@ import { Button, Flex } from "antd";
 import React, { JSX, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import "../styles/scrollableDiv.css";
+import useBreakpoints from "../utilities/breakpoints";
 
 interface Prop {
 	height: number;
@@ -50,6 +51,7 @@ const ScrollableDiv = ({
 			setTimeout(() => setIsScrolling(false), 550);
 		}
 	};
+	const breakpoints = useBreakpoints();
 
 	return (
 		<Flex
@@ -57,25 +59,24 @@ const ScrollableDiv = ({
 			style={{ ...style, position: "relative", height: height }}
 			className="scrollable-div"
 		>
-			{mediaViewerRef.current?.scrollLeft &&
-				!mediaViewerRef.current?.scrollWidth >
-					!mediaViewerRef.current?.clientWidth && (
-					<Button
-						className="left-button"
-						icon={<NavigateBeforeRounded />}
-						variant="filled"
-						color="default"
-						onClick={(e) => {
-							e.stopPropagation();
-							scrollLeft();
-						}}
-						style={{
-							position: "absolute",
-							left: -42,
-							zIndex: 2,
-						}}
-					/>
-				)}
+			{mediaViewerRef.current?.scrollLeft && (
+				<Button
+					className="left-button"
+					icon={<NavigateBeforeRounded />}
+					variant="filled"
+					color="default"
+					onClick={(e) => {
+						e.stopPropagation();
+						scrollLeft();
+					}}
+					style={{
+						display: breakpoints.largerThan("md") ? "flex" : "none",
+						position: "absolute",
+						left: -42,
+						zIndex: 2,
+					}}
+				/>
+			)}
 
 			<Box
 				width="100%"
@@ -97,25 +98,24 @@ const ScrollableDiv = ({
 			>
 				{children}
 			</Box>
-			{!mediaViewerRef.current?.scrollLeft &&
-				!mediaViewerRef.current?.scrollWidth >
-					!mediaViewerRef.current?.clientWidth && (
-					<Button
-						className="right-button"
-						icon={<NavigateNextRounded />}
-						variant="filled"
-						color="default"
-						onClick={(e) => {
-							e.stopPropagation();
-							scrollRight();
-						}}
-						style={{
-							position: "absolute",
-							right: -42,
-							zIndex: 2,
-						}}
-					/>
-				)}
+			{!mediaViewerRef.current?.scrollLeft && (
+				<Button
+					className="right-button"
+					icon={<NavigateNextRounded />}
+					variant="filled"
+					color="default"
+					onClick={(e) => {
+						e.stopPropagation();
+						scrollRight();
+					}}
+					style={{
+						display: breakpoints.largerThan("md") ? "flex" : "none",
+						position: "absolute",
+						right: -42,
+						zIndex: 2,
+					}}
+				/>
+			)}
 			{/*Box for left and right scroll buttons (only show for screens larger than or equal to md size)*/}
 		</Flex>
 	);

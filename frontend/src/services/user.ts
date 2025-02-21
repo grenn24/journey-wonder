@@ -15,10 +15,14 @@ class UserService {
 		"/user",
 		() => {},
 		(status) => {
-			// check for error due to insufficient permissions (itinerary traveller permissions)
+			// check for http error due to access control or permissions (for e.g. non-author trying to access itinerary)
 			if (status === 403) {
+				
+			// check for http error due to authorisation (missing or invalid access token)
+			} else if (status === 401) {
 				// attempt to refresh access tokens
 				authService.refreshAccessToken().catch(({ status }) => {
+					// refresh token missing or invalid, redirect to guest page
 					if (status === 400) {
 						window.location.href = "/guest";
 					}
