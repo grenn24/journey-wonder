@@ -8,7 +8,7 @@ import Itinerary, { ItineraryType } from "../models/itinerary";
 class ItineraryController {
 	async getAllItineraries(request: Request, response: Response) {
 		const itineraries = await itineraryService.getAllItineraries();
-		response.send(itineraries);
+		response.status(200).send(itineraries);
 	}
 
 	async getItineraryByID(request: Request, response: any) {
@@ -25,7 +25,7 @@ class ItineraryController {
 			itineraryID,
 			fullDetails
 		);
-		return response.send(itinerary);
+		return response.status(200).send(itinerary);
 	}
 
 	async createItinerary(request: Request, response: Response) {
@@ -35,7 +35,9 @@ class ItineraryController {
 		if (request.file) {
 			itinerary.picture = fs.readFileSync(request.file.path);
 		}
-		response.send(await itineraryService.createItinerary(itinerary));
+		response
+			.status(200)
+			.send(await itineraryService.createItinerary(itinerary));
 	}
 
 	async updateItinerary(request: Request, response: Response) {
@@ -53,7 +55,7 @@ class ItineraryController {
 			itinerary,
 			itineraryID
 		);
-		response.send(itinerary);
+		response.status(200).send(itinerary);
 	}
 
 	async deleteItineraryByID(request: Request, response: Response) {
@@ -87,16 +89,19 @@ class ItineraryController {
 			} catch (err: any) {
 				// Custom response error
 				if (err instanceof HttpError) {
-					response.status(400).send(err);
+					response.status(404).send(err);
 				}
 				// Document not found
 				else if (err instanceof mongoose.Error.DocumentNotFoundError) {
 					response
 						.status(400)
 						.send({ message: "Itinerary not found" });
+					return;
+						
 					// Validation Error
 				} else if (err instanceof mongoose.Error.ValidationError) {
-					response.status(400).send({ message: err.message });
+				    response.status(400).send({ message: err.message });
+					return;
 					// Internal server errors
 				} else {
 					next(err);

@@ -11,21 +11,25 @@ const itinerarySchema = new mongoose.Schema({
 		ref: "User",
 		required: true,
 	},
-	travellers: [
-		{
-			email: {
-				type: String,
-				required: true,
-				lowercase: true,
-				maxLength: 255,
+	travellers: {
+		type: [
+			{
+				email: {
+					type: String,
+					required: true,
+					lowercase: true,
+					maxLength: 255,
+				},
+				permission: {
+					type: String,
+					enum: ["Read", "Edit"],
+					required: true,
+				},
 			},
-			permission: {
-				type: String,
-				enum: ["Read","Edit"],
-				required: true,
-			},
-		},
-	],
+		],
+		minlength: 1,
+		required: true,
+	},
 	title: {
 		type: String,
 		required: true,
@@ -34,8 +38,21 @@ const itinerarySchema = new mongoose.Schema({
 	description: {
 		type: String,
 	},
-	destination: {
-		type: String,
+	destinations: {
+		type: [
+			{
+				name: {
+					type: String,
+					required: true,
+				},
+				type: {
+					type: String,
+					enum: ["City", "Country", "Region", "State"],
+					required: true,
+				},
+			},
+		],
+		minlength: 1,
 		required: true,
 	},
 	startDate: {
@@ -46,21 +63,23 @@ const itinerarySchema = new mongoose.Schema({
 		type: Date,
 		required: true,
 	},
-	events: [
-		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "Event",
-			default: [],
-		},
-	],
+	events: {
+		type: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "Event",
+			},
+		],
+		default: [],
+	},
 	image: Buffer,
 	visibility: {
 		type: String,
-		enum: ["Private", "Public"],
-		default: "Private",
+		enum: ["Public", "Travellers", "Only Me"],
+		default: "Travellers",
 	},
 	createdAt: {
-		type: Date,
+		type: Date, // UTC +00:00
 		default: Date.now,
 	},
 });
@@ -95,13 +114,31 @@ export function validateItinerary(itinerary: any) {
 	const itinerarySchema = Joi.object({
 		title: Joi.string().max(512).required(),
 		description: Joi.string(),
-		destination: Joi.string().required(),
+		destinations: Joi.array()
+			.items(
+				Joi.object({
+					name: Joi.string().required(),
+					type: Joi.string().required(),
+				})
+			)
+			.min(1)
+			.required(),
 		startDate: Joi.date().required(),
 		endDate: Joi.date().required(),
-		events: Joi.array().items(Joi.object()),
-		visibility: Joi.string().valid("Private", "Public").default("Private"),
+		events: Joi.array().items(Joi.object()).default([]),
+		visibility: Joi.string()
+			.valid("Public", "Travellers", "Only Me")
+			.default("Travellers"),
 		author: JoiObjectId().required(),
-		travellers: Joi.array().items(JoiObjectId()).min(1).required(),
+		travellers: Joi.array()
+			.items(
+				Joi.object({
+					email: Joi.string().email().required(),
+					permission: Joi.string().valid("Edit", "Read").required(),
+				})
+			)
+			.min(1)
+			.required(),
 		picture: Joi.binary(),
 	});
 

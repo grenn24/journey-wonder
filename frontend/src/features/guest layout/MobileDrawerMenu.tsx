@@ -65,6 +65,7 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 					>
 						<Menu.Item
 							key="home"
+							onClick={() => navigate("")}
 							style={{
 								fontFamily: "Roboto",
 								fontWeight: fontWeightStrong,
@@ -79,6 +80,7 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 						<Menu.Divider dashed style={{ borderWidth: 1.5 }} />
 						<Menu.Item
 							key="explore"
+							onClick={() => navigate("explore")}
 							style={{
 								fontFamily: "Roboto",
 								fontWeight: fontWeightStrong,
@@ -93,6 +95,7 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 						<Menu.Divider dashed style={{ borderWidth: 1.5 }} />
 						<Menu.Item
 							key="pricing"
+							onClick={() => navigate("pricing")}
 							style={{
 								fontFamily: "Roboto",
 								fontWeight: fontWeightStrong,
@@ -116,6 +119,7 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 						>
 							<Menu.Item
 								key="mission"
+						onClick={ () => navigate("about/mission")}
 								style={{
 									fontFamily: "Roboto",
 									fontWeight: fontWeightStrong,
@@ -127,6 +131,7 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 							</Menu.Item>
 							<Menu.Item
 								key="creators"
+									onClick = { () => navigate("about/creators")}
 								style={{
 									fontFamily: "Roboto",
 									fontWeight: fontWeightStrong,

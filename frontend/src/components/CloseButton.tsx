@@ -3,7 +3,7 @@ import { Button, theme } from "antd";
 import React from "react";
 
 interface Prop {
-	handleButtonClick: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+	handleButtonClick?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
 	variant?: "link" | "text" | "outlined" | "dashed" | "solid" | "filled";
 	style?: React.CSSProperties;
 	size?: "small" | "large";
@@ -19,9 +19,12 @@ const CloseButton = ({ handleButtonClick, variant="filled" ,style, size}: Prop) 
 			color="default"
 			size={size}
 			icon={
-				<ClearRounded fontSize={size ? "medium": "small"} style={{ color: colorIcon }} />
+				<ClearRounded
+					fontSize={size ? "medium" : "small"}
+					style={{ color: colorIcon }}
+				/>
 			}
-			onClick={(e) => handleButtonClick(e)}
+			onClick={(e) => handleButtonClick && handleButtonClick(e)}
 			style={{ ...style, flexShrink: 0 }}
 		/>
 	);

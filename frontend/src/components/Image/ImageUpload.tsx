@@ -5,7 +5,7 @@ import {
 	UploadFileStatus,
 	UploadListType,
 } from "antd/es/upload/interface";
-import React, { JSX, useEffect, useState } from "react";
+import React, { JSX, useCallback, useEffect, useMemo, useState } from "react";
 import "../../styles/ant.css"
 import {AnimatePresence, motion} from "motion/react"
 
@@ -64,23 +64,31 @@ const ImageUpload = ({
 		previewImage && console.log(URL.createObjectURL(previewImage));
 	};
 
-	const FileInput =
-		defaultImageRenderType === "block" ? Upload.Dragger : Upload;
+	const FileInput = defaultImageRenderType === "block" ? Upload.Dragger : Upload;
+
+	const Custom = useMemo(
+		() =>
+			CustomImageRender
+			,
+		[fileList]
+	);
+
+
 
 	return (
 		<AnimatePresence>
 			<motion.div
 				initial={{ opacity: 0 }}
-				animate={{  opacity: 1}}
+				animate={{ opacity: 1 }}
 				exit={{ opacity: 0 }}
 				transition={{
 					duration: 0.3,
 					ease: "easeInOut",
 				}}
 			>
-				{CustomImageRender &&
+				{Custom &&
 					images.map((image, targetIndex) => (
-						<CustomImageRender
+						<Custom
 							key={targetIndex}
 							image={image}
 							handleDelete={() => {

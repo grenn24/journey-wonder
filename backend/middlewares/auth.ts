@@ -5,21 +5,21 @@ const auth =
 	(role: "User" | "Admin") => (request: any, response: any, next: any) => {
 		const accessToken = request.header("X-Access-Token");
 		try {
-			// Access token missing (unauthorised)
+			// Access token missing (401 unauthorised)
 			if (!accessToken) {
 				return response.status(401).send({
 					status: "MISSING_ACCESS_TOKEN",
 					message: "Missing access token",
 				});
 			}
-			// Access token may be invalid (unauthorised)
+			// Check if access token is valid
 			const payload = jwt.verify(accessToken, config.get("SECRET_KEY"));
 			if (
 				typeof payload !== "string" &&
 				payload.role === "User" &&
 				role === "Admin"
 			) {
-				// Insufficient user permissions (forbidden)
+				// Insufficient user permissions (403 forbidden)
 				return response
 					.status(403)
 					.send({ status: "FORBIDDEN", message: "Access denied" });
@@ -34,7 +34,7 @@ const auth =
 			}
 			next();
 		} catch (err) {
-			// Access token invalid (unauthorised)
+			// Access token invalid (401 unauthorised)
 			response.status(401).send({
 				status: "INVALID_ACCESS_TOKEN",
 				message: "Invalid access token",

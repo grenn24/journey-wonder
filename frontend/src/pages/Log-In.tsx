@@ -10,7 +10,7 @@ import {
 	theme,
 	Typography,
 } from "antd";
-import { useState } from "react";
+import { memo, useMemo, useState } from "react";
 import "../styles/ant.css";
 import { GoogleOutlined } from "@ant-design/icons";
 import authService from "../services/auth";

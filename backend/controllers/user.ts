@@ -8,17 +8,17 @@ import fs from "fs";
 class UserController {
 	async getAllUsers(request: Request, response: Response) {
 		const users = await userService.getAllUsers();
-		response.send(users);
+		response.status(200).send(users);
 	}
 
 	async getUserByID(request: Request, response: Response) {
 		const userID = response.locals._id;
-		response.send(await userService.getUserByID(userID));
+		response.status(200).send(await userService.getUserByID(userID));
 	}
 
 	async getCurrentUser(request: Request, response: Response) {
 		const userID = response.locals.currentUser.userID;
-		response.send(await userService.getUserByID(userID));
+		response.status(200).send(await userService.getUserByID(userID));
 	}
 
 	async createUser(request: any, response: Response) {
@@ -27,7 +27,7 @@ class UserController {
 		if (request.file) {
 			user.avatar = fs.readFileSync(request.file.path);
 		}
-		response.send(await userService.createUser(user));
+		response.status(200).send(await userService.createUser(user));
 	}
 
 	// query existing user, update its fields, save
@@ -35,7 +35,7 @@ class UserController {
 		const userID = response.locals._id;
 		let user = request.body;
 		user = await userService.updateUser(user, userID);
-		response.send(user);
+		response.status(200).send(user);
 	}
 
 	async deleteUserByID(request: Request, response: Response) {
@@ -58,24 +58,29 @@ class UserController {
 			try {
 				await handler(request, response);
 			} catch (err: any) {
-				// Custom response error
 				if (err instanceof HttpError) {
+					// Custom response error
 					response.status(400).send(err);
-				}
-				// Document not found
-				else if (err instanceof mongoose.Error.DocumentNotFoundError) {
+					return;
+				} else if (
+					err instanceof mongoose.Error.DocumentNotFoundError
+				) {
+					// Document not found
 					response.status(400).send({ message: "User not found" });
-					// Validation Error
+					return;
 				} else if (err instanceof mongoose.Error.ValidationError) {
+					// Validation Error
 					response.status(400).send({ message: err.message });
-					// Duplicate Keys in Existing Document
+					return;
 				} else if (err.errorResponse?.code === 11000) {
+					// Duplicate Keys in Existing Document
 					response.status(400).send({
 						message: "Duplicate keys in existing document",
 						errorDetail: err,
 					});
-					// Internal Server Errors
+					return;
 				} else {
+					// Internal Server Errors
 					next(err);
 				}
 			}

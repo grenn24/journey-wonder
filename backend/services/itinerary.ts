@@ -11,8 +11,9 @@ class ItineraryService {
 
 	async getItineraryByID(itineraryID: string, fullDetails: boolean = false) {
 		try {
+
 			const query = Itinerary.findById(itineraryID);
-			console.log(fullDetails);
+
 			if (fullDetails) {
 				query
 					.populate("events")
@@ -21,6 +22,7 @@ class ItineraryService {
 			}
 
 			const itinerary = await query.exec();
+	
 			if (!itinerary) {
 				throw new mongoose.Error.DocumentNotFoundError(
 					"Itinerary not found"
@@ -34,18 +36,25 @@ class ItineraryService {
 
 	async createItinerary(itinerary: any) {
 		try {
-			const eventPromises = itinerary.events.map((event: any) => {
-				const discriminators = EventModel.discriminators;
-				let SubEvent;
-				if (discriminators) {
-					SubEvent = discriminators[`${event.subcategory} Event`];
-					return SubEvent.create(event).then((event) => event._id);
-				} else {
-					SubEvent = EventModel;
-					return SubEvent.create(event).then((event) => event._id);
-				}
-			});
-			itinerary.events = await Promise.all(eventPromises);
+			if (itinerary.event) {
+				const eventPromises = itinerary.events.map((event: any) => {
+					const discriminators = EventModel.discriminators;
+					let SubEvent;
+					if (discriminators) {
+						SubEvent = discriminators[`${event.subcategory} Event`];
+						return SubEvent.create(event).then(
+							(event) => event._id
+						);
+					} else {
+						SubEvent = EventModel;
+						return SubEvent.create(event).then(
+							(event) => event._id
+						);
+					}
+				});
+				itinerary.events = await Promise.all(eventPromises);
+			}
+
 			return await Itinerary.create(itinerary);
 		} catch (err) {
 			throw err;

@@ -11,6 +11,7 @@ import {
 	Input,
 	Divider,
 	Card,
+	Select,
 } from "antd";
 import { InputAdornment, TextField, ThemeProvider } from "@mui/material";
 import {
@@ -22,13 +23,13 @@ import {
 	setTitle,
 } from "../../redux/slices/createJourney";
 import CloseButton from "../../components/CloseButton";
-import searchDestinations from "./searchDestinations";
 import { ClearRounded } from "@mui/icons-material";
 import dayjs from "dayjs";
 import { useMuiTheme } from "../../styles/useTheme";
 import ScrollableDiv from "../../components/ScrollableDiv";
 import "../../styles/ant.css";
-import { AnimatePresence , motion} from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
+import destinations from "../../data/destinations/destinations";
 
 const { RangePicker } = DatePicker;
 const { Text } = Typography;
@@ -59,32 +60,24 @@ const StageOne = () => {
 	);
 	const dispatch = useAppDispatch();
 	const [panelMode, setPanelMode] = useState<"start" | "end">("start");
-	const [destination, setDestination] = useState("");
+	const [destinationSearchValue, setDestinationSearchValue] = useState("");
 	const [options, setOptions] = useState<
 		{ label: JSX.Element; key: number; value: string }[]
 	>([]);
-	const handleDestinationSelect = (
-		_:any,
-		option: { label: JSX.Element; key: number; value: string }
-	) => {
-		setDestination("");
-		const selectedDestination = {
-			label: option.label,
-			key: option.key,
-			value: option.value,
-		};
-		dispatch(addSelectedDestination(selectedDestination));
-	};
+
 	const [isTitleExpanded, setIsTitleExpanded] = useState(false);
-	const [isDestinationExpanded, setIsDestinationExpanded] = useState(false);
+	const [isDestinationsExpanded, setIsdestinationsExpanded] = useState(false);
+	const [isDestinationsInputExpanded, setIsDestinationsInputExpanded] =
+		useState(false);
 	const [isDatesExpanded, setIsDatesExpanded] = useState(false);
+
 	return (
 		<Flex vertical gap={15}>
 			<Card
 				onClick={() => {
 					setIsTitleExpanded(!isTitleExpanded);
 					setIsDatesExpanded(false);
-					setIsDestinationExpanded(false);
+					setIsdestinationsExpanded(false);
 				}}
 				styles={{
 					body: {
@@ -165,23 +158,10 @@ const StageOne = () => {
 						</motion.div>
 					)}
 				</AnimatePresence>
-				<Button
-					onClick={() => setIsTitleExpanded(false)}
-					variant="text"
-					color="default"
-					style={{
-						position: "absolute",
-						display: isTitleExpanded ? "flex" : "none",
-						top: 10,
-						right: 10,
-					}}
-					size="small"
-					icon={<ClearRounded />}
-				/>
 			</Card>
 			<Card
 				onClick={() => {
-					setIsDestinationExpanded(!isDestinationExpanded);
+					setIsdestinationsExpanded(!isDestinationsExpanded);
 					setIsTitleExpanded(false);
 					setIsDatesExpanded(false);
 				}}
@@ -193,7 +173,7 @@ const StageOne = () => {
 				style={{ borderWidth: 2, borderColor: colorBorder }}
 			>
 				<AnimatePresence>
-					{isDestinationExpanded ? (
+					{isDestinationsExpanded ? (
 						<motion.div
 							key="expanded"
 							initial={{ height: 0, opacity: 0, y: -25 }}
@@ -211,98 +191,63 @@ const StageOne = () => {
 									Destination(s)
 								</Text>
 								<div onClick={(e) => e.stopPropagation()}>
-									<AutoComplete
-										style={{
-											width: "100%",
-											height: 50,
-											color: "red",
-										}}
-										options={options}
-										allowClear={false}
-										value={destination}
-										onSelect={handleDestinationSelect}
-									>
-										<Input
-											placeholder="Japan, China, USA ..."
-											size="large"
-											value={destination}
-											onChange={(e) => {
-												setDestination(e.target.value);
-												setOptions(
-													searchDestinations(
-														e.target.value,
-														token
-													)
-												);
-											}}
-											type="text"
-											required
-											suffix={
-												<CloseButton
-													variant="text"
-													handleButtonClick={(e) => {
-														e.stopPropagation();
-														setDestination("");
-														setOptions([]);
-													}}
-													style={{
-														opacity: destination
-															? 1
-															: 0,
-														cursor: "pointer",
-													}}
-												/>
-											}
-										/>
-									</AutoComplete>
-								</div>
-								<ScrollableDiv
-									height={50}
-									style={{
-										display:
-											selectedDestinations.length === 0
-												? "none"
-												: "flex",
-									}}
-								>
-									{selectedDestinations?.map(
-										(destination) => (
-											<Tag
-												bordered
-												closeIcon={
-													<ClearRounded
-														style={{
-															fontSize: 16,
-															marginLeft: 8,
-														}}
-													/>
-												}
-												onClose={() =>
-													dispatch(
-														removeSelectedDestination(
-															destination.key
-														)
-													)
-												}
-												onClick={(e) =>
-													e.stopPropagation()
-												}
-												style={{
-													borderColor: colorBorder,
-													backgroundColor:
-														colorBgContainer,
-
-													padding: "5px 12px",
-
-													display: "flex",
-													alignItems: "center",
-												}}
+									<Select
+										mode="multiple"
+										style={{ width: "100%" }}
+										size="large"
+										placeholder="Japan, China, USA ..."
+										value={selectedDestinations}
+										
+										options={destinations}
+										onSearch={(value) =>
+											setDestinationSearchValue(value)
+										}
+										optionRender={(option) => (
+											<Flex
+												justify="space-between"
+												align="center"
+												style={{ height: 32 }}
 											>
-												{destination.value}
-											</Tag>
-										)
-									)}
-								</ScrollableDiv>
+												<Text>{option.data.name}</Text>
+												<Tag
+													bordered={false}
+													style={{
+														backgroundColor:
+															token.colorBgTextActive,
+													}}
+												>
+													{option.data.type}
+												</Tag>
+											</Flex>
+										)}
+										labelRender={(label) => (
+											<Text style={{ fontSize: 15 }}>
+												{label.value.toString().split(";")[0]}
+											</Text>
+										)}
+										onSelect={(_: any, option) => {
+											dispatch(
+												addSelectedDestination({...option})
+											);
+										
+											setDestinationSearchValue("");
+										}}
+										onDeselect={(_: any, option) =>
+											dispatch(
+												removeSelectedDestination(
+													option.id
+												)
+											)
+										}
+										searchValue={destinationSearchValue}
+										notFoundContent={`No destinations found for ${destinationSearchValue}`}
+										suffixIcon={false}
+										removeIcon={
+											<CloseButton variant="link" />
+										}
+									
+									/>
+								</div>
 							</Flex>
 						</motion.div>
 					) : (
@@ -321,25 +266,12 @@ const StageOne = () => {
 							</Flex>
 						</motion.div>
 					)}
-					<Button
-						onClick={() => setIsDestinationExpanded(false)}
-						variant="text"
-						color="default"
-						style={{
-							position: "absolute",
-							display: isDestinationExpanded ? "flex" : "none",
-							top: 10,
-							right: 10,
-						}}
-						size="small"
-						icon={<ClearRounded />}
-					/>
 				</AnimatePresence>
 			</Card>
 			<Card
 				onClick={() => {
 					setIsDatesExpanded(!isDatesExpanded);
-					setIsDestinationExpanded(false);
+					setIsdestinationsExpanded(false);
 					setIsTitleExpanded(false);
 				}}
 				styles={{
@@ -474,19 +406,6 @@ const StageOne = () => {
 						</motion.div>
 					)}
 				</AnimatePresence>
-				<Button
-					onClick={() => setIsDatesExpanded(false)}
-					variant="text"
-					color="default"
-					style={{
-						position: "absolute",
-						display: isDatesExpanded ? "flex" : "none",
-						top: 10,
-						right: 10,
-					}}
-					size="small"
-					icon={<ClearRounded />}
-				/>
 			</Card>
 		</Flex>
 	);

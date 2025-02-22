@@ -7,5 +7,6 @@ export default defineConfig({
 	resolve: { preserveSymlinks: true }, // Preserve symlink paths
 	define: {
 		"process.env": {},
-	}
+	},
+
 });

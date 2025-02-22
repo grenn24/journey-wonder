@@ -1,9 +1,15 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import authService from "../services/auth";
 
 interface Response<T> {
 	response: AxiosResponse<T>;
 	abort: () => void;
 }
+
+/*
+401 Unauthorised: Missing access tokens
+403 Forbidden: Insufficient permissions
+*/
 
 class ApiClient {
 	private client: AxiosInstance;
@@ -17,6 +23,7 @@ class ApiClient {
 			baseURL,
 			headers: {
 				"Content-Type": "application/json",
+				"X-Access-Token": sessionStorage.getItem("X-Access-Token"),
 			},
 		});
 		client.interceptors.request.use(
@@ -47,7 +54,10 @@ class ApiClient {
 							err.response.status,
 							err.response.data
 						);
-					return Promise.reject({
+					return Promise.reject<{
+						body: string;
+						status: number;
+					}>({
 						body: err.response.data,
 						status: err.response.status,
 					});
@@ -67,47 +77,161 @@ class ApiClient {
 	}
 
 	// GET request
-	public get<T>(
+	public async get<T>(
 		url: string,
 		config?: AxiosRequestConfig
 	): Promise<AxiosResponse<T>> {
-		const response = this.client.get<T>(url, {
-			withCredentials: true,
-			...config,
-		});
-		return response;
+		try {
+			const response = await this.client.get<T>(url, {
+				withCredentials: true,
+				...config,
+			});
+			return response;
+		} catch (err: any) {
+			// Missing or invalid access token
+			if (err.status === 401) {
+				try {
+					await axios.get("/auth/refresh-access-token", {
+						withCredentials: true,
+						...config,
+					});
+					const response = await this.client.get<T>(url, {
+						withCredentials: true,
+						...config,
+					});
+					return response;
+				} catch (err: any) {
+					// Missing or invalid refresh token
+					if (err.status === 400) {
+						window.location.href = "/guest";
+					}
+				}
+			}
+			return Promise.reject(err);
+		}
 	}
 
 	// POST request
-	public post<T, R>(
+	public async post<T, R>(
 		url: string,
 		data: T,
 		config?: AxiosRequestConfig
 	): Promise<AxiosResponse<R>> {
-		return this.client.post<T, AxiosResponse<R>>(url, data, {
-			withCredentials: true,
-			...config,
-		});
+		try {
+			const response = await this.client.post<T, AxiosResponse<R>>(
+				url,
+				data,
+				{
+					withCredentials: true,
+					...config,
+				}
+			);
+			return response;
+		} catch (err: any) {
+			// Missing or invalid access token
+			if (err.status === 401) {
+				try {
+	
+					await authService.refreshAccessToken();
+
+					console.log(sessionStorage.getItem("X-Access-Token"));
+					const response = this.client.post<T, AxiosResponse<R>>(
+						url,
+						data,
+						{
+							withCredentials: true,
+							...config,
+						}
+					);
+					return response;
+				} catch (err: any) {
+					// Missing or invalid refresh token
+					if (err.status === 400) {
+						window.location.href = "/guest";
+					}
+				}
+			}
+			throw err;
+		}
 	}
 
 	// PUT request
-	public put<T, R>(
+	public async put<T, R>(
 		url: string,
 		data: T,
 		config?: AxiosRequestConfig
 	): Promise<AxiosResponse<R>> {
-		return this.client.put<T, AxiosResponse<R>>(url, data, {
-			withCredentials: true,
-			...config,
-		});
+		try {
+			const response = await this.client.put<T, AxiosResponse<R>>(
+				url,
+				data,
+				{
+					withCredentials: true,
+					...config,
+				}
+			);
+			return response;
+		} catch (err: any) {
+			// Missing or invalid access token
+			if (err.status === 401) {
+				try {
+					await axios.get("/auth/refresh-access-token", {
+						withCredentials: true,
+						...config,
+					});
+					const response = await this.client.put<T, AxiosResponse<R>>(
+						url,
+						data,
+						{
+							withCredentials: true,
+							...config,
+						}
+					);
+					return response;
+				} catch (err: any) {
+					// Missing or invalid refresh token
+					if (err.status === 400) {
+						window.location.href = "/guest";
+					}
+				}
+			}
+			return Promise.reject(err);
+		}
 	}
 
 	// DELETE request
-	public delete<T>(
+	public async delete<T>(
 		url: string,
 		config?: AxiosRequestConfig
 	): Promise<AxiosResponse<T>> {
-		return this.client.delete<T>(url, { withCredentials: true, ...config });
+		try {
+			const response = await this.client.delete<T>(url, {
+				withCredentials: true,
+				...config,
+			});
+			return response;
+		} catch (err: any) {
+			// Missing or invalid access token
+			if (err.status === 401) {
+				try {
+					await axios.get("/auth/refresh-access-token", {
+						withCredentials: true,
+						...config,
+					});
+					const response = await this.client.delete<T>(url, {
+						withCredentials: true,
+						...config,
+					});
+					return response;
+				} catch (err: any) {
+					// Missing or invalid refresh token
+					if (err.status === 400) {
+						window.location.href = "/guest";
+					}
+				}
+			}
+			return Promise.reject(err);
+		}
 	}
 
 	// PATCH request

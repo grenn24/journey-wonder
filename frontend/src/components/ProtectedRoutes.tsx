@@ -1,12 +1,13 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import authService from "../services/auth";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Loading from "../pages/Loading";
 
 const ProtectedRoutes = () => {
 	const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(
 		null
 	);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (sessionStorage.getItem("X-Access-Token")) {
@@ -16,17 +17,27 @@ const ProtectedRoutes = () => {
 			authService.refreshAccessToken().catch(({ status }) => {
 				if (status === 400) {
 					setIsAuthenticated(false);
-				} else {
-					setIsAuthenticated(true);
+					navigate("/guest");
 				}
 			});
 		}
 	}, []);
 
 	if (isAuthenticated === null) {
-		return <Loading />;
+		return (
+			<Suspense fallback={<Loading />}>
+				<Loading />
+			</Suspense>
+		);
+	} else if (isAuthenticated) {
+		return (
+			<Suspense fallback={<Loading />}>
+				<Outlet />
+			</Suspense>
+		);
+	} else {
+		return <Navigate replace to="/guest" />;
 	}
-	return isAuthenticated ? <Outlet /> : <Navigate replace to="/guest" />;
 };
 
 export default ProtectedRoutes;

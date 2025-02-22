@@ -44,3 +44,11 @@
 .invisible-upload-image {
 	display:none !important
 }
+
+.select-without-arrow .ant-select-arrow  {
+	display:none
+}
+
+.select-without-arrow .ant-select-selector {
+
+}

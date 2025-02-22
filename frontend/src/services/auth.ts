@@ -1,12 +1,16 @@
 import { Dispatch } from "@reduxjs/toolkit";
 import createApiClient from "../utilities/apiClient";
-import { setEmail, setMembershipTier, setName, setUserID } from "../redux/slices/user";
-
+import {
+	setEmail,
+	setMembershipTier,
+	setName,
+	setUserID,
+} from "../redux/slices/user";
 
 class AuthService {
 	apiClient = createApiClient("/auth"); // api client for auth routes
 
-	login(body: Object, dispatch:Dispatch) {
+	login(body: Object, dispatch: Dispatch) {
 		const response = this.apiClient
 			.post<Object, any>("/log-in", body)
 			.then((res) => {
@@ -19,7 +23,7 @@ class AuthService {
 					"X-Access-Token",
 					headers["x-access-token"]
 				);
-			
+
 				return res;
 			});
 		return response;
@@ -38,11 +42,19 @@ class AuthService {
 			.get("/refresh-access-token")
 			.then((res) => {
 				const { headers } = res;
+				sessionStorage.removeItem("X-Access-Token");
 				sessionStorage.setItem(
 					"X-Access-Token",
 					headers["x-access-token"]
 				);
 				return res;
+			})
+			.catch((err) => {
+				// If refresh token is invalid, redirect to guest page
+				if (err.status === 400) {
+					window.location.href = "/guest";
+				}
+				return err;
 			});
 		return response;
 	}

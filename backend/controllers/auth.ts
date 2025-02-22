@@ -25,7 +25,7 @@ class AuthController {
 				domain: request.header("Host")?.split(":")[0],
 				sameSite: "lax",
 			})
-			.send( user );
+			.send(user);
 	}
 
 	async logout(request: Request, response: Response) {
@@ -47,13 +47,15 @@ class AuthController {
 		if (!refreshToken) {
 			throw new HttpError(
 				"Invalid or missing refresh tokens",
-				"INVALID_REFRESH_TOKEN"
+				"INVALID_REFRESH_TOKEN",
+				400
 			);
 		}
 		const accessToken = await authService.refreshAccessToken(refreshToken);
 		response
 			.status(200)
 			.header("X-Access-Token", accessToken)
+			.header("Cache-Control", "no-store")
 			.send({ message: "Success" });
 	}
 
@@ -68,9 +70,18 @@ class AuthController {
 			} catch (err: any) {
 				// Custom response error
 				if (err instanceof HttpError) {
-					response.status(400).send(err);
-					// Internal Server Errors
+					if (err.errorCode === 401) {
+						response.status(401).send(err);
+						return;
+					} else if (err.errorCode == 403) {
+						response.status(403).send(err);
+						return;
+					} else {
+						response.status(400).send(err);
+						return;
+					}
 				} else {
+					// Internal Server Errors
 					next(err);
 				}
 			}

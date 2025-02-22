@@ -15,3 +15,4 @@ docker run -p 3000:3000 -p 27017:27017 journey-wonder
 # Possible Features
 - Semi transparent modal
 - login input validation real time
+- translate destination names

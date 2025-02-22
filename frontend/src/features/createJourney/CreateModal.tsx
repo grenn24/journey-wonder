@@ -8,6 +8,7 @@ import {
 	DatePicker,
 	Tag,
 	Divider,
+	Select,
 } from "antd";
 import i18n from "../../i18n.ts";
 import { useAppDispatch, useAppSelector } from "../../redux/store.ts";
@@ -21,14 +22,20 @@ import {
 	ArrowForward,
 	ArrowForwardRounded,
 	EastRounded,
+	LockRounded,
+	PeopleAltRounded,
+	PublicRounded,
 } from "@mui/icons-material";
 import {
 	decrementStage,
 	incrementStage,
 	reset,
+	setVisibility,
 } from "../../redux/slices/createJourney.ts";
 import { createElement, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import itineraryService from "../../services/itinerary.ts";
+import useSnackbar from "../../components/showSnackbar.ts";
 
 interface Prop {
 	openCreateModal: boolean;
@@ -46,23 +53,66 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 		colorText,
 		colorPrimary,
 		colorPrimaryBorder,
-		
 	} = token;
 
 	const dispatch = useAppDispatch();
-	const { currentStage, title, selectedDestinations, startDate, endDate } =
-		useAppSelector((state) => ({
-			currentStage: state.createJourney.currentStage,
-			title: state.createJourney.title,
-			selectedDestinations: state.createJourney.selectedDestinations,
-			startDate: state.createJourney.startDate,
-			endDate: state.createJourney.endDate,
-		}));
+	const {
+		currentStage,
+		image,
+		selectedTravellers,
+		title,
+		startDate,
+		endDate,
+		selectedDestinations,
+		author,
+		userEmail,
+		visibility,
+	} = useAppSelector((state) => ({
+		currentStage: state.createJourney.currentStage,
+		image: state.createJourney.image,
+		selectedTravellers: state.createJourney.selectedTravellers,
+		title: state.createJourney.title,
+		startDate: state.createJourney.startDate,
+		endDate: state.createJourney.endDate,
+		selectedDestinations: state.createJourney.selectedDestinations,
+		author: state.user.userID,
+		userEmail: state.user.email,
+		visibility: state.createJourney.visibility,
+	}));
 	const [openModalCloseConfirmation, setOpenModalCloseConfirmation] =
 		useState(false);
 
+		const [showSnackbar, context] = useSnackbar("An internal server error occurred. Please try again later.", "error");
+
+	const createItinerary = () => {
+		const itinerary = {
+			author,
+			title,
+			startDate: startDate?.toDate(),
+			endDate: endDate?.toDate(),
+			destinations: selectedDestinations.map((destination) => ({
+				name: destination.name,
+				type: destination.type,
+			})),
+			travellers: [
+				...selectedTravellers,
+				{
+					email: userEmail,
+					permission: "Edit",
+				},
+			],
+			visibility,
+		};
+
+		itineraryService.createItinerary(itinerary).then(() => {
+			dispatch(reset());
+			setOpenCreateModal(false);
+		}).catch(()=>showSnackbar());
+	};
+
 	return (
 		<>
+		{context}
 			<Modal
 				open={openCreateModal}
 				setOpen={() => setOpenModalCloseConfirmation(true)}
@@ -132,7 +182,54 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 				}}
 				width={600}
 				footer={
-					<Flex justify="center">
+					<Flex justify="space-between" align="center">
+						<Select
+							value={visibility}
+							variant="outlined"
+							style={{ width: 130, textAlign: "left" }}
+							onChange={(value: typeof visibility) =>
+								dispatch(setVisibility(value))
+							}
+							labelRender={(label) => label.value}
+							options={[
+								{
+									value: "Public",
+									label: (
+										<Flex
+											justify="space-between"
+											align="center"
+										>
+											<Text>Public</Text>
+											<PublicRounded fontSize="small" />
+										</Flex>
+									),
+								},
+								{
+									value: "Travellers",
+									label: (
+										<Flex
+											justify="space-between"
+											align="center"
+										>
+											<Text>Travellers</Text>
+											<PeopleAltRounded fontSize="small" />
+										</Flex>
+									),
+								},
+								{
+									value: "Only Me",
+									label: (
+										<Flex
+											justify="space-between"
+											align="center"
+										>
+											<Text>Only Me</Text>
+											<LockRounded fontSize="small" />
+										</Flex>
+									),
+								},
+							]}
+						/>
 						{currentStage !== 1 ? (
 							<Button
 								color="default"
@@ -154,6 +251,7 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 								color="default"
 								variant="filled"
 								size="large"
+								onClick={() => createItinerary()}
 							>
 								Create
 							</Button>
@@ -161,9 +259,7 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 					</Flex>
 				}
 			>
-			
-						{createElement(stages[currentStage])}
-				
+				{createElement(stages[currentStage])}
 			</Modal>
 			<Modal
 				centered

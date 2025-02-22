@@ -3,15 +3,22 @@ import { JSX } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { arrayContains } from "../../utilities/array";
 import { UploadFile } from "antd";
+import { compressImageFile } from "../../utilities/file";
 
 interface createJourneyState {
 	currentStage: number;
 	title: string;
-	selectedDestinations: { label: JSX.Element; key: number; value: string }[];
+	selectedDestinations: {
+		value: string;
+		name: string;
+		type: string;
+		id: number;
+	}[];
 	startDate: Dayjs | null;
 	endDate: Dayjs | null;
 	image: File | null;
-	selectedTravellers: string[];
+	selectedTravellers: { email: string; permission: "Read" | "Edit" }[];
+	visibility: "Public" | "Travellers" | "Only Me";
 }
 const initialState: createJourneyState = {
 	currentStage: 0,
@@ -21,6 +28,7 @@ const initialState: createJourneyState = {
 	endDate: null,
 	image: null,
 	selectedTravellers: [],
+	visibility: "Travellers",
 };
 export const createJourneySlice = createSlice({
 	// Name of slice
@@ -37,7 +45,7 @@ export const createJourneySlice = createSlice({
 		setSelectedDestinations: (
 			state,
 			action: PayloadAction<
-				{ label: JSX.Element; key: number; value: string }[]
+				{ value: string; name: string; type: string; id: number }[]
 			>
 		) => {
 			state.selectedDestinations = action.payload;
@@ -45,16 +53,17 @@ export const createJourneySlice = createSlice({
 		addSelectedDestination: (
 			state,
 			action: PayloadAction<{
-				label: JSX.Element;
-				key: number;
 				value: string;
+				name: string;
+				type: string;
+				id: number;
 			}>
 		) => {
 			if (
 				!arrayContains(
 					state.selectedDestinations,
 					action.payload,
-					(x, y) => x?.value === y.value
+					(x, y) => x?.name === y.name
 				)
 			) {
 				state.selectedDestinations = [
@@ -65,20 +74,38 @@ export const createJourneySlice = createSlice({
 		},
 		removeSelectedDestination: (state, action: PayloadAction<number>) => {
 			state.selectedDestinations = state.selectedDestinations.filter(
-				(value) => value.key !== action.payload
+				(value) => value.id !== action.payload
 			);
 		},
-		addTraveller: (state, action: PayloadAction<string>) => {
-			if (!state.selectedTravellers.includes(action.payload)) {
+		addTraveller: (
+			state,
+			action: PayloadAction<{
+				email: string;
+				permission: "Read" | "Edit";
+			}>
+		) => {
+			if (
+				!arrayContains(
+					state.selectedTravellers,
+					action.payload,
+					(x, y) => x.email === y.email
+				)
+			) {
 				state.selectedTravellers = [
 					...state.selectedTravellers,
 					action.payload,
 				];
 			}
 		},
-		removeTraveller: (state, action: PayloadAction<string>) => {
+		removeTraveller: (
+			state,
+			action: PayloadAction<{
+				email: string;
+				permission: "Read" | "Edit";
+			}>
+		) => {
 			state.selectedTravellers = state.selectedTravellers.filter(
-				(email) => email !== action.payload
+				(traveller) => traveller.email !== action.payload.email
 			);
 		},
 		setStartDate: (state, action: PayloadAction<Dayjs | null>) => {
@@ -102,10 +129,24 @@ export const createJourneySlice = createSlice({
 			state.currentStage > 0 && state.currentStage--;
 		},
 		setImage: (state, action: PayloadAction<File | null>) => {
-			state.image = action.payload;
+			if (action.payload) {
+				compressImageFile(action.payload, 5)
+					.then((file) => {
+						state.image = file;
+					})
+					.catch((err) => console.log(err));
+			} else {
+				state.image = null;
+			}
 		},
 		deleteImage: (state) => {
 			state.image = null;
+		},
+		setVisibility: (
+			state,
+			action: PayloadAction<"Public" | "Travellers" | "Only Me">
+		) => {
+			state.visibility = action.payload;
 		},
 	},
 });
@@ -127,6 +168,7 @@ export const {
 	deleteImage,
 	addTraveller,
 	removeTraveller,
+	setVisibility,
 } = createJourneySlice.actions;
 
 const createJourneyReducer = createJourneySlice.reducer;

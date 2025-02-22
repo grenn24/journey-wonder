@@ -61,6 +61,7 @@ const Image = ({ image, buttons, width, height = 200, style}: Prop) => {
 					objectFit: "contain",
 					zIndex: 1,
 				}}
+				
 			/>
 			<img
 				src={image}
@@ -75,12 +76,13 @@ const Image = ({ image, buttons, width, height = 200, style}: Prop) => {
 					transform: "scale(1.5)",
 					overflow: "hidden",
 				}}
+			
 			/>
 			<div
-			className="buttons-container"
+				className="buttons-container"
 				style={{
 					width: "100%",
-					height:"100%",
+					height: "100%",
 					position: "absolute",
 					padding: 9,
 					zIndex: 2,
