@@ -1,6 +1,6 @@
 # Journey-Wonder
 
-Frontend: React, MUI, Ant Design  
+Frontend: React, MUI, Ant Design, Framer Motion    
 Backend: NodeJS, Express, Multer, Mongoose  
 File Storage: Cloudflare R2  
 
