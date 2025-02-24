@@ -6,8 +6,6 @@ services:
       context: .
       dockerfile: Dockerfile
       target: backend
-    ports:
-      - "3000:3000"
     volumes:
       - ./backend:/backend
     networks:

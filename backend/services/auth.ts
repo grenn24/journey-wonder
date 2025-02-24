@@ -1,8 +1,5 @@
-import mongoose from "mongoose";
 import User from "../models/user";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import config from "config";
+import bcrypt from "bcryptjs";
 import { HttpError } from "../middlewares/error";
 import { validateRefreshToken } from "../middlewares/auth";
 import lodash from "lodash";

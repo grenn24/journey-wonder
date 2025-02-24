@@ -10,7 +10,6 @@ WORKDIR /backend
 # Install backend dependencies
 COPY --chown=app:app ./backend/package*.json .
 RUN npm install
-RUN npm rebuild bcrypt --build-from-source
 
 # Copy backend files
 COPY --chown=app:app ./backend/ ./
