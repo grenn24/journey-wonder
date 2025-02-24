@@ -1,8 +1,8 @@
 # Journey-Wonder
 
-Frontend: React, MUI, Ant Design
-Backend: NodeJS, Express, Multer, Mongoose
-File Storage: Cloudflare R2
+Frontend: React, MUI, Ant Design  
+Backend: NodeJS, Express, Multer, Mongoose  
+File Storage: Cloudflare R2  
 
 # Local Setup
 docker run -p 3000:3000 -p 27017:27017 journey-wonder
