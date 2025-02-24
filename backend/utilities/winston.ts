@@ -1,7 +1,7 @@
-import { time } from "console";
+
 import winston, { transports, format } from "winston";
-const { combine, timestamp, colorize, prettyPrint, simple, json } = format;
-const { Console, File } = transports;
+const { combine, timestamp, colorize, json } = format;
+const {  File } = transports;
 
 // log errors to a file or console
 const logger = (filename: string) =>

@@ -1,6 +1,6 @@
 import { Menu } from "antd";
 import { Footer } from "antd/es/layout/layout";
-import React, { useEffect, useState } from "react";
+import {useState } from "react";
 import useMobileFooterMenuItems from "./menus/mobileFooterMenuItems";
 import CreateModal from "../createJourney/CreateModal";
 

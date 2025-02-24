@@ -1,19 +1,15 @@
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Loading from "./Loading";
 import { useEffect, useState } from "react";
 import authService from "../services/auth";
 
 const Home = () => {
 	const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(
-		null
+		sessionStorage.getItem("X-Access-Token") ? true : null
 	);
 	const navigate = useNavigate();
-
 	useEffect(() => {
-		if (sessionStorage.getItem("X-Access-Token")) {
-			setIsAuthenticated(true);
-		} else {
-			// runs once every component mount only
+		if (isAuthenticated === null) {
 			authService
 				.refreshAccessToken()
 				.then(() => {
@@ -25,6 +21,9 @@ const Home = () => {
 						navigate("/guest");
 					}
 				});
+		}
+		if (isAuthenticated) {
+			navigate("/user")
 		}
 	}, []);
 

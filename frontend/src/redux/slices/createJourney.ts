@@ -1,9 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { JSX } from "react";
-import dayjs, { Dayjs } from "dayjs";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { arrayContains } from "../../utilities/array";
-import { UploadFile } from "antd";
-import { compressImageFile } from "../../utilities/file";
+import { compressImageFile, fileToBase64Url } from "../../utilities/file";
 
 interface createJourneyState {
 	currentStage: number;
@@ -14,9 +11,9 @@ interface createJourneyState {
 		type: string;
 		id: number;
 	}[];
-	startDate: Dayjs | null;
-	endDate: Dayjs | null;
-	image: File | null;
+	startDate: string | null | undefined;
+	endDate: string | null | undefined;
+	image: [string, string] | null;
 	selectedTravellers: { email: string; permission: "Read" | "Edit" }[];
 	visibility: "Public" | "Travellers" | "Only Me";
 }
@@ -30,6 +27,26 @@ const initialState: createJourneyState = {
 	selectedTravellers: [],
 	visibility: "Travellers",
 };
+
+export const compressAndSetImage = createAsyncThunk(
+	"create journey/compress image",
+	async (file: File | null, { rejectWithValue }) => {
+		try {
+			let image : [string,string]| null;
+			if (file) {
+				const compressedImage = await compressImageFile(file, 15);
+				const imageURL = await fileToBase64Url(compressedImage);
+				const imageName = file.name;
+				image = [imageURL, imageName]
+			} else {
+				image = null;
+			}
+			return image;
+		} catch (error) {
+			return rejectWithValue(error);
+		}
+	}
+);
 export const createJourneySlice = createSlice({
 	// Name of slice
 	name: "create journey",
@@ -108,13 +125,19 @@ export const createJourneySlice = createSlice({
 				(traveller) => traveller.email !== action.payload.email
 			);
 		},
-		setStartDate: (state, action: PayloadAction<Dayjs | null>) => {
+		setStartDate: (
+			state,
+			action: PayloadAction<string | null | undefined>
+		) => {
 			state.startDate = action.payload;
 		},
-		setEndDate: (state, action: PayloadAction<Dayjs | null>) => {
+		setEndDate: (
+			state,
+			action: PayloadAction<string | null | undefined>
+		) => {
 			state.endDate = action.payload;
 		},
-		setDates: (state, action: PayloadAction<(Dayjs | null)[]>) => {
+		setDates: (state, action: PayloadAction<(string | null)[]>) => {
 			state.startDate = action.payload[0];
 			state.endDate = action.payload[1];
 		},
@@ -128,16 +151,8 @@ export const createJourneySlice = createSlice({
 		decrementStage: (state) => {
 			state.currentStage > 0 && state.currentStage--;
 		},
-		setImage: (state, action: PayloadAction<File | null>) => {
-			if (action.payload) {
-				compressImageFile(action.payload, 5)
-					.then((file) => {
-						state.image = file;
-					})
-					.catch((err) => console.log(err));
-			} else {
-				state.image = null;
-			}
+		setImage: (state, action: PayloadAction<[string, string] | null>) => {
+			state.image = action.payload;
 		},
 		deleteImage: (state) => {
 			state.image = null;
@@ -148,6 +163,14 @@ export const createJourneySlice = createSlice({
 		) => {
 			state.visibility = action.payload;
 		},
+	},
+	extraReducers: (builder) => {
+		builder.addCase(
+			compressAndSetImage.fulfilled,
+			(state, action: PayloadAction<[string, string] | null>) => {
+				state.image = action.payload;
+			}
+		);
 	},
 });
 
@@ -171,6 +194,6 @@ export const {
 	setVisibility,
 } = createJourneySlice.actions;
 
-const createJourneyReducer = createJourneySlice.reducer;
+const createJourneySliceReducer = createJourneySlice.reducer;
 
-export default createJourneyReducer;
+export default createJourneySliceReducer;

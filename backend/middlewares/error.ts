@@ -7,7 +7,7 @@ const runtimeDebug = createDebug("app:runtime");
 
 export default function error(
 	err: any,
-	request: any,
+	_: any,
 	response: any,
 	next: any
 ) {

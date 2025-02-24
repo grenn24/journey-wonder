@@ -8,7 +8,10 @@ import themeSliceReducer from "./slices/theme";
 import languageSliceReducer from "./slices/language";
 import userSliceReducer from "./slices/user";
 import { persistStore } from "redux-persist";
-import createJourneyReducer from "./slices/createJourney.ts";
+
+import errorSliceReducer from "./slices/error.ts";
+import layoutSliceReducer from "./slices/layout.ts";
+import createJourneySliceReducer  from "./slices/createJourney.ts";
 
 // Enable map state variables
 enableMapSet();
@@ -16,14 +19,16 @@ enableMapSet();
 const persistConfig = {
 	key: "root",
 	storage,
-	whitelist: ["theme", "language", "user"], // persisted slices
+	whitelist: ["theme", "language", "user","createJourney", "layout"], // persisted slices
 };
 
 const rootReducer = combineReducers({
 	theme: themeSliceReducer,
 	language: languageSliceReducer,
 	user: userSliceReducer,
-	createJourney: createJourneyReducer
+	createJourney: createJourneySliceReducer,
+	error: errorSliceReducer,
+	layout:layoutSliceReducer
 });
 
 const persistedRootReducer = persistReducer(persistConfig, rootReducer);
@@ -34,7 +39,7 @@ const store = configureStore({
 export const persistor = persistStore(store);
 export default store;
 
-type RootState = ReturnType<typeof store.getState>;
+type RootState = ReturnType<typeof rootReducer>;
 type AppDispatch = typeof store.dispatch;
 
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>();

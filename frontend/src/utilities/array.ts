@@ -9,10 +9,10 @@ export function removeElementFromArray(array: any[], target: any) {
 	return filteredArray;
 }
 
-export function arrayContains<T>(
+export function arrayContains<T,K>(
 	array: T[],
-	target: T,
-	predicate: (element: T, target: T) => boolean
+	target: K,
+	predicate: (element: T, target: K) => boolean
 ) {
 	for (const element of array) {
 		if (predicate(element, target)) {

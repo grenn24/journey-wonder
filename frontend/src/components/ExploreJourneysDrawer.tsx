@@ -1,10 +1,10 @@
 import {
-	ClearRounded,
+
 	KeyboardVoiceRounded,
 	WestRounded,
 } from "@mui/icons-material";
 import {
-	AutoComplete,
+
 	Button,
 	Drawer,
 	Flex,
@@ -13,10 +13,10 @@ import {
 	Layout,
 	List,
 	theme,
-    Typography,
+ 
 } from "antd";
 import { Content, Header } from "antd/es/layout/layout";
-import React, { useRef, useState } from "react";
+import  { useRef, useState } from "react";
 import CloseButton from "./CloseButton";
 
 const data = [
@@ -31,7 +31,7 @@ interface Prop {
 	openExploreJourneysDrawer: boolean;
 	setOpenExploreJourneysDrawer: (value: boolean) => void;
 }
-const {Text} = Typography;
+
 const ExploreJourneysDrawer = ({
 	openExploreJourneysDrawer,
 	setOpenExploreJourneysDrawer,
@@ -39,9 +39,6 @@ const ExploreJourneysDrawer = ({
 	const {
 		token: {
 			colorBgContainer,
-			borderRadiusLG,
-			fontSizeHeading5,
-			colorText,
 		},
 	} = theme.useToken();
 	const inputRef = useRef<InputRef>(null);

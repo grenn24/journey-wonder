@@ -11,6 +11,7 @@ docker run -p 3000:3000 -p 27017:27017 journey-wonder
 - Internal server errors during runtime not being logged by winston to logs/errors.log
 - Pushing Docker image to GitHub container registry
 - GitHub action workflows
+- Use non-admin for docker linux shell
 
 # Possible Features
 - Semi transparent modal

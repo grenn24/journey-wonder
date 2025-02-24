@@ -4,8 +4,7 @@ import {
 	NavigateNextRounded,
 } from "@mui/icons-material";
 import { Button, Flex } from "antd";
-import React, { JSX, useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import React, { JSX, useRef, useState } from "react";
 import "../styles/scrollableDiv.css";
 import useBreakpoints from "../utilities/breakpoints";
 
@@ -26,7 +25,6 @@ const ScrollableDiv = ({
 	style,
 }: Prop) => {
 	const mediaViewerRef = useRef<HTMLDivElement>(null);
-	const buttonBoxRef = useRef<HTMLDivElement>(null);
 	const [isScrolling, setIsScrolling] = useState(false);
 	const scrollLeft = () => {
 		if (!isScrolling) {

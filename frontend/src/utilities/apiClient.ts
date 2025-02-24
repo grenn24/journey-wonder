@@ -1,12 +1,13 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import authService from "../services/auth";
 
+
+/*
 interface Response<T> {
 	response: AxiosResponse<T>;
 	abort: () => void;
 }
 
-/*
 401 Unauthorised: Missing access tokens
 403 Forbidden: Insufficient permissions
 */
@@ -22,8 +23,8 @@ class ApiClient {
 		const client = axios.create({
 			baseURL,
 			headers: {
-				"Content-Type": "application/json",
-				"X-Access-Token": sessionStorage.getItem("X-Access-Token"),
+				"Content-Type": "application/json", // dont include x-access-token as default headers (since it will change frequently)
+				Accept: "application/json",
 			},
 		});
 		client.interceptors.request.use(
@@ -85,20 +86,27 @@ class ApiClient {
 			const response = await this.client.get<T>(url, {
 				withCredentials: true,
 				...config,
+				headers: {
+					...config?.headers,
+					"X-Access-Token": sessionStorage.getItem("X-Access-Token"),
+				},
 			});
 			return response;
 		} catch (err: any) {
 			// Missing or invalid access token
 			if (err.status === 401) {
 				try {
-					await axios.get("/auth/refresh-access-token", {
-						withCredentials: true,
-						...config,
-					});
+					await authService.refreshAccessToken();
 					const response = await this.client.get<T>(url, {
 						withCredentials: true,
 						...config,
+						headers: {
+							...config?.headers,
+							"X-Access-Token":
+								sessionStorage.getItem("X-Access-Token"),
+						},
 					});
+
 					return response;
 				} catch (err: any) {
 					// Missing or invalid refresh token
@@ -124,6 +132,11 @@ class ApiClient {
 				{
 					withCredentials: true,
 					...config,
+					headers: {
+						...config?.headers,
+						"X-Access-Token":
+							sessionStorage.getItem("X-Access-Token"),
+					},
 				}
 			);
 			return response;
@@ -131,16 +144,18 @@ class ApiClient {
 			// Missing or invalid access token
 			if (err.status === 401) {
 				try {
-	
 					await authService.refreshAccessToken();
-
-					console.log(sessionStorage.getItem("X-Access-Token"));
 					const response = this.client.post<T, AxiosResponse<R>>(
 						url,
 						data,
 						{
 							withCredentials: true,
 							...config,
+							headers: {
+								...config?.headers,
+								"X-Access-Token":
+									sessionStorage.getItem("X-Access-Token"),
+							},
 						}
 					);
 					return response;
@@ -168,6 +183,11 @@ class ApiClient {
 				{
 					withCredentials: true,
 					...config,
+					headers: {
+						...config?.headers,
+						"X-Access-Token":
+							sessionStorage.getItem("X-Access-Token"),
+					},
 				}
 			);
 			return response;
@@ -175,16 +195,18 @@ class ApiClient {
 			// Missing or invalid access token
 			if (err.status === 401) {
 				try {
-					await axios.get("/auth/refresh-access-token", {
-						withCredentials: true,
-						...config,
-					});
+					await authService.refreshAccessToken();
 					const response = await this.client.put<T, AxiosResponse<R>>(
 						url,
 						data,
 						{
 							withCredentials: true,
 							...config,
+							headers: {
+								...config?.headers,
+								"X-Access-Token":
+									sessionStorage.getItem("X-Access-Token"),
+							},
 						}
 					);
 					return response;
@@ -208,19 +230,25 @@ class ApiClient {
 			const response = await this.client.delete<T>(url, {
 				withCredentials: true,
 				...config,
+				headers: {
+					...config?.headers,
+					"X-Access-Token": sessionStorage.getItem("X-Access-Token"),
+				},
 			});
 			return response;
 		} catch (err: any) {
 			// Missing or invalid access token
 			if (err.status === 401) {
 				try {
-					await axios.get("/auth/refresh-access-token", {
-						withCredentials: true,
-						...config,
-					});
+					await authService.refreshAccessToken();
 					const response = await this.client.delete<T>(url, {
 						withCredentials: true,
 						...config,
+						headers: {
+							...config?.headers,
+							"X-Access-Token":
+								sessionStorage.getItem("X-Access-Token"),
+						},
 					});
 					return response;
 				} catch (err: any) {
@@ -243,6 +271,10 @@ class ApiClient {
 		return this.client.patch<T, AxiosResponse<R>>(url, data, {
 			withCredentials: true,
 			...config,
+			headers: {
+				...config?.headers,
+				"X-Access-Token": sessionStorage.getItem("X-Access-Token"),
+			},
 		});
 	}
 }

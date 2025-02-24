@@ -1,11 +1,11 @@
-import { Flex, GlobalToken, Tag, Typography } from "antd";
-import countriesData from "../../data/destinations/countries.json";
-import regionsData from "../../data/destinations/regions.json";
-import statesData from "../../data/destinations/states.json";
-import citiesRawData from "../../data/destinations/cities.json";
 
-const { Text } = Typography;
-const citiesData = citiesRawData as { name: string; id: number }[];
+import countriesData from "./countries.json";
+import regionsData from "./regions.json";
+import statesData from "./states.json";
+import citiesRawData from "./cities.json";
+
+
+const citiesData = citiesRawData;
 const countries = countriesData.map((country) => ({
 	value: country.name + ";" + country.id,
 	name: country.name,

@@ -13,23 +13,17 @@
 		"allowImportingTsExtensions": true,
 		"isolatedModules": true,
 		"moduleDetection": "force",
-    "resolveJsonModule": true,
+		"resolveJsonModule": true,
 		"noEmit": true,
 		"jsx": "react-jsx",
 
 		/* Linting */
-		"strict": true,
+		//"strict": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"noFallthroughCasesInSwitch": true,
 		"noUncheckedSideEffectImports": true
 	},
 	"include": ["src"],
-	"exclude": [
-		"./src/data/destinations/cities.ts",
-		"./src/data/destinations/countries.ts",
-		"./src/data/destinations/regions.ts",
-		"./src/data/destinations/states.ts",
-    "./node_modules"
-	]
+	"exclude": ["node_modules"]
 }

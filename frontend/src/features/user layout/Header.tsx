@@ -7,14 +7,11 @@ import {
 	Image,
 	Input,
 	Modal,
-	Popover,
-	theme,
 	Typography,
 } from "antd";
 import { Header as HeaderBase } from "antd/es/layout/layout";
 import { useAppSelector } from "../../redux/store";
 import useBreakpoints from "../../utilities/breakpoints";
-import { NotificationsNoneRounded } from "@mui/icons-material";
 import useProfileMenu from "./menus/profileMenu";
 import { useState } from "react";
 import journeyWonderIcon from "../../assets/images/journey-wonder-icon/svg/journey-wonder-icon-white-background-normal.svg";
@@ -26,19 +23,12 @@ import NotificationButton from "./NotificationButton";
 
 const { Text } = Typography;
 const UserHeader = () => {
-	const { name, globalTheme, globalLanguage } = useAppSelector((state) => ({
+	const { name, splitterSize } = useAppSelector((state) => ({
 		name: state.user.name,
 		globalTheme: state.theme.theme,
 		globalLanguage: state.language.language,
+		splitterSize: state.layout.splitterSize
 	}));
-	const {
-		token: {
-			colorBgContainer,
-			borderRadiusLG,
-			fontSizeHeading5,
-			colorText,
-		},
-	} = theme.useToken();
 	const navigate = useNavigate();
 	const breakpoints = useBreakpoints();
 	const [openLogOutModal, setOpenLogOutModal] = useState(false);
@@ -57,19 +47,24 @@ const UserHeader = () => {
 		authService.logout().then(() => navigate("/guest"));
 
 	return (
-		<>
+		<div>
 			<HeaderBase
 				style={{
-					backgroundColor: colorBgContainer,
-					padding: "0 20px",
+					backgroundColor: "rgba(0,0,0,0)",
+					padding: "0 30px",
 					display: "flex",
 					justifyContent: "center",
+					position: "fixed",
+					width: breakpoints.largerThan("md")
+						? document.documentElement.clientWidth - splitterSize[0]
+						: "100%",
+					zIndex: 5,
 				}}
 			>
 				<Flex
 					justify="space-between"
 					align="center"
-					style={{ width: 1000 }}
+					style={{ width: "100%" }}
 				>
 					<a
 						href="/user"
@@ -98,13 +93,18 @@ const UserHeader = () => {
 										"Ask JourneyWonder AI"
 									)}
 									variant="filled"
+									style={{
+										backgroundColor:
+											"rgba(255, 255, 255, 0.2)",
+									
+									}}
 								/>
 								<NotificationButton />
 								<Dropdown
 									dropdownRender={
 										profileMenu[profileMenuSection]
 									}
-									placement="bottomLeft"
+									placement="bottomRight"
 									overlayStyle={{ width: 250 }}
 									onOpenChange={(nextOpen, info) => {
 										// set menu closing behaviour
@@ -166,7 +166,7 @@ const UserHeader = () => {
 				openExploreJourneysDrawer={openExploreJourneysDrawer}
 				setOpenExploreJourneysDrawer={setOpenExploreJourneysDrawer}
 			/>
-		</>
+		</div>
 	);
 };
 export default UserHeader;

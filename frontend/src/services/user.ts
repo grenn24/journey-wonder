@@ -1,9 +1,8 @@
-import ApiClient from "../utilities/apiClient";
-import config from "config";
+
 import { UserType } from "../../../backend/models/user";
 import createApiClient from "../utilities/apiClient";
 import authService from "./auth";
-import Joi from "Joi";
+import Joi from "joi";
 
 const emailSchema = Joi.object({
 	email: Joi.string().email({ tlds: { allow: false } }).required(),

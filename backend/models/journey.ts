@@ -1,11 +1,10 @@
 import Joi from "joi";
 const JoiObjectId = require("joi-objectid")(Joi);
 import mongoose, { InferSchemaType } from "mongoose";
-import { eventJoiSchema } from "./event";
 import { HttpError } from "../middlewares/error";
 import Event from "./event";
 
-const itinerarySchema = new mongoose.Schema({
+const journeySchema = new mongoose.Schema({
 	author: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "User",
@@ -84,12 +83,12 @@ const itinerarySchema = new mongoose.Schema({
 	},
 });
 
-itinerarySchema.pre("deleteMany", async function () {
+journeySchema.pre("deleteMany", async function () {
 	try {
-		const itinerariesToDelete = await Itinerary.find(this.getFilter());
-		for (const itinerary of itinerariesToDelete) {
-			if (itinerary.events.length > 0) {
-				await Event.deleteMany({ _id: { $in: itinerary.events } });
+		const itinerariesToDelete = await Journey.find(this.getFilter());
+		for (const journey of itinerariesToDelete) {
+			if (journey.events.length > 0) {
+				await Event.deleteMany({ _id: { $in: journey.events } });
 			}
 		}
 	} catch (err) {
@@ -97,9 +96,9 @@ itinerarySchema.pre("deleteMany", async function () {
 	}
 });
 
-itinerarySchema.pre("deleteOne", async function () {
+journeySchema.pre("deleteOne", async function () {
 	try {
-		const itineraryToDelete = await Itinerary.findOne(this.getFilter());
+		const itineraryToDelete = await Journey.findOne(this.getFilter());
 		if (itineraryToDelete && itineraryToDelete.events.length > 0) {
 			await Event.deleteMany({ _id: { $in: itineraryToDelete.events } });
 		}
@@ -108,10 +107,10 @@ itinerarySchema.pre("deleteOne", async function () {
 	}
 });
 
-itinerarySchema.statics.validate = validateItinerary;
+journeySchema.statics.validate = validateJourney;
 
-export function validateItinerary(itinerary: any) {
-	const itinerarySchema = Joi.object({
+export function validateJourney(journey: any) {
+	const journeySchema = Joi.object({
 		title: Joi.string().max(512).required(),
 		description: Joi.string(),
 		destinations: Joi.array()
@@ -142,13 +141,13 @@ export function validateItinerary(itinerary: any) {
 		picture: Joi.binary(),
 	});
 
-	let result = itinerarySchema.validate(itinerary);
+	let result = journeySchema.validate(journey);
 	if (result.error) {
 		throw new HttpError(result.error.details[0].message, "INVALID_FIELDS");
 	}
 }
 
-const Itinerary = mongoose.model("Itinerary", itinerarySchema);
+const Journey = mongoose.model("Journey", journeySchema);
 
-export default Itinerary;
-export type ItineraryType = InferSchemaType<typeof itinerarySchema>;
+export default Journey;
+export type JourneyType = InferSchemaType<typeof journeySchema>;

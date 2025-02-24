@@ -1,16 +1,14 @@
 import { Image, Upload, UploadFile, UploadProps } from "antd";
 import ImgCrop from "antd-img-crop";
 import {
-	RcFile,
-	UploadFileStatus,
 	UploadListType,
 } from "antd/es/upload/interface";
-import React, { JSX, useCallback, useEffect, useMemo, useState } from "react";
-import "../../styles/ant.css"
-import {AnimatePresence, motion} from "motion/react"
+import React, { JSX, useState } from "react";
+import "../../styles/ant.css";
+import { AnimatePresence, motion } from "motion/react";
 
 interface CustomImageRenderProp {
-	image: File;
+	image: File | string;
 	handleDelete: () => void;
 }
 interface Prop {
@@ -27,6 +25,7 @@ interface Prop {
 	message?: string | JSX.Element;
 	className?: string;
 	hideOnMaxUpload?: boolean;
+	editable?: boolean;
 }
 const defaultImageRenderTypes: Record<string, UploadListType | undefined> = {
 	square: "picture-card",
@@ -47,33 +46,26 @@ const ImageUpload = ({
 	acceptedFileTypes = "image/*",
 	message = "+ Upload File",
 	className,
-	hideOnMaxUpload = false,
+	editable = true,
 }: Prop) => {
 	const [fileList, setFileList] = useState<UploadFile[]>([]);
 	const [previewImage, setPreviewImage] = useState<File | undefined>(
 		undefined
 	);
-
 	const onChange: UploadProps["onChange"] = ({ fileList }) => {
 		setFileList(fileList);
-		setTimeout(()=>setImages(fileList.map((file) => file.originFileObj as File)),500);
+
+		const updatedImages = fileList
+			.filter((file) => (editable ? file.percent !== 0 : true))
+			.map((file) => file.originFileObj as File);
+			setImages(updatedImages);
 	};
 	const onPreview = async (file: UploadFile) => {
 		setPreviewImage(file.originFileObj as File);
-		console.log(previewImage);
 		previewImage && console.log(URL.createObjectURL(previewImage));
 	};
-
-	const FileInput = defaultImageRenderType === "block" ? Upload.Dragger : Upload;
-
-	const Custom = useMemo(
-		() =>
-			CustomImageRender
-			,
-		[fileList]
-	);
-
-
+	const FileInput =
+		defaultImageRenderType === "block" ? Upload.Dragger : Upload;
 
 	return (
 		<AnimatePresence>
@@ -86,9 +78,9 @@ const ImageUpload = ({
 					ease: "easeInOut",
 				}}
 			>
-				{Custom &&
+				{CustomImageRender &&
 					images.map((image, targetIndex) => (
-						<Custom
+						<CustomImageRender
 							key={targetIndex}
 							image={image}
 							handleDelete={() => {
@@ -107,10 +99,52 @@ const ImageUpload = ({
 					))}
 			</motion.div>
 
-			<ImgCrop rotationSlider showGrid aspect={aspectRatio}>
+			{editable ? (
+				<ImgCrop rotationSlider showGrid aspect={aspectRatio}>
+					<FileInput
+						className={
+							images.length >= maxUploads &&
+							defaultImageRenderType === "block"
+								? "invisible-upload-image"
+								: className
+						}
+						accept={acceptedFileTypes}
+						multiple={multipleUploads}
+						maxCount={maxUploads}
+						listType={
+							defaultImageRenderTypes[defaultImageRenderType]
+						}
+						fileList={fileList.map((file) => {
+							if (!uploadUrl) {
+								file.status = "done";
+							}
+							return file;
+						})}
+						onChange={onChange}
+						action={uploadUrl}
+						onPreview={onPreview}
+						itemRender={(image) => {
+							if (CustomImageRender) {
+								return null;
+							} else {
+								return image;
+							}
+						}}
+						showUploadList={{
+							showPreviewIcon: preview,
+							showRemoveIcon: true,
+						}}
+					>
+						{(images.length < maxUploads ||
+							defaultImageRenderType === "block") &&
+							message}
+					</FileInput>
+				</ImgCrop>
+			) : (
 				<FileInput
 					className={
-						images.length >= maxUploads
+						fileList.length >= maxUploads &&
+						defaultImageRenderType === "block"
 							? "invisible-upload-image"
 							: className
 					}
@@ -127,15 +161,23 @@ const ImageUpload = ({
 					onChange={onChange}
 					action={uploadUrl}
 					onPreview={onPreview}
-					itemRender={(image) => (CustomImageRender ? [] : image)}
+					itemRender={(image) => {
+						if (CustomImageRender) {
+							return null;
+						} else {
+							return image;
+						}
+					}}
 					showUploadList={{
 						showPreviewIcon: preview,
 						showRemoveIcon: true,
 					}}
 				>
-					{message}
+					{(fileList.length < maxUploads ||
+						defaultImageRenderType === "block") &&
+						message}
 				</FileInput>
-			</ImgCrop>
+			)}
 
 			{previewImage && (
 				<Image

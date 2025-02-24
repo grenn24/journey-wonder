@@ -1,7 +1,5 @@
-import React, { JSX } from "react";
+import { JSX } from "react";
 import { Tooltip as TooltipBase } from "antd";
-import { LiteralUnion } from "antd/es/_util/type";
-import { PresetColorType } from "antd/es/theme/internal";
 
 type Color =
 	| "blue"

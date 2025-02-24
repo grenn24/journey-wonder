@@ -1,8 +1,6 @@
 
 import {
-	Button,
 	Flex,
-	theme,
 	Tooltip,
 	Typography,
 } from "antd";
@@ -14,17 +12,14 @@ import {
 	CheckCircleOutlineRounded as CheckCircleOutlineRoundedIcon,
 	DeleteRounded as DeleteRoundedIcon,
 	DeleteOutlineRounded as DeleteOutlineRoundedIcon,
-	ChevronLeftRounded as ChevronLeftRoundedIcon,
-	ChevronRightRounded as ChevronRightRoundedIcon,
 	HomeOutlined as HomeOutlinedIcon,
 	HomeRounded as HomeRoundedIcon,
 	ExploreOutlined as ExploreOutlinedIcon,
 	ExploreRounded as ExploreRoundedIcon,
 } from "@mui/icons-material";
-import { use } from "react";
 import i18next from "i18next";
 
-const { Text,Title } = Typography;
+const { Title } = Typography;
 const useLeftMenuItems = (
 	splitterSize: (number | string)[]
 ) => {
@@ -43,14 +38,14 @@ const useLeftMenuItems = (
 			label: (
 				<Tooltip
 					title="Home"
-					placement="bottom"
+					placement="right"
 					arrow={false}
 					color="grey"
 					styles={{
 						body: {
-							opacity: 0.7,
+							
 							position: "relative",
-							top: 14,
+							left: 20,
 						},
 					}}
 				>
@@ -84,14 +79,14 @@ const useLeftMenuItems = (
 			label: (
 				<Tooltip
 					title="Explore"
-					placement="bottom"
+					placement="right"
 					arrow={false}
 					color="grey"
 					styles={{
 						body: {
-							opacity: 0.7,
+							
 							position: "relative",
-							top: 14,
+							left: 20,
 						},
 					}}
 				>
@@ -125,14 +120,14 @@ const useLeftMenuItems = (
 			label: (
 				<Tooltip
 					title="Upcoming Journeys"
-					placement="bottom"
+					placement="right"
 					arrow={false}
 					color="grey"
 					styles={{
 						body: {
-							opacity: 0.7,
+						
 							position: "relative",
-							top: 14,
+							left: 20,
 						},
 					}}
 				>
@@ -166,14 +161,14 @@ const useLeftMenuItems = (
 			label: (
 				<Tooltip
 					title="Completed Journeys"
-					placement="bottom"
+					placement="right"
 					arrow={false}
 					color="grey"
 					styles={{
 						body: {
-							opacity: 0.7,
+						
 							position: "relative",
-							top: 14,
+							left: 20,
 						},
 					}}
 				>
@@ -209,14 +204,14 @@ const useLeftMenuItems = (
 			label: (
 				<Tooltip
 					title="Deleted Journeys"
-					placement="bottom"
+					placement="right"
 					arrow={false}
 					color="grey"
 					styles={{
 						body: {
-							opacity: 0.7,
+						
 							position: "relative",
-							top: 14,
+							left: 20,
 						},
 					}}
 				>

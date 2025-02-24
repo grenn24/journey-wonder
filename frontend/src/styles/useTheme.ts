@@ -6,8 +6,8 @@ import { createTheme } from "@mui/material";
 
 const useTheme = () => {
 	const { globalTheme, globalLanguage } = useAppSelector((state) => ({
-		globalTheme: state.theme.theme,
-		globalLanguage: state.language.language,
+		globalTheme: state.theme?.theme,
+		globalLanguage: state.language?.language,
 	}));
 	const { token } = theme.useToken();
 	type TokenType = typeof token;

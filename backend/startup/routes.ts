@@ -1,7 +1,7 @@
 import express, { Express } from "express";
 import user from "../routes/user";
 import auth from "../routes/auth";
-import itinerary from "../routes/itinerary";
+import journey from "../routes/journey";
 import error from "../middlewares/error";
 const Joi = require("joi");
 Joi.ObjectID = require("joi-objectid")(Joi);
@@ -15,8 +15,8 @@ const routes = (app: Express) => {
 	// User-related routes
 	apiRouter.use("/user", user);
 
-	// Itinerary-related routes
-	apiRouter.use("/itinerary", itinerary);
+	// Journey-related routes
+	apiRouter.use("/journey", journey);
 
 	// Log errors
 	apiRouter.use(error);

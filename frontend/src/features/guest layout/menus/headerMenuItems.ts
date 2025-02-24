@@ -6,9 +6,7 @@ const useHeaderMenuItems =()=> {
     const navigate = useNavigate();
     	 const {
 				token: {
-					colorBgContainer,
 					fontSizeHeading5,
-					colorText,
 				},
 			} = theme.useToken();
     return [

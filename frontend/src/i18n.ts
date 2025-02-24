@@ -45,6 +45,32 @@ const resources = {
 			"Please enter your password": "请输入你的密码",
 			"Invalid email format": "电邮格式不正确",
 			"Ask JourneyWonder AI": "讯问 JourneyWonder AI",
+			Destination: "目的地",
+			Today: "今天",
+			Cancel: "取消",
+			"Discard Changes": "放弃更改",
+			"Save Changes": "保存更改",
+			Create: "创建",
+			Next: "下一步",
+			Public: "公众",
+			Travellers: "旅行伙伴",
+			"Only Me": "我",
+			"Save your current changes so that you can continue later":
+				"保存当前更改，稍后继续",
+			"Heading Somewhere?": "前往某处？",
+			"Add a custom cover photo": "添加封面照片",
+			Reset: "重置",
+			Dates: "日期",
+			Places: "地点",
+			"An internal server error occurred. Please try again later.":
+				"内部服务器发生错误。请稍后再试。",
+			"Send an email invite": "发送邮件邀请",
+			"Plan your new journey": "规划新的旅程",
+			Notifications: "通知",
+			"No notifications for now": "暂时无通知",
+			Title: "主题",
+			"My trip to...": "我的旅行...",
+			"Japan, China, USA...": "日本、中国、美国...",
 		},
 	},
 	ja: {
@@ -87,10 +113,36 @@ const resources = {
 			"Please enter your password": "パスワードを入力してください",
 			"Invalid email format": "メールアドレスの形式が正しくありません",
 			"Ask JourneyWonder AI": "JourneyWonder AI に尋ねる",
+			Destination: "目的地",
+			Today: "今日",
+			Cancel: "キャンセル",
+			"Discard Changes": "変更を破棄",
+			"Save Changes": "変更を保存",
+			Create: "作成",
+			Next: "次へ ",
+			Public: "公共",
+			Travellers: "旅行仲間",
+			"Only Me": "私",
+			"Save your current changes so that you can continue later":
+				"現在の変更を保存して、後で続行できるようにします",
+			"Heading Somewhere?": "どこかへ向かっていますか？",
+			"Add a custom cover photo": "カバー写真を追加",
+			Reset: "リセット",
+			Dates: "日付",
+			Places: "場所",
+			"An internal server error occurred. Please try again later.":
+				"内部サーバーエラーが発生しました。後で再試行してください。",
+			"Send an email invite": "招待メールを送る",
+			"Plan your new journey": "新しい旅を計画する",
+			Notifications: "通知",
+			"No notifications for now": "現在通知はありません",
+			Title: "タイトル",
+			"My trip to...": "私の旅行...",
+			"Japan, China, USA...": "日本、中国、アメリカ...",
 		},
 	},
 };
-const languageCode = getLanguageCode(store.getState().language.language);
+const languageCode = getLanguageCode(store.getState().language?.language);
 i18n.use(initReactI18next) // passes i18n down to react-i18next
 	.init({
 		resources,
@@ -104,7 +156,7 @@ i18n.use(initReactI18next) // passes i18n down to react-i18next
 	});
 
 store.subscribe(() => {
-	const newLanguageCode = getLanguageCode(store.getState().language.language);
+	const newLanguageCode = getLanguageCode(store.getState().language?.language);
 	i18n.changeLanguage(newLanguageCode);
 });
 

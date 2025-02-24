@@ -41,13 +41,10 @@ const useProfileMenu = (
 ) => {
 	const {
 		token: {
-			colorBgContainer,
-			borderRadiusLG,
 			fontSizeHeading5,
-			colorText,
 		},
 	} = theme.useToken();
-	const { name, globalTheme, globalLanguage } = useAppSelector(
+	const { globalTheme, globalLanguage } = useAppSelector(
 		(state: any) => ({
 			name: state.user.name,
 			globalTheme: state.theme.theme,

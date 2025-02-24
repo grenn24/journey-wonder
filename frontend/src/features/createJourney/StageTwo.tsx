@@ -1,5 +1,3 @@
-import { PlusOutlined } from "@ant-design/icons";
-import { TextField, ThemeProvider } from "@mui/material";
 import {
 	Button,
 	Card,
@@ -10,43 +8,31 @@ import {
 	theme,
 	Tooltip,
 	Typography,
-	Upload,
-	UploadFile,
 } from "antd";
-import ImgCrop from "antd-img-crop";
-import { ReactEventHandler, useCallback, useEffect, useState } from "react";
+import { ReactEventHandler, useEffect, useState } from "react";
 import { useAppSelector } from "../../redux/store";
 import { useDispatch } from "react-redux";
 import {
 	addTraveller,
-	deleteImage,
 	removeTraveller,
-	setImage,
+	compressAndSetImage,
 } from "../../redux/slices/createJourney";
-import { UploadFileStatus } from "antd/es/upload/interface";
 import "../../styles/ant.css";
-import { useMuiTheme } from "../../styles/useTheme";
-import ImageViewer from "../../components/Image";
 import {
 	AddRounded,
 	ClearRounded,
 	DeleteOutlineRounded,
-	DeleteRounded,
 	EditRounded,
 	PanoramaRounded,
 	VisibilityRounded,
 } from "@mui/icons-material";
-import Dragger from "antd/es/upload/Dragger";
 import "../../styles/ant.css";
-import CloseButton from "../../components/CloseButton";
 import ScrollableDiv from "../../components/ScrollableDiv";
 import userService from "../../services/user";
 import { AnimatePresence, motion } from "motion/react";
 import ImageUpload from "../../components/Image/ImageUpload";
-import Image from "../../components/Image";
-import Itinerary from "../../../../backend/models/itinerary";
-import itineraryService from "../../services/itinerary";
-import { permission } from "process";
+import Image from "../../components/Image/Image";
+import i18n from "../../i18n";
 
 const { Text } = Typography;
 const StageTwo = () => {
@@ -60,21 +46,19 @@ const StageTwo = () => {
 		"Edit" | "Read"
 	>("Edit");
 	const [isValidEmail, setIsValidEmail] = useState(false);
-	const {
-		image,
-		selectedTravellers,
-		visibility,
-	} = useAppSelector((state) => ({
-		image: state.createJourney.image,
-		selectedTravellers: state.createJourney.selectedTravellers,
-		visibility: state.createJourney.visibility,
-	}));
+	const { image, selectedTravellers, visibility } = useAppSelector(
+		(state) => ({
+			image: state.createJourney?.image,
+			selectedTravellers: state.createJourney?.selectedTravellers,
+			visibility: state.createJourney?.visibility,
+		})
+	);
 
 	const [isTravellersExpanded, setIsTravellersExpanded] = useState(false);
-	const [fileList, setFileList] = useState<UploadFile<any>[]>([]);
 
 	const addTravellerEmail: ReactEventHandler = (e) => {
 		e.stopPropagation();
+		console.log(travellerPermission);
 		const traveller = {
 			email: travellerEmail,
 			permission: travellerPermission,
@@ -82,7 +66,6 @@ const StageTwo = () => {
 		isValidEmail && travellerEmail && dispatch(addTraveller(traveller));
 		setTravellerEmail("");
 	};
-
 
 	useEffect(() => {
 		visibility === "Only Me" && setIsTravellersExpanded(false);
@@ -121,7 +104,7 @@ const StageTwo = () => {
 											width: "100%",
 										}}
 									>
-										Travellers
+										{i18n.t("Travellers")}
 									</Text>
 									<Input
 										type="email"
@@ -131,7 +114,9 @@ const StageTwo = () => {
 												: "error"
 										}
 										size="middle"
-										placeholder="Send an email invite to your friends"
+										placeholder={i18n.t(
+											"Send an email invite"
+										)}
 										value={travellerEmail}
 										onClick={(e) => e.stopPropagation()}
 										onChange={(e) => {
@@ -155,22 +140,21 @@ const StageTwo = () => {
 										suffix={
 											<>
 												<Select
-													defaultValue={{
-														value: "Edit",
-														label: (
-															<EditRounded fontSize="small" />
-														),
-													}}
+													value={travellerPermission}
 													variant="borderless"
 													options={[
 														{
-															value: "Edit",
+															value: "Edit" as
+																| "Edit"
+																| "Read",
 															label: (
 																<EditRounded fontSize="small" />
 															),
 														},
 														{
-															value: "View",
+															value: "Read" as
+																| "Edit"
+																| "Read",
 															label: (
 																<VisibilityRounded fontSize="small" />
 															),
@@ -216,6 +200,11 @@ const StageTwo = () => {
 																? 1
 																: 0,
 													}}
+													onSelect={(value) => {
+														setTravellerPermission(
+															value
+														);
+													}}
 													className="select-without-arrow"
 												/>
 												<Button
@@ -238,12 +227,12 @@ const StageTwo = () => {
 										height={35}
 										style={{
 											display:
-												selectedTravellers.length === 0
+												selectedTravellers?.length === 0
 													? "none"
 													: "flex",
 										}}
 									>
-										{selectedTravellers?.map(
+										{selectedTravellers ? selectedTravellers?.map(
 											(traveller) => (
 												<Tooltip
 													title={
@@ -300,7 +289,7 @@ const StageTwo = () => {
 													</Tag>
 												</Tooltip>
 											)
-										)}
+										) : []}
 									</ScrollableDiv>
 								</Flex>
 							</motion.div>
@@ -317,13 +306,14 @@ const StageTwo = () => {
 							>
 								<Flex justify="space-between">
 									<Text disabled={visibility === "Only Me"}>
-										Travellers
+										{i18n.t("Travellers")}
 									</Text>
 									<Text>
 										{visibility !== "Only Me"
-											? selectedTravellers.length +
-											  " Travellers"
-											: "Only Me"}
+											? selectedTravellers?.length +
+											  " " +
+											  i18n.t("Travellers")
+											: i18n.t("Only Me")}
 									</Text>
 								</Flex>
 							</motion.div>
@@ -334,15 +324,15 @@ const StageTwo = () => {
 
 			<ImageUpload
 				className="draggable-upload-image"
-				aspectRatio={16 / 9}
-				images={image ? [image] : []}
+				aspectRatio={21 / 9}
+				images={image ? [image[0] as any] : []}
 				defaultImageRenderType="block"
 				maxUploads={1}
-				setImages={(images) =>
+				setImages={(images) => {
 					images.length === 0
-						? dispatch(setImage(null))
-						: dispatch(setImage(images[0]))
-				}
+						? dispatch(compressAndSetImage(null) as any)
+						: dispatch(compressAndSetImage(images[0]) as any);
+				}}
 				CustomImageRender={({ image, handleDelete }) => (
 					<Image
 						image={image}
@@ -355,7 +345,7 @@ const StageTwo = () => {
 								}}
 								icon={
 									<DeleteOutlineRounded
-										style={{ color: colorBgContainer }}
+										style={{ color: "white" }}
 									/>
 								}
 								onClick={() => handleDelete()}
@@ -366,7 +356,7 @@ const StageTwo = () => {
 				message={
 					<Flex vertical justify="center" align="center">
 						<PanoramaRounded style={{ fontSize: 38 }} />
-						<Text>Add a cover photo</Text>
+						<Text> {i18n.t("Add a custom cover photo")}</Text>
 					</Flex>
 				}
 				acceptedFileTypes="image/jpeg, image/png, image/gif"

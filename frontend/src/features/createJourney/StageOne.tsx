@@ -1,7 +1,6 @@
-import React, { JSX, useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import {
-	AutoComplete,
 	Button,
 	Flex,
 	Tag,
@@ -9,11 +8,9 @@ import {
 	DatePicker,
 	Typography,
 	Input,
-	Divider,
 	Card,
 	Select,
 } from "antd";
-import { InputAdornment, TextField, ThemeProvider } from "@mui/material";
 import {
 	addSelectedDestination,
 	removeSelectedDestination,
@@ -23,52 +20,32 @@ import {
 	setTitle,
 } from "../../redux/slices/createJourney";
 import CloseButton from "../../components/CloseButton";
-import { ClearRounded } from "@mui/icons-material";
 import dayjs from "dayjs";
-import { useMuiTheme } from "../../styles/useTheme";
-import ScrollableDiv from "../../components/ScrollableDiv";
 import "../../styles/ant.css";
 import { AnimatePresence, motion } from "motion/react";
 import destinations from "../../data/destinations/destinations";
+import i18n from "../../i18n";
 
 const { RangePicker } = DatePicker;
 const { Text } = Typography;
 const StageOne = () => {
+	const memoisedDestinations = useMemo(() => destinations, []);
 	const { token } = theme.useToken();
-	const muiTheme = useMuiTheme();
-	const {
-		colorBgContainer,
-		borderRadius,
-		fontSizeHeading5,
-		colorText,
-		colorPrimary,
-		colorPrimaryBg,
-		colorPrimaryBorder,
-		colorBorder,
-		colorPrimaryBorderHover,
-		colorPrimaryActive,
-		colorPrimaryText,
-		fontFamily,
-	} = token;
+	const { colorBorder } = token;
 	const { title, selectedDestinations, startDate, endDate } = useAppSelector(
 		(state) => ({
-			title: state.createJourney.title,
-			selectedDestinations: state.createJourney.selectedDestinations,
-			startDate: state.createJourney.startDate,
-			endDate: state.createJourney.endDate,
+			title: state.createJourney?.title,
+			selectedDestinations: state.createJourney?.selectedDestinations,
+			startDate: state.createJourney?.startDate,
+			endDate: state.createJourney?.endDate,
 		})
 	);
 	const dispatch = useAppDispatch();
 	const [panelMode, setPanelMode] = useState<"start" | "end">("start");
 	const [destinationSearchValue, setDestinationSearchValue] = useState("");
-	const [options, setOptions] = useState<
-		{ label: JSX.Element; key: number; value: string }[]
-	>([]);
 
 	const [isTitleExpanded, setIsTitleExpanded] = useState(false);
 	const [isDestinationsExpanded, setIsdestinationsExpanded] = useState(false);
-	const [isDestinationsInputExpanded, setIsDestinationsInputExpanded] =
-		useState(false);
 	const [isDatesExpanded, setIsDatesExpanded] = useState(false);
 
 	return (
@@ -110,11 +87,11 @@ const StageOne = () => {
 											width: "100%",
 										}}
 									>
-										Title
+										{i18n.t("Title")}
 									</Text>
 									<Input
 										size="large"
-										placeholder="My trip to ..."
+										placeholder={i18n.t("My trip to...")}
 										value={title}
 										onClick={(e) => e.stopPropagation()}
 										onChange={(e) =>
@@ -152,7 +129,7 @@ const StageOne = () => {
 							transition={{ duration: 0.3, ease: "easeInOut" }}
 						>
 							<Flex justify="space-between">
-								<Text>Title</Text>
+								<Text>{i18n.t("Title")}</Text>
 								<Text>{title}</Text>
 							</Flex>
 						</motion.div>
@@ -188,17 +165,18 @@ const StageOne = () => {
 								<Text
 									style={{ textAlign: "left", width: "100%" }}
 								>
-									Destination(s)
+									{i18n.t("Destination")}
 								</Text>
 								<div onClick={(e) => e.stopPropagation()}>
 									<Select
 										mode="multiple"
 										style={{ width: "100%" }}
 										size="large"
-										placeholder="Japan, China, USA ..."
+										placeholder={i18n.t(
+											"Japan, China, USA..."
+										)}
 										value={selectedDestinations}
-										
-										options={destinations}
+										options={memoisedDestinations}
 										onSearch={(value) =>
 											setDestinationSearchValue(value)
 										}
@@ -222,14 +200,20 @@ const StageOne = () => {
 										)}
 										labelRender={(label) => (
 											<Text style={{ fontSize: 15 }}>
-												{label.value.toString().split(";")[0]}
+												{
+													label.value
+														.toString()
+														.split(";")[0]
+												}
 											</Text>
 										)}
 										onSelect={(_: any, option) => {
 											dispatch(
-												addSelectedDestination({...option})
+												addSelectedDestination({
+													...option as any,
+												})
 											);
-										
+
 											setDestinationSearchValue("");
 										}}
 										onDeselect={(_: any, option) =>
@@ -245,7 +229,6 @@ const StageOne = () => {
 										removeIcon={
 											<CloseButton variant="link" />
 										}
-									
 									/>
 								</div>
 							</Flex>
@@ -259,9 +242,10 @@ const StageOne = () => {
 							transition={{ duration: 0.3, ease: "easeInOut" }}
 						>
 							<Flex justify="space-between">
-								<Text>Destination(s)</Text>
+								<Text>{i18n.t("Destination")}</Text>
 								<Text>
-									{selectedDestinations.length} Places
+									{selectedDestinations?.length}{" "}
+									{i18n.t("Places")}
 								</Text>
 							</Flex>
 						</motion.div>
@@ -297,7 +281,7 @@ const StageOne = () => {
 								<Text
 									style={{ textAlign: "left", width: "100%" }}
 								>
-									Dates
+									{i18n.t("Dates")}
 								</Text>
 								<div onClick={(e) => e.stopPropagation()}>
 									<RangePicker
@@ -309,14 +293,23 @@ const StageOne = () => {
 										picker="date"
 										minDate={dayjs()}
 										format="D MMMM YYYY"
-										value={[startDate, endDate]}
+										value={[
+											startDate ? dayjs(startDate) : null,
+											endDate ? dayjs(endDate) : null,
+										]}
 										onClick={(e) => e.stopPropagation()}
 										onChange={(value) => {
-											if (value) {
+											if (value && value[0] && value[1]) {
 												dispatch(
-													setStartDate(value[0])
+													setStartDate(
+														value[0].toISOString()
+													)
 												);
-												dispatch(setEndDate(value[1]));
+												dispatch(
+													setEndDate(
+														value[1].toISOString()
+													)
+												);
 											} else {
 												dispatch(resetDates());
 											}
@@ -334,7 +327,7 @@ const StageOne = () => {
 														) {
 															dispatch(
 																setStartDate(
-																	dayjs()
+																	dayjs().toISOString()
 																)
 															);
 															dispatch(
@@ -354,7 +347,7 @@ const StageOne = () => {
 															);
 															dispatch(
 																setEndDate(
-																	dayjs()
+																	dayjs().toISOString()
 																)
 															);
 															setPanelMode(
@@ -363,7 +356,7 @@ const StageOne = () => {
 														}
 													}}
 												>
-													Today
+													{i18n.t("Today")}
 												</Button>
 												<Button
 													color="primary"
@@ -377,7 +370,7 @@ const StageOne = () => {
 														);
 													}}
 												>
-													Reset
+													{i18n.t("Reset")}
 												</Button>
 											</Flex>
 										)}
@@ -394,12 +387,16 @@ const StageOne = () => {
 							transition={{ duration: 0.3, ease: "easeInOut" }}
 						>
 							<Flex justify="space-between">
-								<Text>Dates</Text>
+								<Text>{i18n.t("Dates")}</Text>
 								{startDate && endDate && (
 									<Text style={{ whiteSpace: "pre-wrap" }}>
-										{startDate?.format("D MMMM YYYY") +
+										{dayjs(startDate).format(
+											"D MMMM YYYY"
+										) +
 											"  -  " +
-											endDate?.format("D MMMM YYYY")}
+											dayjs(endDate).format(
+												"D MMMM YYYY"
+											)}
 									</Text>
 								)}
 							</Flex>

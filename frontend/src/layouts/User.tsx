@@ -1,72 +1,77 @@
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import { PlusOutlined} from "@ant-design/icons";
 import {
-	Avatar,
 	Button,
-	Dropdown,
 	Flex,
 	FloatButton,
-	Image,
-	Input,
 	Layout,
 	Menu,
-	Modal,
 	Splitter,
 	theme,
 	Tooltip,
-	Typography,
 } from "antd";
-import { Content, Footer, Header } from "antd/es/layout/layout";
-import { useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Content} from "antd/es/layout/layout";
+import { lazy, useMemo, useState } from "react";
+import { Outlet } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import useBreakpoints from "../utilities/breakpoints";
-import useMobileFooterMenuItems from "../features/user layout/menus/mobileFooterMenuItems";
 import useLeftMenuItems from "../features/user layout/menus/leftMenuItems";
 import UserHeader from "../features/user layout/Header";
 import MobileFooterMenu from "../features/user layout/MobileFooterMenu";
-import CreateModal from "../features/createJourney/CreateModal";
+const CreateModal = lazy(() => import("../features/createJourney/CreateModal"));
 import i18next from "i18next";
-import ExploreJourneysDrawer from "../components/ExploreJourneysDrawer";
 import { ChevronLeftRounded, ChevronRightRounded } from "@mui/icons-material";
+import GlobalError from "../pages/error/GlobalError";
+import { useAppSelector } from "../redux/store";
+import { setSplitterSize } from "../redux/slices/layout";
 
 const User = () => {
 	const dispatch = useDispatch();
 	const {
-		token: {
-			colorBgContainer,
-			borderRadiusLG,
-			fontSizeHeading5,
-			colorText,
-		},
+		token: { colorBgContainer },
 	} = theme.useToken();
-	const [splitterSize, setSplitterSize] = useState<(number | string)[]>([
-		0.10 * document.documentElement.clientWidth,
-		"100%",
-	]);
 
+	const {splitterSize} = useAppSelector((state) => state.layout);
 	const breakpoints = useBreakpoints();
 	const leftMenuItems = useLeftMenuItems(splitterSize);
 
 	const [openCreateModal, setOpenCreateModal] = useState(false);
 
-	const selectedLeftMenuItem =
-		location.pathname
-			.split("/")
-			.slice(location.pathname.split("/").length - 1)[0] !== "user"
-			? location.pathname
-					.split("/")
-					.slice(location.pathname.split("/").length - 1)[0]
-			: "home";
+	const selectedLeftMenuItem = useMemo(
+		() =>
+			location.pathname
+				.split("/")
+				.slice(location.pathname.split("/").length - 1)[0] !== "user"
+				? location.pathname
+						.split("/")
+						.slice(location.pathname.split("/").length - 1)[0]
+				: "home",
+		[location]
+	);
 	const handleMenuButtonClick = () =>
 		Number(splitterSize[0]) > 100
-			? setSplitterSize([100, window.innerWidth - 100])
-			: setSplitterSize([280, "100%"]);
+			? dispatch(
+					setSplitterSize([
+						100,
+						document.documentElement.clientWidth - 100,
+					])
+			  )
+			: dispatch(
+					setSplitterSize([
+						280,
+						document.documentElement.clientWidth - 280,
+					])
+			  );
+			  window.onresize=()=>dispatch(
+					setSplitterSize([
+						splitterSize[0],
+						document.documentElement.clientWidth - splitterSize[0],
+					]))
 
 	return (
 		<>
 			<Layout style={{ height: "100vh" }}>
 				<Splitter
-					onResize={setSplitterSize}
+					onResize={(sizes)=>dispatch(setSplitterSize(sizes))}
 					style={{ backgroundColor: colorBgContainer }}
 				>
 					{breakpoints.largerThan("md") && (
@@ -125,7 +130,7 @@ const User = () => {
 					)}
 
 					<Splitter.Panel size={splitterSize[1]} resizable>
-						<Layout>
+						<Layout style={{ maxWidth: "100%" }}>
 							<UserHeader />
 							<Content>
 								<Outlet />
@@ -135,16 +140,17 @@ const User = () => {
 				</Splitter>
 				{breakpoints.smallerThan("md") && <MobileFooterMenu />}
 			</Layout>
+
 			{breakpoints.largerThan("md") && (
 				<Tooltip
 					title={i18next.t("Create a new journey")}
 					color="primary"
 					placement="left"
 					arrow={false}
-					styles={{body:{position:"relative", right:15}}}
+					styles={{ body: { position: "relative", right: 15 } }}
 				>
 					<FloatButton
-						style={{ width: 50, height: 50 }}
+						style={{ width: 50, height: 50, right: 70, bottom: 70 }}
 						icon={<PlusOutlined />}
 						onClick={() => setOpenCreateModal(true)}
 					/>
@@ -154,6 +160,7 @@ const User = () => {
 				openCreateModal={openCreateModal}
 				setOpenCreateModal={setOpenCreateModal}
 			/>
+			<GlobalError />
 		</>
 	);
 };

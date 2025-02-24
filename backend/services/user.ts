@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import User, { UserType } from "../models/user";
 import lodash from "lodash";
 import bcrypt from "bcrypt";
-import fs from "fs";
 import { HttpError } from "../middlewares/error";
 
 class UserService {

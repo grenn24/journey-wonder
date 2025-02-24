@@ -1,6 +1,5 @@
 import { GlobalOutlined } from "@ant-design/icons";
 import { Button, Dropdown } from "antd";
-import React, { useState } from "react";
 import useLanguageMenuItems from "./menus/languageMenuItems";
 import { useAppSelector } from "../../redux/store";
 

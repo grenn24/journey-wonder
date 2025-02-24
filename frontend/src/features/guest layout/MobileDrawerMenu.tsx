@@ -21,7 +21,6 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 			fontWeightStrong,
 			fontSizeHeading4,
 			fontSizeHeading5,
-			colorText,
 		},
 	} = theme.useToken();
 	const { language } = useAppSelector((state) => ({

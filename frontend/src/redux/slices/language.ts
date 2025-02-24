@@ -18,8 +18,8 @@ export const languageFontMap: Record<string, string> = {
 	[Language.Japanese]: "Noto Sans JP",
 };
 
-export const getLanguageCode = (language: Language) =>
-	languageCodeMap[language];
+export const getLanguageCode = (language: Language | undefined) =>
+	language ? languageCodeMap[language] : "";
 
 export const getLanguageFont = (language: Language) =>
 	languageFontMap[language];

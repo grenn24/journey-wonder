@@ -28,6 +28,7 @@ const auth =
 			if (typeof payload != "string") {
 				response.locals.user = {
 					userID: payload?.userID,
+					email:payload?.email,
 					role: payload?.role,
 					membershipTier: payload?.membershipTier,
 				};

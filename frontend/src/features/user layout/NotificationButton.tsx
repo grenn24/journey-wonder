@@ -1,8 +1,9 @@
-import { ClearRounded, NotificationsNoneRounded } from "@mui/icons-material";
+import {  NotificationsNoneRounded } from "@mui/icons-material";
 import { Button, Empty, Flex, Popover, Typography } from "antd";
-import React, { useState } from "react";
+import { useState } from "react";
 import "../../styles/ant.css";
 import CloseButton from "../../components/CloseButton";
+import i18n from "../../i18n";
 
 const { Text, Title } = Typography;
 const NotificationButton = () => {
@@ -13,13 +14,15 @@ const NotificationButton = () => {
 			content={
 				<Empty
 					image={Empty.PRESENTED_IMAGE_SIMPLE}
-					description={<Text>No notifications for now</Text>}
+					description={
+						<Text>{i18n.t("No notifications for now")}</Text>
+					}
 				/>
 			}
 			title={
 				<Flex justify="space-between" align="center">
 					<Title level={4} style={{ margin: 0 }}>
-						Notifications
+						{i18n.t("Notifications")}
 					</Title>
 					<CloseButton
 						handleButtonClick={() =>

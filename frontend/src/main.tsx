@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import "./styles/index.css";
 import "./i18n";
 import App from "./App.tsx";
-import WebFont from "webfontloader";
 import store, { persistor } from "./redux/store.ts";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";

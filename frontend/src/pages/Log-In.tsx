@@ -2,7 +2,6 @@ import {
 	Button,
 	Card,
 	Checkbox,
-	Col,
 	Divider,
 	Flex,
 	Form,
@@ -10,12 +9,12 @@ import {
 	theme,
 	Typography,
 } from "antd";
-import { memo, useMemo, useState } from "react";
+import { useState } from "react";
 import "../styles/ant.css";
 import { GoogleOutlined } from "@ant-design/icons";
 import authService from "../services/auth";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../redux/store";
+import { useAppDispatch } from "../redux/store";
 import i18n from "../i18n";
 
 const { Title } = Typography;
@@ -25,7 +24,6 @@ const Login = () => {
 	const {
 		token: { colorBgContainer, colorBorder },
 	} = theme.useToken();
-	const state = useAppSelector((state) => state.user);
 	const [form] = Form.useForm();
 	const { Text, Link } = Typography;
 	const [loading, setLoading] = useState(false);
@@ -34,7 +32,7 @@ const Login = () => {
 		setLoading(false);
 		authService
 			.login(body, dispatch)
-			.then(({ data }) => {
+			.then(() => {
 				setLoading(false);
 				navigate("/user");
 				form.resetFields();
@@ -71,7 +69,7 @@ const Login = () => {
 				}}
 				title={
 					<Title level={3} style={{ marginBottom: 3, marginLeft: 5 }}>
-						Log In
+						{i18n.t("Log In")}
 					</Title>
 				}
 			>

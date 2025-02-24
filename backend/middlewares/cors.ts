@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 
 export default function cors(request: Request, response: Response, next: any) {
-	const allowedOrigins = ["http://localhost:5173"];
+	const allowedOrigins = ["http://localhost:5173", "http://localhost","www.journey-wonder.com"];
 	const origin = request.header("Origin");
+
 	if (origin) {
 		allowedOrigins.includes(origin) &&
 			response.setHeader("Access-Control-Allow-Origin", origin);

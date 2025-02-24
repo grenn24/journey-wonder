@@ -1,26 +1,21 @@
 import {
 	AutoComplete,
 	Button,
-	Dropdown,
 	Flex,
 	Image,
 	Input,
 	Menu,
-	Space,
 	theme,
 } from "antd";
 import { Header } from "antd/es/layout/layout";
 import useBreakpoints from "../../utilities/breakpoints";
-import { useAppSelector } from "../../redux/store";
 import {
-	GlobalOutlined,
 	MenuOutlined,
 	SearchOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { ArrowForwardIosRounded } from "@mui/icons-material";
 import { useState } from "react";
-import useLanguageMenuItems from "./menus/languageMenuItems";
 import useHeaderMenuItems from "./menus/headerMenuItems";
 import journeyWonderIcon from "../../assets/images/journey-wonder-icon/svg/journey-wonder-icon-white-background-normal.svg";
 import MobileDrawerMenu from "./MobileDrawerMenu";
@@ -49,20 +44,12 @@ const GuestHeader = () => {
 	const [openMobileDrawerMenu, setOpenMobileDrawerMenu] = useState(false);
 	const [openExploreJourneysDrawer, setOpenExploreJourneysDrawer] =
 		useState(false);
-	const languageMenuItems = useLanguageMenuItems();
 	const headerMenuItems = useHeaderMenuItems();
 	const {
 		token: {
 			colorBgContainer,
-			borderRadiusLG,
-			fontSizeHeading5,
-			colorText,
-			fontWeightStrong,
 		},
 	} = theme.useToken();
-	const { language } = useAppSelector((state) => ({
-		language: state.language.language,
-	}));
 	const selectedItem =
 		location.pathname.split("/").slice(2).length !== 0
 			? location.pathname.split("/").slice(2)[0]
@@ -80,7 +67,7 @@ const GuestHeader = () => {
 				<Flex
 					justify="space-between"
 					align="center"
-					style={{ width: 1200 }}
+					style={{ width: 1350 }}
 				>
 					<Flex gap={20}>
 						<a
@@ -96,7 +83,7 @@ const GuestHeader = () => {
 								style={{ marginBottom: 2 }}
 							/>
 						</a>
-						{breakpoints.largerThan("lg") && (
+						{breakpoints.largerThan("md") && (
 							<Menu
 								mode="horizontal"
 								items={headerMenuItems}

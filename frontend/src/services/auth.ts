@@ -39,7 +39,9 @@ class AuthService {
 
 	refreshAccessToken() {
 		const response = this.apiClient
-			.get("/refresh-access-token")
+			.get("/refresh-access-token", {
+
+			})
 			.then((res) => {
 				const { headers } = res;
 				sessionStorage.removeItem("X-Access-Token");

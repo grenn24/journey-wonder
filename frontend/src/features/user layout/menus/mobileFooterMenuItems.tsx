@@ -3,7 +3,6 @@ import {
 	Avatar,
 	Flex,
 	theme,
-	Tooltip,
 	Typography,
 } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -21,16 +20,13 @@ import { useAppSelector } from "../../../redux/store";
 const { Text } = Typography;
 const useMobileFooterMenuItems = (setOpenCreateModal : (value:boolean)=>void) => {
 	const navigate = useNavigate();
-	const { name, globalTheme, globalLanguage } = useAppSelector((state) => ({
+	const { name} = useAppSelector((state) => ({
 		name: state.user.name,
 		globalTheme: state.theme.theme,
 		globalLanguage: state.language.language,
 	}));
 	const {
 		token: {
-			colorBgContainer,
-			borderRadiusLG,
-			fontSizeHeading5,
 			colorText,
 		},
 	} = theme.useToken();

@@ -1,27 +1,12 @@
-import {
-	AutoComplete,
-	Button,
-	Flex,
-	Input,
-	theme,
-	Typography,
-	DatePicker,
-	Tag,
-	Divider,
-	Select,
-} from "antd";
+import { Button, Flex, theme, Typography, Divider, Select } from "antd";
+import { createElement, lazy, memo, useState } from "react";
 import i18n from "../../i18n.ts";
 import { useAppDispatch, useAppSelector } from "../../redux/store.ts";
 import Modal from "../../components/Modal.tsx";
-import CloseButton from "../../components/CloseButton.tsx";
-import StageOne from "./StageOne.tsx";
-import StageTwo from "./StageTwo.tsx";
+const StageOne = lazy(() => import("./StageOne.tsx"));
+const StageTwo = lazy(() => import("./StageTwo.tsx"));
 import {
-	ArrowBack,
 	ArrowBackRounded,
-	ArrowForward,
-	ArrowForwardRounded,
-	EastRounded,
 	LockRounded,
 	PeopleAltRounded,
 	PublicRounded,
@@ -32,10 +17,10 @@ import {
 	reset,
 	setVisibility,
 } from "../../redux/slices/createJourney.ts";
-import { createElement, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
-import itineraryService from "../../services/itinerary.ts";
+
+import journeyService from "../../services/journey.ts";
 import useSnackbar from "../../components/showSnackbar.ts";
+import { base64UrlToFile } from "../../utilities/file.ts";
 
 interface Prop {
 	openCreateModal: boolean;
@@ -46,14 +31,7 @@ const { Text, Title } = Typography;
 const stages = [StageOne, StageTwo];
 const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 	const { token } = theme.useToken();
-	const {
-		colorBgContainer,
-		borderRadius,
-		fontSizeHeading5,
-		colorText,
-		colorPrimary,
-		colorPrimaryBorder,
-	} = token;
+	const { fontSizeHeading5, colorPrimaryBorder } = token;
 
 	const dispatch = useAppDispatch();
 	const {
@@ -64,32 +42,24 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 		startDate,
 		endDate,
 		selectedDestinations,
-		author,
-		userEmail,
 		visibility,
-	} = useAppSelector((state) => ({
-		currentStage: state.createJourney.currentStage,
-		image: state.createJourney.image,
-		selectedTravellers: state.createJourney.selectedTravellers,
-		title: state.createJourney.title,
-		startDate: state.createJourney.startDate,
-		endDate: state.createJourney.endDate,
-		selectedDestinations: state.createJourney.selectedDestinations,
-		author: state.user.userID,
-		userEmail: state.user.email,
-		visibility: state.createJourney.visibility,
-	}));
+		userID,
+		email,
+	} = useAppSelector((state) => ({ ...state.createJourney, ...state.user }));
 	const [openModalCloseConfirmation, setOpenModalCloseConfirmation] =
 		useState(false);
 
-		const [showSnackbar, context] = useSnackbar("An internal server error occurred. Please try again later.", "error");
+	const [showSnackbar, context] = useSnackbar(
+		i18n.t("An internal server error occurred. Please try again later."),
+		"error"
+	);
 
-	const createItinerary = () => {
+	const createItinerary = async () => {
 		const itinerary = {
-			author,
+			author: userID,
 			title,
-			startDate: startDate?.toDate(),
-			endDate: endDate?.toDate(),
+			startDate,
+			endDate,
 			destinations: selectedDestinations.map((destination) => ({
 				name: destination.name,
 				type: destination.type,
@@ -97,22 +67,26 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 			travellers: [
 				...selectedTravellers,
 				{
-					email: userEmail,
+					email: email,
 					permission: "Edit",
 				},
 			],
+			image: image ? await base64UrlToFile(image[0], image[1]) : null,
 			visibility,
 		};
 
-		itineraryService.createItinerary(itinerary).then(() => {
-			dispatch(reset());
-			setOpenCreateModal(false);
-		}).catch(()=>showSnackbar());
+		journeyService
+			.createJourney(itinerary)
+			.then(() => {
+				dispatch(reset());
+				setOpenCreateModal(false);
+			})
+			.catch(() => showSnackbar());
 	};
 
 	return (
 		<>
-		{context}
+			{context}
 			<Modal
 				open={openCreateModal}
 				setOpen={() => setOpenModalCloseConfirmation(true)}
@@ -185,12 +159,13 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 					<Flex justify="space-between" align="center">
 						<Select
 							value={visibility}
+							
 							variant="outlined"
 							style={{ width: 130, textAlign: "left" }}
 							onChange={(value: typeof visibility) =>
 								dispatch(setVisibility(value))
 							}
-							labelRender={(label) => label.value}
+							labelRender={(label) => i18n.t(label.value.toString())}
 							options={[
 								{
 									value: "Public",
@@ -199,7 +174,7 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 											justify="space-between"
 											align="center"
 										>
-											<Text>Public</Text>
+											<Text>{i18n.t("Public")}</Text>
 											<PublicRounded fontSize="small" />
 										</Flex>
 									),
@@ -211,7 +186,7 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 											justify="space-between"
 											align="center"
 										>
-											<Text>Travellers</Text>
+											<Text>{i18n.t("Travellers")}</Text>
 											<PeopleAltRounded fontSize="small" />
 										</Flex>
 									),
@@ -223,7 +198,7 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 											justify="space-between"
 											align="center"
 										>
-											<Text>Only Me</Text>
+											<Text>{i18n.t("Only Me")}</Text>
 											<LockRounded fontSize="small" />
 										</Flex>
 									),
@@ -244,7 +219,7 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 								}
 								style={{ paddingLeft: 17, paddingRight: 17 }}
 							>
-								Next
+								{i18n.t("Next")}
 							</Button>
 						) : (
 							<Button
@@ -253,7 +228,7 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 								size="large"
 								onClick={() => createItinerary()}
 							>
-								Create
+								{i18n.t("Create")}
 							</Button>
 						)}
 					</Flex>
@@ -265,14 +240,15 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 				centered
 				open={openModalCloseConfirmation}
 				setOpen={setOpenModalCloseConfirmation}
-				title="Heading Somewhere?"
+				title={i18n.t("Heading Somewhere?")}
 				footer={[
 					<Button
 						onClick={() => setOpenModalCloseConfirmation(false)}
 						color="default"
 						variant="filled"
+						key="cancel"
 					>
-						Cancel
+						{i18n.t("Cancel")}
 					</Button>,
 					<Button
 						onClick={() => {
@@ -282,8 +258,9 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 						}}
 						color="danger"
 						variant="filled"
+						key="save"
 					>
-						Discard Changes
+						{i18n.t("Discard Changes")}
 					</Button>,
 					<Button
 						onClick={() => {
@@ -292,14 +269,17 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 						}}
 						color="primary"
 						variant="filled"
+						key="discard"
 					>
-						Save Changes
+						{i18n.t("Save Changes")}
 					</Button>,
 				]}
 			>
 				<>
 					<Text>
-						Save your current changes so that you can continue later
+						{i18n.t(
+							"Save your current changes so that you can continue later"
+						)}
 					</Text>
 					<br />
 					<br />
@@ -309,7 +289,7 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 	);
 };
 
-export default CreateModal;
+export default memo(CreateModal);
 
 /*
 <Button

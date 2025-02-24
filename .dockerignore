@@ -1,3 +1,6 @@
 /backend/node_modules/
-./backend/gitignore
+./backend/.gitignore
+/frontend/node_modules/
+./frontend/.gitignore
+./frontend/dist/
 admin.txt
