@@ -3,7 +3,7 @@
 	"description": "",
 	"version": "1.0.2",
 	"license": "ISC",
-	"author": "",
+	"author": "Hoo Di Heng",
 	"type": "commonjs",
 	"main": "index.js",
 	"scripts": {

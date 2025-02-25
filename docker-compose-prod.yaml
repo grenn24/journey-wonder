@@ -1,0 +1,36 @@
+# Docker compose file for loading built images
+
+services:
+  backend:
+    image: journey-wonder-backend:1.0.2  # Use pre-built image
+    networks:
+      - app-network
+    environment:
+      NODE_ENV: production
+
+  frontend:
+    image: journey-wonder-frontend:1.0.2  # Use pre-built image
+    networks:
+      - app-network
+    environment:
+      NODE_ENV: production
+    depends_on:
+      - backend
+
+  nginx:
+    image: journey-wonder:1.0.2  # Use pre-built image
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - app-network
+    volumes:
+      - ./certbot-challenges/:/usr/share/nginx/html/.well-known/acme-challenge/ # acme challenge files
+      - ./etc/nginx/ssl/:/etc/nginx/ssl/ # ssl certs
+    depends_on:
+      - backend
+      - frontend
+
+networks:
+  app-network:
+    driver: bridge

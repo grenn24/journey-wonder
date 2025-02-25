@@ -19,7 +19,7 @@ import {
 } from "../../redux/slices/createJourney.ts";
 
 import journeyService from "../../services/journey.ts";
-import useSnackbar from "../../components/showSnackbar.ts";
+import useSnackbar from "../../components/useSnackbar.ts";
 import { base64UrlToFile } from "../../utilities/file.ts";
 
 interface Prop {
@@ -49,12 +49,21 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 	const [openModalCloseConfirmation, setOpenModalCloseConfirmation] =
 		useState(false);
 
-	const [showSnackbar, context] = useSnackbar(
+	const { createSnackbar, snackbarContext } = useSnackbar();
+	const [openErrorSnackbar] = createSnackbar(
 		i18n.t("An internal server error occurred. Please try again later."),
 		"error"
 	);
+	const [openUploadingSnackbar, closeUploadingSnackbar] = createSnackbar(
+		i18n.t("Creating your journey"),
+		"loading",
+		1000000
+	);
+
+
 
 	const createItinerary = async () => {
+		openUploadingSnackbar();
 		const itinerary = {
 			author: userID,
 			title,
@@ -78,15 +87,19 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 		journeyService
 			.createJourney(itinerary)
 			.then(() => {
+				closeUploadingSnackbar();
 				dispatch(reset());
 				setOpenCreateModal(false);
 			})
-			.catch(() => showSnackbar());
+			.catch(() => {
+				closeUploadingSnackbar();
+				openErrorSnackbar();
+			});
 	};
 
 	return (
 		<>
-			{context}
+			{snackbarContext}
 			<Modal
 				open={openCreateModal}
 				setOpen={() => setOpenModalCloseConfirmation(true)}
@@ -159,13 +172,14 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 					<Flex justify="space-between" align="center">
 						<Select
 							value={visibility}
-							
 							variant="outlined"
 							style={{ width: 130, textAlign: "left" }}
 							onChange={(value: typeof visibility) =>
 								dispatch(setVisibility(value))
 							}
-							labelRender={(label) => i18n.t(label.value.toString())}
+							labelRender={(label) =>
+								i18n.t(label.value.toString())
+							}
 							options={[
 								{
 									value: "Public",

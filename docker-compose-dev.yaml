@@ -1,4 +1,3 @@
-version: "3.8"
 
 services:
   backend:
@@ -12,6 +11,7 @@ services:
       - app-network
     environment:
       NODE_ENV: production
+    image: journey-wonder-backend:1.0.2
 
   frontend:
     build:
@@ -26,6 +26,7 @@ services:
       NODE_ENV: production
     depends_on:
       - backend
+    image: journey-wonder-frontend:1.0.2
 
   nginx:
     build:
@@ -34,11 +35,13 @@ services:
       target: nginx
     ports:
       - "80:80"
+      - "443:443"
     networks:
       - app-network
     depends_on:
       - backend
       - frontend
+    image: journey-wonder:1.0.2
 
 networks:
   app-network:

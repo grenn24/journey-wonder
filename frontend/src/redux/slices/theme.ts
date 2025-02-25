@@ -9,7 +9,7 @@ interface themeSliceState {
 	theme: Theme;
 }
 const initialState: themeSliceState = {
-	theme: Theme.System,
+	theme: Theme.Light
 };
 export const themeSlice = createSlice({
 	// Name of slice

@@ -45,6 +45,7 @@ FROM nginx:stable-alpine3.20-perl AS nginx
 
 # Create new user and set working directory
 RUN adduser -D -h /home/app -s /bin/sh app
+RUN mkdir -p /usr/share/nginx/html/.well-known/acme-challenge/ /etc/nginx/ssl/
 WORKDIR /nginx
 
 # Copy Nginx configuration file
