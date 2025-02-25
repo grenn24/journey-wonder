@@ -7,6 +7,7 @@ import ProtectedRoutes from "./components/ProtectedRoutes";
 
 import { lazy} from "react";
 import Journey from "./pages/user/Journey";
+import SignUp from "./pages/Sign-Up";
 const Login = lazy(() => import("./pages/Log-In"));
 const Home = lazy(() => import("./pages/Home"));
 const UserHome = lazy(() => import("./pages/user/Home"));
@@ -29,7 +30,7 @@ const App = () => {
 					</Route>
 					<Route path="guest/account">
 						<Route path="log-in" element={<Login />} />
-						<Route path="sign-up" />
+						<Route path="sign-up" element={<SignUp />}/>
 					</Route>
 					{/*Protected routes*/}
 					<Route element={<ProtectedRoutes />}>

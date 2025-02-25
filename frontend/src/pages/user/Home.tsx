@@ -1,10 +1,8 @@
-
+import config from "config"
 
 const UserHome = () => {
 	
-	return (
-		<></>
-	);
+	return <></>;
 };
 
 export default UserHome;

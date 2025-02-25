@@ -1,4 +1,4 @@
-
+# Docker compose file for building images
 services:
   backend:
     build:
@@ -9,8 +9,6 @@ services:
       - ./backend:/backend
     networks:
       - app-network
-    environment:
-      NODE_ENV: production
     image: journey-wonder-backend:1.0.2
 
   frontend:
@@ -22,8 +20,6 @@ services:
       - ./frontend:/frontend
     networks:
       - app-network
-    environment:
-      NODE_ENV: production
     depends_on:
       - backend
     image: journey-wonder-frontend:1.0.2

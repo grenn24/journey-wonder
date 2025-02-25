@@ -5,9 +5,9 @@
 	"type": "module",
 	"author": "Hoo Di Heng",
 	"scripts": {
-		"start": "vite",
-		"dev": "vite",
-		"build": "npx tsc -b && vite build",
+		"start": "set VITE_ENV=production&& vite --mode production",
+		"dev": "set VITE_ENV=development&& vite --mode development",
+		"build": "set VITE_ENV=production&& npx tsc -b && vite build --mode production",
 		"lint": "eslint .",
 		"preview": "vite preview"
 	},
@@ -23,7 +23,6 @@
 		"antd-img-crop": "^4.24.0",
 		"axios": "^1.7.9",
 		"browser-image-compression": "^2.0.2",
-		"config": "^3.3.12",
 		"dayjs": "^1.11.13",
 		"i18next": "^24.2.2",
 		"joi": "^17.13.3",

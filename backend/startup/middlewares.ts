@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser";
 
 const middlewares = (app: Express) => {
 	// middlewares
-	config.get("ENV") === "development" && app.use(cors);
+	config.get("NODE_ENV") === "development" && app.use(cors);
 	app.use(cookieParser());
 	app.use(express.json());
 	app.use(express.urlencoded({ extended: true }));

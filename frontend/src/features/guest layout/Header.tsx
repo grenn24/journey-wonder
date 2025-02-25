@@ -145,6 +145,7 @@ const GuestHeader = () => {
 											}}
 										/>
 									}
+									onClick={()=>navigate("account/sign-up")}
 								>
 									{i18n.t("Sign Up")}
 								</Button>

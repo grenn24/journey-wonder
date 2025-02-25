@@ -1,4 +1,4 @@
-# Docker compose file for loading built images
+# Docker compose file for running previously built images in a network bridge
 
 services:
   backend:
@@ -13,7 +13,7 @@ services:
     networks:
       - app-network
     environment:
-      NODE_ENV: production
+      ENV: production
     depends_on:
       - backend
 
@@ -26,7 +26,7 @@ services:
       - app-network
     volumes:
       - ./certbot-challenges/:/usr/share/nginx/html/.well-known/acme-challenge/ # acme challenge files
-      - ./etc/nginx/ssl/:/etc/nginx/ssl/ # ssl certs
+      - ./ssl/:/etc/nginx/ssl/ # ssl certs
     depends_on:
       - backend
       - frontend
