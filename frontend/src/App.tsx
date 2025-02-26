@@ -5,9 +5,14 @@ import { ConfigProvider } from "antd";
 import useTheme from "./styles/useTheme";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 
-import { lazy} from "react";
+import { lazy } from "react";
 import Journey from "./pages/user/Journey";
 import SignUp from "./pages/Sign-Up";
+import Explore from "./pages/user/Explore";
+import Pricing from "./pages/guest/Pricing";
+import GuestHome from "./pages/guest/Home";
+import Mission from "./pages/user/Mission";
+import Creators from "./pages/user/Creators";
 const Login = lazy(() => import("./pages/Log-In"));
 const Home = lazy(() => import("./pages/Home"));
 const UserHome = lazy(() => import("./pages/user/Home"));
@@ -24,19 +29,24 @@ const App = () => {
 					{/*Non-protected routes*/}
 					<Route index element={<Home />} />
 					<Route path="guest" element={<Guest />}>
+						<Route index element={<GuestHome />} />
 						<Route path="about" />
-						<Route path="pricing" />
-						<Route path="explore" />
+						<Route path="pricing" element={<Pricing />} />
+						<Route path="explore" element={<Explore />} />
+						<Route path="about">
+							<Route path="mission" element={<Mission />} />
+							<Route path="creators" element={<Creators />} />
+						</Route>
 					</Route>
 					<Route path="guest/account">
 						<Route path="log-in" element={<Login />} />
-						<Route path="sign-up" element={<SignUp />}/>
+						<Route path="sign-up" element={<SignUp />} />
 					</Route>
 					{/*Protected routes*/}
 					<Route element={<ProtectedRoutes />}>
 						<Route path="user" element={<User />}>
 							<Route index element={<UserHome />} />
-							<Route path="explore" />
+							<Route path="explore" element={<Explore />} />
 
 							<Route path="journey">
 								<Route

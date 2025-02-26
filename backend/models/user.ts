@@ -13,6 +13,11 @@ const userSchema = new mongoose.Schema(
 			required: [true, "Name is required"],
 			maxLength: 70,
 		},
+		username: {
+			type: String,
+			required: [true, "Username is required"],
+			maxLength: 35,
+		},
 		email: {
 			type: String,
 			required: [true, "Email is required"],
@@ -22,9 +27,8 @@ const userSchema = new mongoose.Schema(
 		},
 		passwordHash: {
 			type: String,
-			required: [true, "Password is required"],
 			minLength: 8,
-			maxLength: 64,
+			maxLength: 48,
 		},
 		birthday: Date,
 		membershipTier: {
@@ -83,6 +87,7 @@ userSchema.statics.validate = validateUserPost;
 export function validateUserPost(user: any) {
 	const userSchema = Joi.object({
 		name: Joi.string().max(70).required(),
+		username: Joi.string().max(35).required(),
 		email: Joi.string().max(255).email().required(),
 		password: Joi.string().min(8).max(64).required(),
 		birthday: Joi.date(),

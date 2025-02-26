@@ -1,3 +1,4 @@
+"use server";
 import { Button, Flex, theme, Typography, Divider, Select } from "antd";
 import { createElement, lazy, memo, useState } from "react";
 import i18n from "../../i18n.ts";
@@ -60,8 +61,6 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 		1000000
 	);
 
-
-
 	const createItinerary = async () => {
 		openUploadingSnackbar();
 		const itinerary = {
@@ -100,6 +99,7 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 	return (
 		<>
 			{snackbarContext}
+
 			<Modal
 				open={openCreateModal}
 				setOpen={() => setOpenModalCloseConfirmation(true)}

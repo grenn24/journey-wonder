@@ -12,7 +12,15 @@ class AuthService {
 			if (!user) {
 				throw new HttpError(
 					"Invalid email or password",
-					"INVALID_EMAIL_PASSWORD"
+					"INVALID_EMAIL_PASSWORD",400
+				);
+			}
+
+			if (!user.passwordHash) {
+				throw new HttpError(
+					"Password not yet created for email log-in",
+					"PASSWORD_NOT_CREATED",
+					400
 				);
 			}
 
@@ -20,7 +28,8 @@ class AuthService {
 			if (!isValid) {
 				throw new HttpError(
 					"Invalid email or password",
-					"INVALID_EMAIL_PASSWORD"
+					"INVALID_EMAIL_PASSWORD",
+					400
 				);
 			}
 

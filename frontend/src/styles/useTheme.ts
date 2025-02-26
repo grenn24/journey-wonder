@@ -21,7 +21,7 @@ const useTheme = () => {
 		token: {
 			fontFamily: getLanguageFont(globalLanguage),
 			borderRadius: 20,
-			borderRadiusSM: 20,
+			borderRadiusSM: 10,
 			borderRadiusLG: 20,
 			fontWeightStrong: 600,
 			fontSizeHeading4: 19,

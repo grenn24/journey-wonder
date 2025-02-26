@@ -3,7 +3,10 @@ import { Button, Dropdown } from "antd";
 import useLanguageMenuItems from "./menus/languageMenuItems";
 import { useAppSelector } from "../../redux/store";
 
-const LanguageMenu = () => {
+interface Prop {
+	placement?:"bottom" | "bottomLeft" |  "bottomRight" |  "top"  | "topLeft" |  "topRight"
+}
+const LanguageMenu = ({placement="bottom"}:Prop) => {
 	const { language } = useAppSelector((state) => ({
 		language: state.language.language,
 	}));
@@ -16,7 +19,7 @@ const LanguageMenu = () => {
 				selectedKeys: [language],
 			}}
 
-			placement="bottom"
+			placement={placement}
 			
 		>
 			<Button

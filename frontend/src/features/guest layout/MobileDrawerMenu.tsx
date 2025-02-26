@@ -118,7 +118,7 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 						>
 							<Menu.Item
 								key="mission"
-						onClick={ () => navigate("about/mission")}
+								onClick={() => navigate("about/mission")}
 								style={{
 									fontFamily: "Roboto",
 									fontWeight: fontWeightStrong,
@@ -130,7 +130,7 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 							</Menu.Item>
 							<Menu.Item
 								key="creators"
-									onClick = { () => navigate("about/creators")}
+								onClick={() => navigate("about/creators")}
 								style={{
 									fontFamily: "Roboto",
 									fontWeight: fontWeightStrong,
@@ -188,6 +188,7 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 							size="large"
 							variant="solid"
 							color="primary"
+							onClick={() => navigate("account/sign-up")}
 							style={{ fontWeight: fontWeightStrong }}
 							iconPosition="end"
 							icon={

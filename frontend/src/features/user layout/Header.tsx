@@ -51,7 +51,7 @@ const UserHeader = () => {
 			<HeaderBase
 				style={{
 					backgroundColor: "rgba(0,0,0,0)",
-					padding: "0 30px",
+					padding: "0 15px",
 					display: "flex",
 					justifyContent: "center",
 					position: "fixed",

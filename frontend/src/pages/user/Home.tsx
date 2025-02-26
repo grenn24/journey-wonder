@@ -1,8 +1,13 @@
-import config from "config"
 
 const UserHome = () => {
-	
-	return <></>;
+	return (
+		<>
+			{" "}
+		
+				<title>Journey Wonder</title>
+
+		</>
+	);
 };
 
 export default UserHome;

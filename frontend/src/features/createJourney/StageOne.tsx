@@ -1,3 +1,4 @@
+"use server"
 import { useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import {
@@ -210,7 +211,7 @@ const StageOne = () => {
 										onSelect={(_: any, option) => {
 											dispatch(
 												addSelectedDestination({
-													...option as any,
+													...(option as any),
 												})
 											);
 
