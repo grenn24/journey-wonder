@@ -3,7 +3,7 @@
 services:
   # Run backend api server
   backend:
-    image: journey-wonder-backend:1.0.2  # Use pre-built image
+    image: journey-wonder-backend:1.0.3  # Use pre-built image
     networks:
       - app-network
     volumes:
@@ -13,7 +13,7 @@ services:
 
   # Run nginx server serving static files
   nginx:
-    image: journey-wonder-nginx:1.0.2  
+    image: journey-wonder-nginx:1.0.3  
     ports:
       - "80:80"
       - "443:443"

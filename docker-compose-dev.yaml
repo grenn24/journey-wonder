@@ -10,7 +10,7 @@ services:
       - ./backend:/backend
     networks:
       - app-network
-    image: journey-wonder-backend:1.0.2
+    image: journey-wonder-backend:1.0.3
 
   # Step 2: Compile frontend static files
   frontend:
@@ -24,7 +24,7 @@ services:
       - app-network
     depends_on:
       - backend
-    image: journey-wonder-frontend:1.0.2
+    image: journey-wonder-frontend:1.0.3
 
   # Step 3: Build nginx server
   nginx:
@@ -40,7 +40,7 @@ services:
     depends_on:
       - backend
       - frontend
-    image: journey-wonder-nginx:1.0.2
+    image: journey-wonder-nginx:1.0.3
 
 networks:
   app-network:

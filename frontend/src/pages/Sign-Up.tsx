@@ -56,6 +56,7 @@ const SignUp = () => {
 					setLoading(false);
 					form.resetFields();
 				}, 2000);
+
 			})
 			.catch(({ body }) => {
 				setLoading(false);
@@ -194,6 +195,21 @@ const SignUp = () => {
 											"Please enter your full name"
 										),
 									},
+									{
+										validator: (_, value) => {
+											const regex = /^.{0,70}$/;
+											if (!regex.test(value)) {
+												return Promise.reject(
+													i18n.t(
+														"Name cannot contain more than 70 characters"
+													)
+												);
+											}
+
+											return Promise.resolve();
+										},
+										validateTrigger: "onChange",
+									},
 								]}
 								style={{ marginBottom: marginSM }}
 							>
@@ -207,6 +223,23 @@ const SignUp = () => {
 								label={i18n.t("Username")}
 								name="username"
 								style={{ marginBottom: marginSM }}
+								rules={[
+									{
+										validator: (_, value) => {
+											const regex = /^.{0,35}$/;
+											if (!regex.test(value)) {
+												return Promise.reject(
+													i18n.t(
+														"Username cannot contain more than 35 characters"
+													)
+												);
+											}
+
+											return Promise.resolve();
+										},
+										validateTrigger: "onChange",
+									},
+								]}
 							>
 								<Input
 									size="large"
@@ -228,7 +261,7 @@ const SignUp = () => {
 									{
 										validator: (_, value) => {
 											const regex =
-												/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+												/^(?=.{1,255}$)[^\s@]+@[^\s@]+\.[^\s@]+$/;
 											if (!regex.test(value)) {
 												return Promise.reject(
 													i18n.t(
@@ -239,7 +272,7 @@ const SignUp = () => {
 
 											return Promise.resolve();
 										},
-										validateTrigger: "onSubmit",
+										validateTrigger: "onChange",
 									},
 								]}
 							>
@@ -275,7 +308,7 @@ const SignUp = () => {
 
 											return Promise.resolve();
 										},
-										validateTrigger: "onSubmit",
+										validateTrigger: "onChange",
 									},
 								]}
 							>

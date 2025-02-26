@@ -1,7 +1,7 @@
 {
 	"name": "backend",
 	"description": "",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"license": "ISC",
 	"author": "Hoo Di Heng",
 	"type": "commonjs",
