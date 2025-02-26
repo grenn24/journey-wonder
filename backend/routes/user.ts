@@ -18,7 +18,12 @@ user.get(
 	getID,
 	userController.catchErrors(userController.getUserByID.bind(userController))
 );
-user.post("", multer.single("avatar"),userController.catchErrors(userController.createUser.bind(userController)));
+user.post(
+	"",
+	auth("Admin"),
+	multer.single("avatar"),
+	userController.catchErrors(userController.createUser.bind(userController))
+);
 user.put(
 	"/:ID",
 	auth("User"),

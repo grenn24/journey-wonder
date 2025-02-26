@@ -37,9 +37,9 @@ class UserService {
 			const existingUser = await User.findOne({
 				email: user.email,
 			}).exec();
-			console.log(existingUser);
+
 			if (existingUser) {
-				throw new HttpError("User already exists", "DUPLICATE_USER");
+				throw new HttpError("User already exists", "DUPLICATE_USER",400);
 			}
 
 			const salt = await bcrypt.genSalt(10);

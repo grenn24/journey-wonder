@@ -49,28 +49,43 @@ const SignUp = () => {
 	const handleFormSubmit = (body: Object) => {
 		setLoading(true);
 		authService
-			.login(body, dispatch)
+			.signUp(body, dispatch)
 			.then(() => {
-					navigate("/user");
+				navigate("/user");
 				setTimeout(() => {
 					setLoading(false);
 					form.resetFields();
 				}, 2000);
-
 			})
-			.catch(({ body }) => {
+			.catch(({ body, status }) => {
 				setLoading(false);
-				if (body?.status === "INVALID_EMAIL_PASSWORD") {
-					form.setFields([
-						{
+				if (status === 400) {
+					const fields: any[] = [];
+					if (body?.status === "DUPLICATE_EMAIL") {
+						fields.push({
 							name: "email",
-							errors: [i18n.t("Invalid email or password")],
-						},
-						{
-							name: "password",
-							errors: [i18n.t("Invalid email or password")],
-						},
-					]);
+							errors: [i18n.t("Email already used")],
+						});
+					}
+					if (body?.status === "DUPLICATE_USERNAME") {
+						fields.push({
+							name: "username",
+							errors: [i18n.t("Username already used")],
+						});
+					}
+					if (body?.status === "DUPLICATE_EMAIL_USERNAME") {
+						fields.push(
+							{
+								name: "email",
+								errors: [i18n.t("Email already used")],
+							},
+							{
+								name: "username",
+								errors: [i18n.t("Username already used")],
+							}
+						);
+					}
+					form.setFields(fields);
 				} else {
 					openErrorSnackbar();
 				}
@@ -184,7 +199,11 @@ const SignUp = () => {
 						<Divider plain style={{ border: 0 }}>
 							{i18n.t("or")}
 						</Divider>
-						<Form form={form} layout="vertical">
+						<Form
+							form={form}
+							onFinish={handleFormSubmit}
+							layout="vertical"
+						>
 							<Form.Item
 								label={i18n.t("Full Name")}
 								name="name"
@@ -297,11 +316,11 @@ const SignUp = () => {
 									{
 										validator: (_, value) => {
 											const regex =
-												/^(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,48}$/;
+												/^(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,64}$/;
 											if (!regex.test(value)) {
 												return Promise.reject(
 													i18n.t(
-														"Password must contain 8-48 characters, at least 1 special character"
+														"Password must contain 8-64 characters, at least 1 special character"
 													)
 												);
 											}

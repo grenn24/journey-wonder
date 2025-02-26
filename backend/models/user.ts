@@ -4,6 +4,8 @@ import JoiPasswordComplexity from "joi-password-complexity";
 import jwt from "jsonwebtoken";
 import config from "config";
 import { HttpError } from "../middlewares/error";
+import { v4 as uuidv4 } from "uuid";
+import randomWords from "random-words";
 
 const secretKey: string = config.get("SECRET_KEY");
 const userSchema = new mongoose.Schema(
@@ -15,8 +17,8 @@ const userSchema = new mongoose.Schema(
 		},
 		username: {
 			type: String,
-			required: [true, "Username is required"],
 			maxLength: 35,
+			unique: true,
 		},
 		email: {
 			type: String,
@@ -27,8 +29,6 @@ const userSchema = new mongoose.Schema(
 		},
 		passwordHash: {
 			type: String,
-			minLength: 8,
-			maxLength: 48,
 		},
 		birthday: Date,
 		membershipTier: {
@@ -57,7 +57,7 @@ const userSchema = new mongoose.Schema(
 					{
 						userID: this._id,
 						name: this.name,
-						email:this.email,
+						email: this.email,
 						membershipTier: this.membershipTier,
 						role: this.role,
 						type: "accessToken",
@@ -80,14 +80,16 @@ const userSchema = new mongoose.Schema(
 		},
 	}
 );
+const User = mongoose.model("User", userSchema);
 
 // Add a validate method to the model
 userSchema.statics.validate = validateUserPost;
+userSchema.statics.generateUniqueUsername = generateUniqueUsername;
 
 export function validateUserPost(user: any) {
 	const userSchema = Joi.object({
 		name: Joi.string().max(70).required(),
-		username: Joi.string().max(35).required(),
+		username: Joi.string().max(35).allow(""),
 		email: Joi.string().max(255).email().required(),
 		password: Joi.string().min(8).max(64).required(),
 		birthday: Joi.date(),
@@ -113,7 +115,30 @@ export function validateUserPost(user: any) {
 	}
 }
 
-const User = mongoose.model("User", userSchema);
+export async function generateUniqueUsername() {
+	
+	let words = randomWords.generate(2);
+
+	if (Array.isArray(words)) {
+		words = words.join("-")
+	}
+	let username = `${words}-${uuidv4().split("-")[0]}`;
+
+	// Repeat until no duplicates
+	while (
+		await User.findOne({
+			username: username,
+		}).exec()
+	) {
+			let words = randomWords.generate(2);
+			if (Array.isArray(words)) {
+				words = words.join("-");
+			}
+			username = `${words}-${uuidv4().split("-")[0]}`;
+	}
+
+	return username;
+}
 
 export default User;
 

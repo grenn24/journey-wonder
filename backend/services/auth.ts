@@ -1,4 +1,4 @@
-import User from "../models/user";
+import User, { generateUniqueUsername } from "../models/user";
 import bcrypt from "bcryptjs";
 import { HttpError } from "../middlewares/error";
 import { validateRefreshToken } from "../middlewares/auth";
@@ -12,7 +12,8 @@ class AuthService {
 			if (!user) {
 				throw new HttpError(
 					"Invalid email or password",
-					"INVALID_EMAIL_PASSWORD",400
+					"INVALID_EMAIL_PASSWORD",
+					400
 				);
 			}
 
@@ -45,7 +46,60 @@ class AuthService {
 		}
 	}
 
-	async refreshAccessToken(refreshToken : string) {
+	async signUp(user: any) {
+		try {
+			const existingEmail = await User.findOne({
+				email: user.email,
+			}).exec();
+
+			// generate a unique and random username
+			if (!user.username) {
+				user.username = await generateUniqueUsername();
+			}
+
+			const existingUsername = await User.findOne({
+				username: user.username,
+			}).exec();
+
+			if (existingEmail && existingUsername) {
+				throw new HttpError(
+					"Email and username is used by an existing user",
+					"DUPLICATE_EMAIL_USERNAME",
+					400
+				);
+			}
+
+			if (existingEmail) {
+				throw new HttpError(
+					"Email is used by an existing user",
+					"DUPLICATE_EMAIL",
+					400
+				);
+			}
+
+			if (existingUsername) {
+				throw new HttpError(
+					"Username is used by an existing user",
+					"DUPLICATE_USERNAME",
+					400
+				);
+			}
+
+			const salt = await bcrypt.genSalt(10);
+			user.passwordHash = await bcrypt.hash(user.password, salt);
+			const createdUser = await User.create(user);
+
+			return {
+				accessToken: createdUser.generateAccessToken(),
+				refreshToken: createdUser.generateRefreshToken("5d"),
+				user: lodash.omit(createdUser.toObject(), ["passwordHash"]),
+			};
+		} catch (err) {
+			throw err;
+		}
+	}
+
+	async refreshAccessToken(refreshToken: string) {
 		const payload = validateRefreshToken(refreshToken);
 		if (!payload) {
 			throw new HttpError(
@@ -58,5 +112,5 @@ class AuthService {
 	}
 }
 
-const authService = new AuthService;
+const authService = new AuthService();
 export default authService;

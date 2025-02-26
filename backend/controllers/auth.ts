@@ -3,6 +3,8 @@ import authService from "../services/auth";
 import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import { HttpError } from "../middlewares/error";
+import User from "../models/user";
+import fs from "fs";
 
 class AuthController {
 	async login(request: Request, response: Response) {
@@ -14,12 +16,36 @@ class AuthController {
 			login.password,
 			login.remember
 		);
-
 		response
 			.status(200)
 			.header("X-Access-Token", accessToken)
 			.cookie("X-Refresh-Token", refreshToken, {
 				maxAge: login.remember ? 2592000000 : 432000000,
+				httpOnly: true,
+				secure: true,
+				domain: request.header("Host")?.split(":")[0],
+				sameSite: "lax",
+			})
+			.send(user);
+	}
+
+	async signUp(request: Request, response: Response) {
+		const signUp = request.body;
+
+		User.validate(signUp);
+		if (request.file) {
+			signUp.avatar = fs.readFileSync(request.file.path);
+		}
+	
+		// Return JSON Web Token
+		const { accessToken, refreshToken, user } = await authService.signUp(
+			signUp
+		);
+		response
+			.status(200)
+			.header("X-Access-Token", accessToken)
+			.cookie("X-Refresh-Token", refreshToken, {
+				maxAge: 432000000, // 5d
 				httpOnly: true,
 				secure: true,
 				domain: request.header("Host")?.split(":")[0],
