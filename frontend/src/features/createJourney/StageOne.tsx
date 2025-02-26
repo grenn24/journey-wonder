@@ -1,4 +1,4 @@
-"use server"
+"use server";
 import { useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import {

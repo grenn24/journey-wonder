@@ -17,42 +17,48 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../redux/store";
 import i18n from "../i18n";
 import useBreakpoints from "../utilities/breakpoints";
-import googleLogo from "../assets/images/google/google.svg"
+import googleLogo from "../assets/images/google/google.svg";
 import journeyWonderIcon from "../assets/images/journey-wonder-icon/svg/journey-wonder-icon-white-background-normal.svg";
-import LanguageMenu from "../features/guest layout/LanguageMenu";
+import LanguageMenu from "../components/LanguageMenu/LanguageMenu";
 import useSnackbar from "../components/useSnackbar";
+import ThemeMenu from "../components/ThemeMenu";
 
-
-const { Title ,Text, Link} = Typography;
+const { Title, Text, Link } = Typography;
 const SignUp = () => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const {
-		token: { colorBgContainer, colorBorder, marginSM, marginMD,fontWeightStrong},
+		token: {
+			colorBgContainer,
+			colorBorder,
+			marginSM,
+			marginMD,
+			fontWeightStrong,
+		},
 	} = theme.useToken();
 	const [form] = Form.useForm();
 	const breakpoints = useBreakpoints();
 
 	const [loading, setLoading] = useState(false);
-		const { createSnackbar, snackbarContext } = useSnackbar();
-		const [openErrorSnackbar] = createSnackbar(
-			i18n.t(
-				"An internal server error occurred. Please try again later."
-			),
-			"error"
-		);
+	const { createSnackbar, snackbarContext } = useSnackbar();
+	const [openErrorSnackbar] = createSnackbar(
+		i18n.t("An internal server error occurred. Please try again later."),
+		"error"
+	);
 
 	const handleFormSubmit = (body: Object) => {
-		setLoading(false);
+		setLoading(true);
 		authService
 			.login(body, dispatch)
 			.then(() => {
-				setLoading(false);
-				navigate("/user");
-				form.resetFields();
+					navigate("/user");
+				setTimeout(() => {
+					setLoading(false);
+					form.resetFields();
+				}, 2000);
 			})
-			.catch((err) => {
-				const { body } = err;
+			.catch(({ body }) => {
+				setLoading(false);
 				if (body?.status === "INVALID_EMAIL_PASSWORD") {
 					form.setFields([
 						{
@@ -309,7 +315,7 @@ const SignUp = () => {
 						<Flex
 							justify="space-between"
 							align="center"
-							style={{ margin: "15px 15px" }}
+							style={{ margin: "10px 15px" }}
 						>
 							<a
 								href="/guest"
@@ -318,13 +324,22 @@ const SignUp = () => {
 								title="Journey Wonder"
 							>
 								<Image
-									width={50}
+									width={40}
 									src={journeyWonderIcon}
 									preview={false}
 									style={{ marginBottom: 2 }}
 								/>
 							</a>
-							<LanguageMenu placement="bottomRight" />
+							<Flex gap={15}>
+								<ThemeMenu
+									placement="bottomRight"
+									size="middle"
+								/>
+								<LanguageMenu
+									placement="bottomRight"
+									size="middle"
+								/>
+							</Flex>
 						</Flex>
 					</div>
 				</Flex>

@@ -1,27 +1,16 @@
-import {
-	AutoComplete,
-	Button,
-	Flex,
-	Image,
-	Input,
-	Menu,
-	theme,
-} from "antd";
+import { AutoComplete, Button, Flex, Image, Input, Menu, theme } from "antd";
 import { Header } from "antd/es/layout/layout";
 import useBreakpoints from "../../utilities/breakpoints";
-import {
-	MenuOutlined,
-	SearchOutlined,
-} from "@ant-design/icons";
+import { MenuOutlined, SearchOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { ArrowForwardIosRounded } from "@mui/icons-material";
 import { useState } from "react";
-import useHeaderMenuItems from "./menus/headerMenuItems";
+import useHeaderMenuItems from "./headerMenuItems";
 import journeyWonderIcon from "../../assets/images/journey-wonder-icon/svg/journey-wonder-icon-white-background-normal.svg";
 import MobileDrawerMenu from "./MobileDrawerMenu";
 import i18n from "../../i18n";
 import ExploreJourneysDrawer from "../../components/ExploreJourneysDrawer";
-import LanguageMenu from "./LanguageMenu";
+import LanguageMenu from "../../components/LanguageMenu/LanguageMenu";
 
 const options = [
 	{
@@ -46,9 +35,7 @@ const GuestHeader = () => {
 		useState(false);
 	const headerMenuItems = useHeaderMenuItems();
 	const {
-		token: {
-			colorBgContainer,
-		},
+		token: { colorBgContainer },
 	} = theme.useToken();
 	const selectedItem =
 		location.pathname.split("/").slice(2).length !== 0
@@ -62,6 +49,7 @@ const GuestHeader = () => {
 					padding: "0px 20px",
 					display: "flex",
 					justifyContent: "center",
+					height: 70,
 				}}
 			>
 				<Flex
@@ -77,7 +65,7 @@ const GuestHeader = () => {
 							title="Journey Wonder"
 						>
 							<Image
-								width={50}
+								width={45}
 								src={journeyWonderIcon}
 								preview={false}
 								style={{ marginBottom: 2 }}
@@ -145,7 +133,7 @@ const GuestHeader = () => {
 											}}
 										/>
 									}
-									onClick={()=>navigate("account/sign-up")}
+									onClick={() => navigate("account/sign-up")}
 								>
 									{i18n.t("Sign Up")}
 								</Button>

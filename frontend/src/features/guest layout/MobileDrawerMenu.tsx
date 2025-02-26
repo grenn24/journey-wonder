@@ -3,9 +3,12 @@ import { ArrowForwardIosRounded } from "@mui/icons-material";
 import { Button, Drawer, Dropdown, Flex, Layout, Menu, theme } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { useNavigate } from "react-router-dom";
-import useLanguageMenuItems from "./menus/languageMenuItems";
+
 import { useAppSelector } from "../../redux/store";
 import i18n from "../../i18n";
+import LanguageMenu from "../../components/LanguageMenu";
+import ThemeMenu from "../../components/ThemeMenu";
+import CloseButton from "../../components/CloseButton";
 
 const { Footer } = Layout;
 interface Prop {
@@ -20,7 +23,6 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 			colorBgContainer,
 			fontWeightStrong,
 			fontSizeHeading4,
-			fontSizeHeading5,
 		},
 	} = theme.useToken();
 	const { language } = useAppSelector((state) => ({
@@ -28,20 +30,30 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 	}));
 	const navigate = useNavigate();
 
-	const languageMenuItems = useLanguageMenuItems();
+
 	const selectedItem =
 		location.pathname.split("/").slice(2).length !== 0
 			? location.pathname.split("/").slice(2)[0]
 			: "home";
 	return (
 		<Drawer
-			title=""
+			title={
+				<Flex justify="space-between" align="center">
+					<CloseButton variant="filled" handleButtonClick={()=>setOpenMobileDrawerMenu(false)} />
+					<Flex gap={15} justify="flex-end">
+						<ThemeMenu placement="bottom" />
+						<LanguageMenu placement="bottomRight" />
+					</Flex>
+				</Flex>
+			}
+			closeIcon={<CloseButton variant="text" />}
+			closable={false}
 			onClose={() => setOpenMobileDrawerMenu(false)}
 			open={openMobileDrawerMenu}
 			width="100vw"
 			styles={{
 				header: {
-					padding: "25px 15px",
+					padding: "15px 15px",
 				},
 				body: {
 					padding: "0px 15px",
@@ -66,10 +78,10 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 							key="home"
 							onClick={() => navigate("")}
 							style={{
-								fontFamily: "Roboto",
 								fontWeight: fontWeightStrong,
-								fontSize: fontSizeHeading4,
+								fontSize: 25,
 								padding: "25px 20px",
+								margin: "10px 0px",
 								marginTop: 15,
 								marginBottom: 15,
 							}}
@@ -81,10 +93,10 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 							key="explore"
 							onClick={() => navigate("explore")}
 							style={{
-								fontFamily: "Roboto",
 								fontWeight: fontWeightStrong,
-								fontSize: fontSizeHeading4,
+								fontSize: 25,
 								padding: "25px 20px",
+								margin: "10px 0px",
 								marginTop: 15,
 								marginBottom: 15,
 							}}
@@ -96,10 +108,10 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 							key="pricing"
 							onClick={() => navigate("pricing")}
 							style={{
-								fontFamily: "Roboto",
 								fontWeight: fontWeightStrong,
-								fontSize: fontSizeHeading4,
+								fontSize: 25,
 								padding: "25px 20px",
+								margin: "10px 0px",
 								marginTop: 15,
 								marginBottom: 15,
 							}}
@@ -110,9 +122,8 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 						<Menu.SubMenu
 							title={i18n.t("About Us")}
 							style={{
-								fontFamily: "Roboto",
 								fontWeight: fontWeightStrong,
-								fontSize: fontSizeHeading4,
+								fontSize: 25,
 								padding: "10px 0px",
 							}}
 						>
@@ -120,10 +131,10 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 								key="mission"
 								onClick={() => navigate("about/mission")}
 								style={{
-									fontFamily: "Roboto",
 									fontWeight: fontWeightStrong,
-									fontSize: fontSizeHeading5,
+									fontSize: fontSizeHeading4,
 									padding: "25px 50px",
+									margin: "10px 0px",
 								}}
 							>
 								{i18n.t("Our Mission")}
@@ -132,10 +143,10 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 								key="creators"
 								onClick={() => navigate("about/creators")}
 								style={{
-									fontFamily: "Roboto",
 									fontWeight: fontWeightStrong,
-									fontSize: fontSizeHeading5,
+									fontSize: fontSizeHeading4,
 									padding: "25px 50px",
+									margin: "10px 0px",
 								}}
 							>
 								{i18n.t("Creators")}
@@ -151,57 +162,49 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 						marginBottom: 25,
 					}}
 				>
-					<Flex gap={20} justify="center" align="center">
-						<Dropdown
-							menu={{
-								items: languageMenuItems,
-								selectedKeys: [language],
-							}}
-							placement="bottom"
-						>
+					<Flex
+						justify="center"
+						align="center"
+						style={{ width: "100%" }}
+					>
+						<Flex gap={15}>
 							<Button
 								size="large"
 								variant="filled"
 								color="default"
-								icon={<GlobalOutlined />}
-							/>
-						</Dropdown>
-						<Button
-							size="large"
-							variant="filled"
-							color="default"
-							onClick={() => navigate("account/log-in")}
-							style={{ fontWeight: fontWeightStrong }}
-							iconPosition="end"
-							icon={
-								<ArrowForwardIosRounded
-									style={{
-										fontSize: 14,
-										fontWeight: 500,
-									}}
-								/>
-							}
-						>
-							{i18n.t("Log In")}
-						</Button>
-						<Button
-							size="large"
-							variant="solid"
-							color="primary"
-							onClick={() => navigate("account/sign-up")}
-							style={{ fontWeight: fontWeightStrong }}
-							iconPosition="end"
-							icon={
-								<ArrowForwardIosRounded
-									style={{
-										fontSize: 14,
-										fontWeight: 500,
-									}}
-								/>
-							}
-						>
-							{i18n.t("Sign Up")}
-						</Button>
+								onClick={() => navigate("account/log-in")}
+								style={{ fontWeight: fontWeightStrong }}
+								iconPosition="end"
+								icon={
+									<ArrowForwardIosRounded
+										style={{
+											fontSize: 14,
+											fontWeight: 500,
+										}}
+									/>
+								}
+							>
+								{i18n.t("Log In")}
+							</Button>
+							<Button
+								size="large"
+								variant="solid"
+								color="primary"
+								onClick={() => navigate("account/sign-up")}
+								style={{ fontWeight: fontWeightStrong }}
+								iconPosition="end"
+								icon={
+									<ArrowForwardIosRounded
+										style={{
+											fontSize: 14,
+											fontWeight: 500,
+										}}
+									/>
+								}
+							>
+								{i18n.t("Sign Up")}
+							</Button>
+						</Flex>
 					</Flex>
 				</Footer>
 			</Layout>

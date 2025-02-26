@@ -1,10 +1,10 @@
 # Dockerfile for building backend and nginx images
 
-# Step 1: Backend
-FROM node:lts-jod as backend
+# Step 1: Backend api server
+FROM node:hydrogen-alpine3.21 as backend
 
 # Create new user and set working directory
-RUN useradd --create-home --shell /bin/bash app
+RUN adduser -D -h /home/app -s /bin/sh app
 WORKDIR /backend
 
 # Install backend dependencies
@@ -21,11 +21,11 @@ EXPOSE 3000
 CMD ["npm","start"]
 
 
-# Step 2: Frontend (build dist files)
-FROM node:lts-jod AS frontend
+# Step 2: Compile frontend dist files
+FROM node:hydrogen-alpine3.21 AS frontend
 
 # Create new user and set working directory
-RUN useradd --create-home --shell /bin/bash app
+RUN adduser -D -h /home/app -s /bin/sh app
 
 WORKDIR /frontend
 
@@ -40,18 +40,18 @@ COPY --chown=app:app ./frontend/ ./
 RUN npm run build
 
 
-# Step 3: Setup Nginx
+# Step 3: Setup Nginx server
 FROM nginx:stable-alpine3.20-perl AS nginx
 
-# Create new user and set working directory
+# Create new user, directories for volume sharing
 RUN adduser -D -h /home/app -s /bin/sh app
-RUN mkdir -p /usr/share/nginx/html/.well-known/acme-challenge/ /etc/nginx/ssl/
+RUN mkdir -p /usr/share/nginx/html/.well-known/acme-challenge/ /usr/share/nginx/html/seo/ /etc/nginx/ssl/ /var/log/nginx/
 WORKDIR /nginx
 
 # Copy Nginx configuration file
 COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
 
-# Copy dist static files built by frontend container
+# Copy over dist static files compiled in step 2
 COPY --from=frontend /frontend/dist/ /usr/share/nginx/html/journey-wonder
 
 EXPOSE 80

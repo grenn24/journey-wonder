@@ -28,7 +28,6 @@ const useTheme = () => {
 			fontSize: 16,
 			colorPrimary: "#7cb305",
 			colorPrimaryText: "#7cb305", // text
-
 			colorInfo: "#5b8c00", // button text, links
 			colorBgSpotlight: "#5b8c00", // tooltip background
 		} as TokenType,

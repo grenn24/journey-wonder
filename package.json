@@ -19,7 +19,7 @@
 		"start": "docker compose -f docker-compose-dev.yaml up --build",
 		"dev": "concurrently \"cd ./backend && npm run dev\" \"cd ./frontend && npm run dev\"",
 		"build": "docker compose -f docker-compose-dev.yaml build",
-		"upload": "docker compose -f docker-compose-dev.yaml build && docker save -o journey-wonder.tar journey-wonder journey-wonder-frontend journey-wonder-backend && scp journey-wonder.tar docker-compose-prod.yaml root@138.197.85.71:/root",
+		"upload": "docker compose -f docker-compose-dev.yaml build && docker save -o journey-wonder.tar journey-wonder-nginx journey-wonder-backend && scp journey-wonder.tar docker-compose-prod.yaml root@138.197.85.71:/root",
 		"bash": "docker exec -it journey-wonder:1.0.2 bash",
 		"clear-images": "for /f \"tokens=*\" %i in ('docker images -q') do docker rmi -f %i",
 		"clear-containers": "for /f \"tokens=*\" %i in ('docker ps -q') do docker rm -f %i",

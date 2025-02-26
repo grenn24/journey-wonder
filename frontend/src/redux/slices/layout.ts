@@ -24,7 +24,15 @@ export const layoutSlice = createSlice({
 	reducers: {
 		reset: () => initialState,
 		setSplitterSize: (state, action: PayloadAction<number[]>) => {
-			state.splitterSize = action.payload;
+			const left =
+				action.payload[0] < 100
+					? 100
+					: action.payload[0] >
+					  0.25 * document.documentElement.clientWidth
+					? 0.25 * document.documentElement.clientWidth
+					: action.payload[0];
+			const right = document.documentElement.clientWidth - left;
+			state.splitterSize = [left,right];
 		},
 	},
 });

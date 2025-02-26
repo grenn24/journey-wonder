@@ -1,6 +1,6 @@
 import { theme } from "antd";
 import { useNavigate } from "react-router-dom";
-import i18n from "../../../i18n";
+import i18n from "../../i18n";
 
 const useHeaderMenuItems =()=> {
     const navigate = useNavigate();

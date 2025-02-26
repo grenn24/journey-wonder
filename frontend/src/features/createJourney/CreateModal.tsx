@@ -167,7 +167,7 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 						padding: 0,
 					},
 				}}
-				width={600}
+				width="100%"
 				footer={
 					<Flex justify="space-between" align="center">
 						<Select
@@ -274,7 +274,7 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 						variant="filled"
 						key="save"
 					>
-						{i18n.t("Discard Changes")}
+						{i18n.t("Discard")}
 					</Button>,
 					<Button
 						onClick={() => {
@@ -285,7 +285,7 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 						variant="filled"
 						key="discard"
 					>
-						{i18n.t("Save Changes")}
+						{i18n.t("Save")}
 					</Button>,
 				]}
 			>

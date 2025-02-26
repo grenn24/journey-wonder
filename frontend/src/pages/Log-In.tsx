@@ -19,10 +19,10 @@ import { useAppDispatch } from "../redux/store";
 import i18n from "../i18n";
 import googleLogo from "../assets/images/google/google.svg";
 import useBreakpoints from "../utilities/breakpoints";
-import LanguageMenu from "../features/guest layout/LanguageMenu";
+import LanguageMenu from "../components/LanguageMenu/LanguageMenu";
 import journeyWonderIcon from "../assets/images/journey-wonder-icon/svg/journey-wonder-icon-white-background-normal.svg";
 import useSnackbar from "../components/useSnackbar";
-
+import ThemeMenu from "../components/ThemeMenu";
 
 const { Title } = Typography;
 const Login = () => {
@@ -42,16 +42,18 @@ const Login = () => {
 	);
 
 	const handleFormSubmit = (body: Object) => {
-		setLoading(false);
+		setLoading(true);
 		authService
 			.login(body, dispatch)
 			.then(() => {
-				setLoading(false);
 				navigate("/user");
-				form.resetFields();
+				setTimeout(() => {
+					setLoading(false);
+					form.resetFields();
+				}, 2000);
 			})
-			.catch((err) => {
-				const { body } = err;
+			.catch(({ body }) => {
+				setLoading(false);
 				if (body?.status === "INVALID_EMAIL_PASSWORD") {
 					form.setFields([
 						{
@@ -187,22 +189,6 @@ const Login = () => {
 											"Please enter your email"
 										),
 									},
-									{
-										validator: (_, value) => {
-											const regex =
-												/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-											if (!regex.test(value)) {
-												return Promise.reject(
-													i18n.t(
-														"Invalid email format"
-													)
-												);
-											}
-
-											return Promise.resolve();
-										},
-										validateTrigger: "onSubmit",
-									},
 								]}
 							>
 								<Input
@@ -280,7 +266,7 @@ const Login = () => {
 						<Flex
 							justify="space-between"
 							align="center"
-							style={{ margin: "15px 15px" }}
+							style={{ margin: "10px 15px" }}
 						>
 							<a
 								href="/guest"
@@ -289,13 +275,22 @@ const Login = () => {
 								title="Journey Wonder"
 							>
 								<Image
-									width={50}
+									width={40}
 									src={journeyWonderIcon}
 									preview={false}
 									style={{ marginBottom: 2 }}
 								/>
 							</a>
-							<LanguageMenu placement="bottomRight" />
+							<Flex gap={15}>
+								<ThemeMenu
+									placement="bottomRight"
+									size="middle"
+								/>
+								<LanguageMenu
+									placement="bottomRight"
+									size="middle"
+								/>
+							</Flex>
 						</Flex>
 					</div>
 				</Flex>

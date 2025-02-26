@@ -1,5 +1,6 @@
-# Docker compose file for building images
+# Docker compose file for building necessary images (and running them)
 services:
+  # Step 1: Build backend api server
   backend:
     build:
       context: .
@@ -11,6 +12,7 @@ services:
       - app-network
     image: journey-wonder-backend:1.0.2
 
+  # Step 2: Compile frontend static files
   frontend:
     build:
       context: .
@@ -24,6 +26,7 @@ services:
       - backend
     image: journey-wonder-frontend:1.0.2
 
+  # Step 3: Build nginx server
   nginx:
     build:
       context: .
@@ -37,7 +40,7 @@ services:
     depends_on:
       - backend
       - frontend
-    image: journey-wonder:1.0.2
+    image: journey-wonder-nginx:1.0.2
 
 networks:
   app-network:

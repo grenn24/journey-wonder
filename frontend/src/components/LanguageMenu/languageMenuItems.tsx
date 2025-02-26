@@ -1,8 +1,8 @@
 import { useDispatch } from "react-redux";
-import { Language, setLanguage } from "../../../redux/slices/language";
+import { Language, setLanguage } from "../../redux/slices/language";
 import { Flex, Typography } from "antd";
 import Flag from "react-world-flags";
-import { useAppSelector } from "../../../redux/store";
+import { useAppSelector } from "../../redux/store";
 
 const {Title} = Typography;
 const useLanguageMenuItems = () => {
@@ -21,7 +21,7 @@ const useLanguageMenuItems = () => {
 							marginBottom: 0,
 							fontWeight:
 								globalLanguage === Language.EnglishUK
-									? 800
+									? 700
 									: 500,
 						}}
 					>
@@ -44,7 +44,7 @@ const useLanguageMenuItems = () => {
 							marginBottom: 0,
 							fontWeight:
 								globalLanguage === Language.ChineseSimplified
-									? 800
+									? 700
 									: 500,
 						}}
 					>
@@ -66,7 +66,7 @@ const useLanguageMenuItems = () => {
 							marginBottom: 0,
 							fontWeight:
 								globalLanguage === Language.Japanese
-									? 800
+									? 700
 									: 500,
 						}}
 					>

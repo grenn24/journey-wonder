@@ -15,5 +15,5 @@ require("./startup/routes").default(app);
 // Start the server
 const port = config.get("PORT") || 3000;
 app.listen(port, () => {
-	startupDebug(`API server running locally at ${port}`);
+	startupDebug(`Backend api server running locally at port ${port}`);
 });

@@ -2,12 +2,14 @@
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
+	-webkit-tap-highlight-color: transparent;
 }
 
 body {
 	font-family: "Arial", sans-serif;
 	line-height: 1.6;
 }
+
 
 /*Typeface Declarations*/
 @font-face {

@@ -26,6 +26,7 @@ const CloseButton = ({ handleButtonClick, variant="filled" ,style, size}: Prop) 
 			}
 			onClick={(e) => handleButtonClick && handleButtonClick(e)}
 			style={{ ...style, flexShrink: 0 }}
+			
 		/>
 	);
 };

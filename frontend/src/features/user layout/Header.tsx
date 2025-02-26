@@ -7,6 +7,7 @@ import {
 	Image,
 	Input,
 	Modal,
+	theme,
 	Typography,
 } from "antd";
 import { Header as HeaderBase } from "antd/es/layout/layout";
@@ -20,15 +21,17 @@ import { useNavigate } from "react-router-dom";
 import i18next from "i18next";
 import ExploreJourneysDrawer from "../../components/ExploreJourneysDrawer";
 import NotificationButton from "./NotificationButton";
+import useTheme from "../../styles/useTheme";
 
 const { Text } = Typography;
 const UserHeader = () => {
-	const { name, splitterSize } = useAppSelector((state) => ({
+	const { name, splitterSize, globalTheme } = useAppSelector((state) => ({
 		name: state.user.name,
 		globalTheme: state.theme.theme,
 		globalLanguage: state.language.language,
-		splitterSize: state.layout.splitterSize
+		splitterSize: state.layout.splitterSize,
 	}));
+	const { algorithm } = useTheme();
 	const navigate = useNavigate();
 	const breakpoints = useBreakpoints();
 	const [openLogOutModal, setOpenLogOutModal] = useState(false);
@@ -51,7 +54,7 @@ const UserHeader = () => {
 			<HeaderBase
 				style={{
 					backgroundColor: "rgba(0,0,0,0)",
-					padding: "0 15px",
+					padding: "0px 20px",
 					display: "flex",
 					justifyContent: "center",
 					position: "fixed",
@@ -59,6 +62,7 @@ const UserHeader = () => {
 						? document.documentElement.clientWidth - splitterSize[0]
 						: "100%",
 					zIndex: 5,
+					height: 70,
 				}}
 			>
 				<Flex
@@ -73,7 +77,7 @@ const UserHeader = () => {
 						title="Journey Wonder"
 					>
 						<Image
-							width={50}
+							width={45}
 							src={journeyWonderIcon}
 							preview={false}
 							style={{ marginBottom: 2 }}
@@ -94,9 +98,10 @@ const UserHeader = () => {
 									)}
 									variant="filled"
 									style={{
-										backgroundColor:
-											"rgba(255, 255, 255, 0.2)",
-									
+										background: "rgba(255, 255, 255, 0.3)",
+										color: "black",
+										mixBlendMode:
+											"difference"
 									}}
 								/>
 								<NotificationButton />
