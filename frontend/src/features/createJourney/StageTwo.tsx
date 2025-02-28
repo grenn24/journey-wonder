@@ -80,7 +80,7 @@ const StageTwo = () => {
 					}}
 					styles={{
 						body: {
-							padding: 15,
+							padding: "10px 15px",
 						},
 					}}
 					style={{ borderWidth: 2, borderColor: colorBorder }}
@@ -97,7 +97,7 @@ const StageTwo = () => {
 									ease: "easeInOut",
 								}}
 							>
-								<Flex vertical gap={10}>
+								<Flex vertical gap={5}>
 									<Text
 										style={{
 											textAlign: "left",
@@ -106,123 +106,151 @@ const StageTwo = () => {
 									>
 										{i18n.t("Travellers")}
 									</Text>
-									<Input
-										type="email"
-										status={
-											isValidEmail || !travellerEmail
-												? undefined
-												: "error"
-										}
-										size="middle"
-										placeholder={i18n.t(
-											"Send an email invite"
-										)}
-										value={travellerEmail}
-										onClick={(e) => e.stopPropagation()}
-										onChange={(e) => {
-											setTravellerEmail(e.target.value);
-											setIsValidEmail(
-												!userService.validateEmail(
-													e.target.value
-												)
-											);
-										}}
-										onKeyDown={(e) => {
-											if (
-												e.key === "Enter" &&
-												isValidEmail
-											) {
-												addTravellerEmail(e);
+									<div>
+										<Input
+											type="email"
+											status={
+												isValidEmail || !travellerEmail
+													? undefined
+													: "error"
 											}
-										}}
-										required
-										style={{ width: "100%" }}
-										suffix={
-											<>
-												<Select
-													value={travellerPermission}
-													variant="borderless"
-													options={[
-														{
-															value: "Edit" as
-																| "Edit"
-																| "Read",
-															label: (
-																<EditRounded fontSize="small" />
-															),
-														},
-														{
-															value: "Read" as
-																| "Edit"
-																| "Read",
-															label: (
-																<VisibilityRounded fontSize="small" />
-															),
-														},
-													]}
-													labelRender={(label) => (
-														<Flex
-															style={{
-																height: "100%",
-															}}
-															align="center"
-														>
-															{label.label}
-														</Flex>
-													)}
-													optionRender={(option) => (
-														<Flex
-															style={{
-																height: "auto",
-															}}
-															justify="flex-start"
-															align="center"
-														>
-															{option.label}
-														</Flex>
-													)}
-													onClick={(e) =>
-														e.stopPropagation()
-													}
-													open={
-														isValidEmail &&
+											size="middle"
+											placeholder={i18n.t(
+												"Send an email invite"
+											)}
+											value={travellerEmail}
+											onClick={(e) => e.stopPropagation()}
+											onChange={(e) => {
+												setTravellerEmail(
+													e.target.value
+												);
+												setIsValidEmail(
+													!userService.validateEmail(
+														e.target.value
+													)
+												);
+											}}
+											onKeyDown={(e) => {
+												if (
+													e.key === "Enter" &&
+													isValidEmail
+												) {
+													addTravellerEmail(e);
+												}
+											}}
+											required
+											style={{ width: "100%" }}
+											suffix={
+												<>
+													<Select
+														value={
+															travellerPermission
+														}
+														variant="borderless"
+														options={[
+															{
+																value: "Edit" as
+																	| "Edit"
+																	| "Read",
+																label: (
+																	<EditRounded fontSize="small" />
+																),
+															},
+															{
+																value: "Read" as
+																	| "Edit"
+																	| "Read",
+																label: (
+																	<VisibilityRounded fontSize="small" />
+																),
+															},
+														]}
+														labelRender={(
+															label
+														) => (
+															<Flex
+																style={{
+																	height: "100%",
+																}}
+																align="center"
+															>
+																{label.label}
+															</Flex>
+														)}
+														optionRender={(
+															option
+														) => (
+															<Flex
+																style={{
+																	height: "auto",
+																}}
+																justify="flex-start"
+																align="center"
+															>
+																{option.label}
+															</Flex>
+														)}
+														onClick={(e) =>
+															e.stopPropagation()
+														}
+														open={
+															isValidEmail &&
+															travellerEmail
+																? undefined
+																: false
+														}
+														style={{
+															width: 52,
+															left: 15,
+															marginRight: 0,
+															opacity:
+																isValidEmail &&
+																travellerEmail
+																	? 1
+																	: 0,
+														}}
+														onSelect={(value) => {
+															setTravellerPermission(
+																value
+															);
+														}}
+														className="select-without-arrow"
+													/>
+													<Button
+														variant="text"
+														color="default"
+														icon={<AddRounded />}
+														style={{
+															opacity:
+																isValidEmail &&
+																travellerEmail
+																	? 1
+																	: 0,
+														}}
+														onClick={
+															addTravellerEmail
+														}
+													/>
+												</>
+											}
+										/>
+										{
+											<Text
+												style={{
+													fontSize: 14,
+													opacity:
+														!isValidEmail &&
 														travellerEmail
-															? undefined
-															: false
-													}
-													style={{
-														width: 52,
-														left: 15,
-														marginRight: 0,
-														opacity:
-															isValidEmail &&
-															travellerEmail
-																? 1
-																: 0,
-													}}
-													onSelect={(value) => {
-														setTravellerPermission(
-															value
-														);
-													}}
-													className="select-without-arrow"
-												/>
-												<Button
-													variant="text"
-													color="default"
-													icon={<AddRounded />}
-													style={{
-														opacity:
-															isValidEmail &&
-															travellerEmail
-																? 1
-																: 0,
-													}}
-													onClick={addTravellerEmail}
-												/>
-											</>
+															? 1
+															: 0,
+												}}
+												type="danger"
+											>
+												The email format is invalid
+											</Text>
 										}
-									/>
+									</div>
+
 									<ScrollableDiv
 										height={35}
 										style={{
@@ -232,64 +260,70 @@ const StageTwo = () => {
 													: "flex",
 										}}
 									>
-										{selectedTravellers ? selectedTravellers?.map(
-											(traveller) => (
-												<Tooltip
-													title={
-														"Can " +
-														traveller.permission
-													}
-													arrow={false}
-													placement="bottom"
-													color="grey"
-													styles={{
-														body: {
-															fontSize: 15,
-															opacity: 0.9,
-															position:
-																"relative",
-															top: 5,
-														},
-													}}
-												>
-													<Tag
-														bordered
-														closeIcon={
-															<ClearRounded
+										{selectedTravellers
+											? selectedTravellers?.map(
+													(traveller) => (
+														<Tooltip
+															title={
+																"Can " +
+																traveller.permission
+															}
+															arrow={false}
+															placement="bottom"
+															color="grey"
+															styles={{
+																body: {
+																	fontSize: 15,
+																	opacity: 0.9,
+																	position:
+																		"relative",
+																	top: 5,
+																},
+															}}
+														>
+															<Tag
+																bordered
+																closeIcon={
+																	<ClearRounded
+																		style={{
+																			fontSize: 16,
+																			marginLeft: 8,
+																		}}
+																	/>
+																}
+																onClose={() =>
+																	dispatch(
+																		removeTraveller(
+																			traveller
+																		)
+																	)
+																}
+																onClick={(e) =>
+																	e.stopPropagation()
+																}
 																style={{
-																	fontSize: 16,
-																	marginLeft: 8,
+																	borderColor:
+																		colorBorder,
+																	backgroundColor:
+																		colorBgContainer,
+
+																	padding:
+																		"5px 12px",
+
+																	display:
+																		"flex",
+																	alignItems:
+																		"center",
 																}}
-															/>
-														}
-														onClose={() =>
-															dispatch(
-																removeTraveller(
-																	traveller
-																)
-															)
-														}
-														onClick={(e) =>
-															e.stopPropagation()
-														}
-														style={{
-															borderColor:
-																colorBorder,
-															backgroundColor:
-																colorBgContainer,
-
-															padding: "5px 12px",
-
-															display: "flex",
-															alignItems:
-																"center",
-														}}
-													>
-														{traveller.email}
-													</Tag>
-												</Tooltip>
-											)
-										) : []}
+															>
+																{
+																	traveller.email
+																}
+															</Tag>
+														</Tooltip>
+													)
+											  )
+											: []}
 									</ScrollableDiv>
 								</Flex>
 							</motion.div>

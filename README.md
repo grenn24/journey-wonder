@@ -11,7 +11,9 @@ Deployment: DigitalOcean Droplets, Docker
 - GitHub action workflows
 - Use non-admin for docker linux shell
 
+
 # Possible Features
 - Semi transparent modal
-- login input validation real time
 - translate destination names
+- Forgot password
+- Suspicious activity popup

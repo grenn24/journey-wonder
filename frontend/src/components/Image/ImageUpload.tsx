@@ -134,6 +134,7 @@ const ImageUpload = ({
 							showPreviewIcon: preview,
 							showRemoveIcon: true,
 						}}
+						
 					>
 						{(images.length < maxUploads ||
 							defaultImageRenderType === "block") &&
