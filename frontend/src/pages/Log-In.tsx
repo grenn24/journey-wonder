@@ -24,12 +24,12 @@ import journeyWonderIcon from "../assets/images/journey-wonder-icon/svg/journey-
 import useSnackbar from "../components/useSnackbar";
 import ThemeMenu from "../components/ThemeMenu";
 
-const { Title } = Typography;
+const { Title, Link } = Typography;
 const Login = () => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const {
-		token: { colorBgContainer, colorBorder, fontWeightStrong },
+		token: { colorBgContainer, colorBorder, fontWeightStrong, marginMD },
 	} = theme.useToken();
 	const [form] = Form.useForm();
 	const { Text, Link } = Typography;
@@ -52,19 +52,24 @@ const Login = () => {
 					form.resetFields();
 				}, 2000);
 			})
-			.catch(({ body }) => {
+			.catch(({ body, status }) => {
 				setLoading(false);
-				if (body?.status === "INVALID_EMAIL_PASSWORD") {
-					form.setFields([
-						{
-							name: "email",
-							errors: [i18n.t("Invalid email or password")],
-						},
-						{
-							name: "password",
-							errors: [i18n.t("Invalid email or password")],
-						},
-					]);
+				if (status === 400) {
+					if (body?.status === "INVALID_EMAIL_PASSWORD") {
+						form.setFields([
+							{
+								name: "email",
+								errors: [i18n.t("Invalid email or password")],
+							},
+							{
+								name: "password",
+								errors: [i18n.t("Invalid email or password")],
+							},
+						]);
+					}
+					if (body?.status==="SUSPICIOUS_ACTIVITY_DETECTED") {
+
+					}
 				} else {
 					openErrorSnackbar();
 				}
@@ -81,7 +86,11 @@ const Login = () => {
 			<Flex
 				justify="center"
 				align="center"
-				style={{ background: colorBgContainer, height: "100vh" }}
+				style={{
+					background: colorBgContainer,
+					height: "100dvh",
+					width: "100dvw",
+				}}
 			>
 				<Flex
 					style={{
@@ -101,16 +110,11 @@ const Login = () => {
 						styles={{
 							header: {
 								borderBottom: `0px solid ${colorBorder}`,
-								marginBottom: 20,
+								padding: 24,
 							},
 						}}
 						title={
-							<Flex
-								vertical
-								justify="space-between"
-								gap={7}
-								style={{ marginBottom: 6 }}
-							>
+							<Flex vertical justify="space-between" gap={7}>
 								<Title level={1} style={{ margin: 0 }}>
 									{i18n.t("Log In")}
 								</Title>
@@ -123,18 +127,18 @@ const Login = () => {
 							</Flex>
 						}
 					>
-						<Flex gap={15}>
+						<Flex gap={20}>
 							<Button
 								icon={
 									<img
 										src={googleLogo}
 										alt="Google Logo"
-										width="20"
+										width="18"
 									/>
 								}
 								iconPosition="start"
 								block
-								size="large"
+								size="middle"
 								color="default"
 								styles={{
 									icon: {
@@ -147,6 +151,7 @@ const Login = () => {
 									fontWeight: fontWeightStrong,
 									borderRadius: 10,
 								}}
+								onClick={() => authService.googleLogin()}
 							>
 								{i18n.t("Google")}
 							</Button>
@@ -154,7 +159,7 @@ const Login = () => {
 								icon={<AppleFilled />}
 								iconPosition="start"
 								block
-								size="large"
+								size="middle"
 								color="default"
 								styles={{
 									icon: {
@@ -171,7 +176,10 @@ const Login = () => {
 								{i18n.t("Apple")}
 							</Button>
 						</Flex>
-						<Divider plain style={{ border: 0 }}>
+						<Divider
+							plain
+							style={{ border: 0, margin: "10px 0px" }}
+						>
 							{i18n.t("or")}
 						</Divider>
 						<Form
@@ -190,6 +198,7 @@ const Login = () => {
 										),
 									},
 								]}
+								style={{ marginBottom: marginMD }}
 							>
 								<Input
 									size="large"
@@ -208,6 +217,7 @@ const Login = () => {
 										),
 									},
 								]}
+								style={{ marginBottom: marginMD }}
 							>
 								<Input.Password
 									size="large"
@@ -232,7 +242,7 @@ const Login = () => {
 									</Link>
 								</Flex>
 							</Form.Item>
-							<Form.Item>
+							<Form.Item style={{ marginBottom: 15 }}>
 								<Button
 									block
 									type="primary"
@@ -255,6 +265,7 @@ const Login = () => {
 							</Link>
 						</Form>
 					</Card>
+
 					<div
 						style={{
 							position: "absolute",
@@ -292,6 +303,45 @@ const Login = () => {
 								/>
 							</Flex>
 						</Flex>
+					</div>
+					<div
+						style={{
+							position: "absolute",
+							bottom: 5,
+							left: 0,
+							width: "100%",
+						}}
+					>
+						<Text
+							style={{
+								whiteSpace: "pre-wrap",
+								fontSize: 10,
+								maxWidth: 350,
+								display: "block",
+								margin: "auto",
+								textAlign: "center",
+								padding: "0px 24px",
+								opacity: 0.8,
+								lineHeight: 1.2,
+							}}
+						>
+							This site is protected by reCAPTCHA and the Google{" "}
+							<a
+								href="https://policies.google.com/privacy"
+								target="_blank"
+							>
+								{" "}
+								Privacy Policy
+							</a>{" "}
+							and{" "}
+							<a
+								href="https://policies.google.com/terms"
+								target="_blank"
+							>
+								Terms of Service
+							</a>{" "}
+							apply.
+						</Text>
 					</div>
 				</Flex>
 				<div

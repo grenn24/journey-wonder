@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import config from "config";
 import { HttpError } from "../middlewares/error";
 import { v4 as uuidv4 } from "uuid";
-import randomWords from "random-words";
+import {generate} from "random-words";
 
 const secretKey: string = config.get("SECRET_KEY");
 const userSchema = new mongoose.Schema(
@@ -83,16 +83,17 @@ const userSchema = new mongoose.Schema(
 const User = mongoose.model("User", userSchema);
 
 // Add a validate method to the model
-userSchema.statics.validate = validateUserPost;
+userSchema.statics.validate = validateUser;
 userSchema.statics.generateUniqueUsername = generateUniqueUsername;
 
-export function validateUserPost(user: any) {
+export function validateUser(user: any) {
 	const userSchema = Joi.object({
 		name: Joi.string().max(70).required(),
 		username: Joi.string().max(35).allow(""),
 		email: Joi.string().max(255).email().required(),
 		password: Joi.string().min(8).max(64).required(),
 		birthday: Joi.date(),
+		recaptchaToken:Joi.string()
 	});
 	const passwordOptions = {
 		min: 8,
@@ -117,7 +118,7 @@ export function validateUserPost(user: any) {
 
 export async function generateUniqueUsername() {
 	
-	let words = randomWords.generate(2);
+	let words = generate(2);
 
 	if (Array.isArray(words)) {
 		words = words.join("-")
@@ -130,7 +131,7 @@ export async function generateUniqueUsername() {
 			username: username,
 		}).exec()
 	) {
-			let words = randomWords.generate(2);
+			let words = generate(2);
 			if (Array.isArray(words)) {
 				words = words.join("-");
 			}

@@ -68,7 +68,7 @@ const UserHeader = () => {
 				<Flex
 					justify="space-between"
 					align="center"
-					style={{ width: "100%" }}
+					style={{ width: "100%", height:"100%" }}
 				>
 					<a
 						href="/user"
@@ -83,7 +83,7 @@ const UserHeader = () => {
 							style={{ marginBottom: 2 }}
 						/>
 					</a>
-					<Flex gap={17} align="center">
+					<Flex gap={17} align="center" style={{ height: "100%" }}>
 						{breakpoints.largerThan("md") ? (
 							<>
 								<Input
@@ -100,8 +100,7 @@ const UserHeader = () => {
 									style={{
 										background: "rgba(255, 255, 255, 0.3)",
 										color: "black",
-										mixBlendMode:
-											"difference"
+										mixBlendMode: "difference",
 									}}
 								/>
 								<NotificationButton />

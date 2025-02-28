@@ -5,16 +5,41 @@ import mongoose from "mongoose";
 import { HttpError } from "../middlewares/error";
 import User from "../models/user";
 import fs from "fs";
+import config from "config";
+import axios from "axios";
 
 class AuthController {
 	async login(request: Request, response: Response) {
 		const login = request.body;
+		const { email, password, remember, recaptchaToken } = login;
 		validateLogin(login);
+
+		const { data } = await axios.post(
+			"https://www.google.com/recaptcha/api/siteverify",
+			null,
+			{
+				params: {
+					secret: config.get("RECAPTCHA_SECRET_KEY"),
+					response: recaptchaToken,
+				},
+			}
+		);
+		if (!data.success) {
+			throw new HttpError(data.error_codes, undefined, 500);
+		}
+		if (data.score < 0.6) {
+			throw new HttpError(
+				"We noticed unusual activity. Please verify your identity.",
+				"SUSPICIOUS_ACTIVITY_DETECTED",
+				400
+			);
+		}
+
 		// Return JSON Web Token
 		const { accessToken, refreshToken, user } = await authService.login(
-			login.email,
-			login.password,
-			login.remember
+			email,
+			password,
+			remember
 		);
 		response
 			.status(200)
@@ -36,7 +61,28 @@ class AuthController {
 		if (request.file) {
 			signUp.avatar = fs.readFileSync(request.file.path);
 		}
-	
+
+		const { data } = await axios.post(
+			"https://www.google.com/recaptcha/api/siteverify",
+			null,
+			{
+				params: {
+					secret: config.get("RECAPTCHA_SECRET_KEY"),
+					response: signUp.recaptchaToken,
+				},
+			}
+		);
+		if (!data.success) {
+			throw new HttpError(data.error_codes, undefined, 500);
+		}
+		if (data.score < 0.6) {
+			throw new HttpError(
+				"We noticed unusual activity. Please verify your identity.",
+				"SUSPICIOUS_ACTIVITY_DETECTED",
+				400
+			);
+		}
+
 		// Return JSON Web Token
 		const { accessToken, refreshToken, user } = await authService.signUp(
 			signUp
@@ -94,7 +140,7 @@ class AuthController {
 			try {
 				await handler(request, response);
 			} catch (err: any) {
-				// Custom response error
+				// Custom response errors
 				if (err instanceof HttpError) {
 					if (err.errorCode === 401) {
 						response.status(401).send(err);
@@ -120,6 +166,7 @@ const validateLogin = (login: any) => {
 		email: Joi.string().email().required(),
 		password: Joi.string().required(),
 		remember: Joi.boolean(),
+		recaptchaToken:Joi.string().required()
 	});
 	const result = loginSchema.validate(login);
 	if (result.error) {

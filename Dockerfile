@@ -1,7 +1,7 @@
 # Dockerfile for building backend and nginx images
 
 # Step 1: Backend api server
-FROM node:hydrogen-alpine3.21 as backend
+FROM node:current-alpine3.21 as backend
 
 # Create new user and set working directory
 RUN adduser -D -h /home/app -s /bin/sh app
@@ -22,7 +22,7 @@ CMD ["npm","start"]
 
 
 # Step 2: Compile frontend dist files
-FROM node:hydrogen-alpine3.21 AS frontend
+FROM node:current-alpine3.21 AS frontend
 
 # Create new user and set working directory
 RUN adduser -D -h /home/app -s /bin/sh app

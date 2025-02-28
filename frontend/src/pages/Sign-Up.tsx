@@ -47,6 +47,7 @@ const SignUp = () => {
 	);
 
 	const handleFormSubmit = (body: Object) => {
+	
 		setLoading(true);
 		authService
 			.signUp(body, dispatch)
@@ -85,6 +86,8 @@ const SignUp = () => {
 							}
 						);
 					}
+					if (body?.status === "SUSPICIOUS_ACTIVITY_DETECTED") {
+					}
 					form.setFields(fields);
 				} else {
 					openErrorSnackbar();
@@ -104,8 +107,8 @@ const SignUp = () => {
 				align="center"
 				style={{
 					background: colorBgContainer,
-					height: "100vh",
-					width: "100vw",
+					height: "100dvh",
+					width: "100dvw",
 				}}
 			>
 				<Flex
@@ -126,16 +129,11 @@ const SignUp = () => {
 						styles={{
 							header: {
 								borderBottom: `0px solid ${colorBorder}`,
-								marginBottom: 20,
+								padding: "14px 24px",
 							},
 						}}
 						title={
-							<Flex
-								vertical
-								justify="space-between"
-								gap={7}
-								style={{ marginBottom: 6 }}
-							>
+							<Flex vertical justify="space-between" gap={7}>
 								<Title level={1} style={{ margin: 0 }}>
 									{i18n.t("Get Started")}
 								</Title>
@@ -148,18 +146,18 @@ const SignUp = () => {
 							</Flex>
 						}
 					>
-						<Flex gap={15}>
+						<Flex gap={20}>
 							<Button
 								icon={
 									<img
 										src={googleLogo}
 										alt="Google Logo"
-										width="20"
+										width="18"
 									/>
 								}
 								iconPosition="start"
 								block
-								size="large"
+								size="middle"
 								color="default"
 								styles={{
 									icon: {
@@ -172,6 +170,7 @@ const SignUp = () => {
 									fontWeight: fontWeightStrong,
 									borderRadius: 10,
 								}}
+								onClick={() => authService.googleLogin()}
 							>
 								{i18n.t("Google")}
 							</Button>
@@ -179,7 +178,7 @@ const SignUp = () => {
 								icon={<AppleFilled />}
 								iconPosition="start"
 								block
-								size="large"
+								size="middle"
 								color="default"
 								styles={{
 									icon: {
@@ -196,7 +195,10 @@ const SignUp = () => {
 								{i18n.t("Apple")}
 							</Button>
 						</Flex>
-						<Divider plain style={{ border: 0 }}>
+						<Divider
+							plain
+							style={{ border: 0, margin: "10px 0px" }}
+						>
 							{i18n.t("or")}
 						</Divider>
 						<Form
@@ -207,12 +209,11 @@ const SignUp = () => {
 							<Form.Item
 								label={i18n.t("Full Name")}
 								name="name"
+								style={{ marginBottom: marginMD }}
 								rules={[
 									{
 										required: true,
-										message: i18n.t(
-											"Please enter your full name"
-										),
+										message: "",
 									},
 									{
 										validator: (_, value) => {
@@ -230,10 +231,9 @@ const SignUp = () => {
 										validateTrigger: "onChange",
 									},
 								]}
-								style={{ marginBottom: marginSM }}
 							>
 								<Input
-									size="large"
+									size="middle"
 									autoComplete="name"
 									variant="filled"
 								/>
@@ -241,7 +241,7 @@ const SignUp = () => {
 							<Form.Item
 								label={i18n.t("Username")}
 								name="username"
-								style={{ marginBottom: marginSM }}
+								style={{ marginBottom: marginMD }}
 								rules={[
 									{
 										validator: (_, value) => {
@@ -261,7 +261,7 @@ const SignUp = () => {
 								]}
 							>
 								<Input
-									size="large"
+									size="middle"
 									autoComplete="username"
 									variant="filled"
 								/>
@@ -269,22 +269,20 @@ const SignUp = () => {
 							<Form.Item
 								label={i18n.t("Email")}
 								name="email"
-								style={{ marginBottom: marginSM }}
+								style={{ marginBottom: marginMD }}
 								rules={[
 									{
 										required: true,
-										message: i18n.t(
-											"Please enter your email"
-										),
+										message: "",
 									},
 									{
 										validator: (_, value) => {
 											const regex =
 												/^(?=.{1,255}$)[^\s@]+@[^\s@]+\.[^\s@]+$/;
-											if (!regex.test(value)) {
+											if (!regex.test(value) && value) {
 												return Promise.reject(
 													i18n.t(
-														"Invalid email format"
+														"The email format is invalid"
 													)
 												);
 											}
@@ -296,7 +294,7 @@ const SignUp = () => {
 								]}
 							>
 								<Input
-									size="large"
+									size="middle"
 									autoComplete="email"
 									variant="filled"
 								/>
@@ -305,22 +303,20 @@ const SignUp = () => {
 							<Form.Item
 								label={i18n.t("Password")}
 								name="password"
-								style={{ marginBottom: marginMD }}
+								style={{ marginBottom: 42 }}
 								rules={[
 									{
 										required: true,
-										message: i18n.t(
-											"Please enter your password"
-										),
+										message: "",
 									},
 									{
 										validator: (_, value) => {
 											const regex =
-												/^(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,64}$/;
-											if (!regex.test(value)) {
+												/^(?=.*[\W])[A-Za-z\d\W]{8,64}$/;
+											if (!regex.test(value) && value) {
 												return Promise.reject(
 													i18n.t(
-														"Password must contain 8-64 characters, at least 1 special character"
+														"Password should contain 8-64 characters with a special symbol"
 													)
 												);
 											}
@@ -332,12 +328,12 @@ const SignUp = () => {
 								]}
 							>
 								<Input.Password
-									size="large"
+									size="middle"
 									autoComplete="password"
 									variant="filled"
 								/>
 							</Form.Item>
-							<Form.Item>
+							<Form.Item style={{ marginBottom: 15 }}>
 								<Button
 									block
 									type="primary"
@@ -356,6 +352,45 @@ const SignUp = () => {
 							</Link>
 						</Form>
 					</Card>
+					<div
+						style={{
+							position: "absolute",
+							bottom: 5,
+							left: 0,
+							width: "100%",
+						}}
+					>
+						<Text
+							style={{
+								whiteSpace: "pre-wrap",
+								fontSize: 10,
+								maxWidth: 350,
+								display: "block",
+								margin: "auto",
+								textAlign: "center",
+								padding: "0px 24px",
+								opacity: 0.8,
+								lineHeight: 1.2,
+							}}
+						>
+							This site is protected by reCAPTCHA and the Google{" "}
+							<a
+								href="https://policies.google.com/privacy"
+								target="_blank"
+							>
+								{" "}
+								Privacy Policy
+							</a>{" "}
+							and{" "}
+							<a
+								href="https://policies.google.com/terms"
+								target="_blank"
+							>
+								Terms of Service
+							</a>{" "}
+							apply.
+						</Text>
+					</div>
 					<div
 						style={{
 							position: "absolute",

@@ -24,6 +24,10 @@
 	font-size: 18px !important;
 }
 
+#password_help .ant-form-item-explain-error,  #email_help .ant-form-item-explain-error, #name_help .ant-form-item-explain-error{
+  font-size: 14px; 
+}
+
 /*
 .ant-picker-input input::placeholder {
   color: rgba(0, 0, 0, 0.47)  !important;  Standard for modern browsers 

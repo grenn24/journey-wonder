@@ -6,45 +6,79 @@ import {
 	setName,
 	setUserID,
 } from "../redux/slices/user";
+import { useGoogleLogin } from "@react-oauth/google";
 
 class AuthService {
 	apiClient = createApiClient("/auth"); // api client for auth routes
 
 	login(body: Object, dispatch: Dispatch) {
-		const response = this.apiClient
-			.post<Object, any>("/log-in", body)
-			.then((res) => {
-				const { headers, data } = res;
-				dispatch(setUserID(data._id));
-				dispatch(setName(data.name));
-				dispatch(setEmail(data.email));
-				dispatch(setMembershipTier(data.membershipTier));
-				sessionStorage.setItem(
-					"X-Access-Token",
-					headers["x-access-token"]
-				);
+		return new Promise((resolve, reject) => {
+			grecaptcha.ready(() => {
+				grecaptcha
+					.execute(import.meta.env.VITE_RECAPTCHA_SITE_KEY, {
+						action: "submit",
+					})
+					.then((token) => {
+						// submit login request to backend server
+						this.apiClient
+							.post<Object, any>("/log-in", {
+								...body,
+								recaptchaToken: token,
+							})
+							.then((res) => {
+								const { headers, data } = res;
+								dispatch(setUserID(data._id));
+								dispatch(setName(data.name));
+								dispatch(setEmail(data.email));
+								dispatch(
+									setMembershipTier(data.membershipTier)
+								);
+								sessionStorage.setItem(
+									"X-Access-Token",
+									headers["x-access-token"]
+								);
 
-				return res;
+								resolve(res);
+							})
+							.catch((err) => reject(err));
+					});
 			});
-		return response;
+		});
 	}
 
 	signUp(body: Object, dispatch: Dispatch) {
-		const response = this.apiClient
-			.post<Object, any>("/sign-up", body)
-			.then((res) => {
-				const { headers, data } = res;
-				dispatch(setUserID(data._id));
-				dispatch(setName(data.name));
-				dispatch(setEmail(data.email));
-				dispatch(setMembershipTier(data.membershipTier));
-				sessionStorage.setItem(
-					"X-Access-Token",
-					headers["x-access-token"]
-				);
-				return res;
+			return new Promise((resolve, reject) => {
+				grecaptcha.ready(() => {
+					grecaptcha
+						.execute(import.meta.env.VITE_RECAPTCHA_SITE_KEY, {
+							action: "submit",
+						})
+						.then((token) => {
+							// submit login request to backend server
+							this.apiClient
+								.post<Object, any>("/sign-up", {
+									...body,
+									recaptchaToken: token,
+								})
+								.then((res) => {
+									const { headers, data } = res;
+									dispatch(setUserID(data._id));
+									dispatch(setName(data.name));
+									dispatch(setEmail(data.email));
+									dispatch(
+										setMembershipTier(data.membershipTier)
+									);
+									sessionStorage.setItem(
+										"X-Access-Token",
+										headers["x-access-token"]
+									);
+
+									resolve(res);
+								})
+								.catch((err) => reject(err));
+						});
+				});
 			});
-		return response;
 	}
 
 	logout() {
@@ -75,6 +109,26 @@ class AuthService {
 				return err;
 			});
 		return response;
+	}
+
+	googleLogin() {
+		return new Promise<void>((resolve, reject) => {
+			const login = useGoogleLogin({
+				onSuccess: (tokenResponse) => {
+					this.apiClient
+						.get("/oauth?provider=google", {
+							headers: {
+								Authorization:
+									"Bearer " + tokenResponse.access_token,
+							},
+						})
+						.then(() => resolve())
+						.catch((err) => reject(err));
+				},
+				onError: (err) => reject(err),
+			});
+			login();
+		});
 	}
 }
 

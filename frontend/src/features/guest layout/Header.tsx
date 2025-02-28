@@ -55,9 +55,9 @@ const GuestHeader = () => {
 				<Flex
 					justify="space-between"
 					align="center"
-					style={{ width: 1350 }}
+					style={{ width: 1350, height: "100%" }}
 				>
-					<Flex gap={20}>
+					<Flex gap={20} align="center" style={{ height: "100%" }}>
 						<a
 							href="/guest"
 							target="_self"
@@ -68,7 +68,6 @@ const GuestHeader = () => {
 								width={45}
 								src={journeyWonderIcon}
 								preview={false}
-								style={{ marginBottom: 2 }}
 							/>
 						</a>
 						{breakpoints.largerThan("md") && (
@@ -80,7 +79,7 @@ const GuestHeader = () => {
 							/>
 						)}
 					</Flex>
-					<Flex gap={17} align="center">
+					<Flex gap={17} align="center" style={{ height: "100%" }}>
 						{breakpoints.largerThan("xl") ? (
 							<>
 								<AutoComplete
