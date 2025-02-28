@@ -16,5 +16,5 @@ export const stayEventJoiSchema = eventJoiSchema.concat(
 	})
 );
 
-const StayEvent = Event.discriminator("Stay Event", stayEventSchema);
+const StayEvent = Event.discriminator("Stay Event", stayEventSchema,"stay event");
 export default StayEvent;

@@ -8,7 +8,7 @@ const app = express();
 
 require("./startup/logging").default();
 require("./startup/config").default();
-require("./startup/db").default();
+require("./startup/db").default(app);
 require("./startup/middlewares").default(app);
 require("./startup/routes").default(app);
 

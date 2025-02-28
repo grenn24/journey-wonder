@@ -41,5 +41,5 @@ const boatEventSchema = new mongoose.Schema({
 	},
 });
 
-const BoatEvent = Event.discriminator("Boat Event", boatEventSchema);
+const BoatEvent = Event.discriminator("Boat Event", boatEventSchema,"boat event");
 export default BoatEvent;

@@ -330,7 +330,7 @@ const Login = () => {
 								href="https://policies.google.com/privacy"
 								target="_blank"
 							>
-								{" "}
+								
 								Privacy Policy
 							</a>{" "}
 							and{" "}

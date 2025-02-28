@@ -42,5 +42,5 @@ const trainEventSchema = new mongoose.Schema({
 	},
 });
 
-const TrainEvent = Event.discriminator("Train Event", trainEventSchema);
+const TrainEvent = Event.discriminator("Train Event", trainEventSchema,"train event");
 export default TrainEvent;

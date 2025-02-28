@@ -17,7 +17,7 @@ import useBreakpoints from "../utilities/breakpoints";
 import useLeftMenuItems from "../features/user layout/menus/leftMenuItems";
 import UserHeader from "../features/user layout/Header";
 import MobileFooterMenu from "../features/user layout/MobileFooterMenu";
-const CreateModal = lazy(() => import("../features/createJourney/CreateModal"));
+import CreateModal from "../features/createJourney/CreateModal";
 import i18next from "i18next";
 import { ChevronLeftRounded, ChevronRightRounded } from "@mui/icons-material";
 import GlobalError from "../pages/error/GlobalError";
@@ -69,7 +69,7 @@ const User = () => {
 
 	return (
 		<>
-			<Layout style={{ height: "100vh" }}>
+			<Layout style={{ height: "100dvh" }}>
 				<Splitter
 					onResize={(sizes)=>dispatch(setSplitterSize(sizes))}
 					style={{ backgroundColor: colorBgContainer }}

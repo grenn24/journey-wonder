@@ -23,5 +23,5 @@ export const foodEventJoiSchema = eventJoiSchema.concat(
 	})
 );
 
-const FoodEvent = Event.discriminator("Food Event", foodEventSchema);
+const FoodEvent = Event.discriminator("Food Event", foodEventSchema,"food event");
 export default FoodEvent;

@@ -378,7 +378,7 @@ const SignUp = () => {
 								href="https://policies.google.com/privacy"
 								target="_blank"
 							>
-								{" "}
+							
 								Privacy Policy
 							</a>{" "}
 							and{" "}

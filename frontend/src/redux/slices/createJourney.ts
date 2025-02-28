@@ -76,18 +76,9 @@ export const createJourneySlice = createSlice({
 				id: number;
 			}>
 		) => {
-			if (
-				!arrayContains(
-					state.selectedDestinations,
-					action.payload,
-					(x, y) => x?.name === y.name
-				)
-			) {
-				state.selectedDestinations = [
+			state.selectedDestinations = [
 					...state.selectedDestinations,
-					action.payload,
-				];
-			}
+					action.payload]
 		},
 		removeSelectedDestination: (state, action: PayloadAction<number>) => {
 			state.selectedDestinations = state.selectedDestinations.filter(

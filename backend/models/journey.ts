@@ -147,7 +147,7 @@ export function validateJourney(journey: any) {
 	}
 }
 
-const Journey = mongoose.model("Journey", journeySchema);
+const Journey = mongoose.model("Journey", journeySchema,"journey");
 
 export default Journey;
 export type JourneyType = InferSchemaType<typeof journeySchema>;

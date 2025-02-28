@@ -75,7 +75,7 @@ export const eventJoiSchema = Joi.object({
 
 
 
-const Event = mongoose.model("Event", eventSchema);
+const Event = mongoose.model("Event", eventSchema,"event");
 
 export default Event;
 export type EventType = InferSchemaType<typeof eventSchema>;

@@ -80,7 +80,7 @@ const userSchema = new mongoose.Schema(
 		},
 	}
 );
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model("User", userSchema,"user");
 
 // Add a validate method to the model
 userSchema.statics.validate = validateUser;

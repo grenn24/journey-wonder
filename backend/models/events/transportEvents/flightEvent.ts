@@ -127,5 +127,5 @@ export const flightEventJoiSchema = eventJoiSchema.concat(
 	})
 );
 
-const FlightEvent = Event.discriminator("Flight Event", flightEventSchema);
+const FlightEvent = Event.discriminator("Flight Event", flightEventSchema,"flight event");
 export default FlightEvent;

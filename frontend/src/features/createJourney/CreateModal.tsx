@@ -167,7 +167,7 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 						padding: 0,
 					},
 				}}
-				width="100%"
+		
 				footer={
 					<Flex justify="space-between" align="center">
 						<Select

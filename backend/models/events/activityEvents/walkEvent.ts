@@ -35,5 +35,5 @@ export const walkEventJoiSchema = eventJoiSchema.concat(
 	})
 );
 
-const WalkEvent = Event.discriminator("Walk Event", walkEventSchema);
+const WalkEvent = Event.discriminator("Walk Event", walkEventSchema,"walk event");
 export default WalkEvent;

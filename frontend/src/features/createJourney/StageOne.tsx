@@ -1,5 +1,5 @@
 "use server";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import {
 	Button,
@@ -24,13 +24,18 @@ import CloseButton from "../../components/CloseButton";
 import dayjs from "dayjs";
 import "../../styles/ant.css";
 import { AnimatePresence, motion } from "motion/react";
-import destinations from "../../data/destinations/destinations";
 import i18n from "../../i18n";
+import autocompleteService from "../../services/autocomplete";
 
+interface Destination {
+	name: string;
+	id: number;
+	type: string;
+	value:string
+}
 const { RangePicker } = DatePicker;
 const { Text } = Typography;
 const StageOne = () => {
-	const memoisedDestinations = useMemo(() => destinations, []);
 	const { token } = theme.useToken();
 	const { colorBorder } = token;
 	const { title, selectedDestinations, startDate, endDate } = useAppSelector(
@@ -45,9 +50,23 @@ const StageOne = () => {
 	const [panelMode, setPanelMode] = useState<"start" | "end">("start");
 	const [destinationSearchValue, setDestinationSearchValue] = useState("");
 
-	const [isTitleExpanded, setIsTitleExpanded] = useState(false);
+	const [isTitleExpanded, setIsTitleExpanded] = useState(
+		!title || !startDate || !endDate || selectedDestinations.length === 0
+			? true
+			: false
+	);
 	const [isDestinationsExpanded, setIsdestinationsExpanded] = useState(false);
 	const [isDatesExpanded, setIsDatesExpanded] = useState(false);
+
+	const [destinations, setDestinations] = useState<Destination[]>([]);
+
+	useEffect(() => {
+		autocompleteService
+			.searchDestinations(destinationSearchValue)
+			.then((data) => {
+				setDestinations(data);
+			});
+	}, [destinationSearchValue]);
 
 	return (
 		<Flex vertical gap={15}>
@@ -177,7 +196,7 @@ const StageOne = () => {
 											"Japan, China, USA..."
 										)}
 										value={selectedDestinations}
-										options={memoisedDestinations}
+										options={destinations}
 										onSearch={(value) =>
 											setDestinationSearchValue(value)
 										}
@@ -225,7 +244,7 @@ const StageOne = () => {
 											)
 										}
 										searchValue={destinationSearchValue}
-										notFoundContent={`No destinations found for ${destinationSearchValue}`}
+										notFoundContent={destinationSearchValue ? `No destinations found for ${destinationSearchValue}` : ""}
 										suffixIcon={false}
 										removeIcon={
 											<CloseButton variant="link" />
