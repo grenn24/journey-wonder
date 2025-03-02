@@ -88,21 +88,7 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 						>
 							{i18n.t("Home")}
 						</Menu.Item>
-						<Menu.Divider dashed style={{ borderWidth: 1.5 }} />
-						<Menu.Item
-							key="explore"
-							onClick={() => navigate("explore")}
-							style={{
-								fontWeight: fontWeightStrong,
-								fontSize: 25,
-								padding: "25px 20px",
-								margin: "10px 0px",
-								marginTop: 15,
-								marginBottom: 15,
-							}}
-						>
-							{i18n.t("Explore")}
-						</Menu.Item>
+		
 						<Menu.Divider dashed style={{ borderWidth: 1.5 }} />
 						<Menu.Item
 							key="pricing"
@@ -189,7 +175,7 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 							<Button
 								size="large"
 								variant="solid"
-								color="primary"
+								color="default"
 								onClick={() => navigate("account/sign-up")}
 								style={{ fontWeight: fontWeightStrong }}
 								iconPosition="end"
@@ -212,3 +198,21 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 	);
 };
 export default MobileDrawerMenu;
+
+/*
+				<Menu.Divider dashed style={{ borderWidth: 1.5 }} />
+						<Menu.Item
+							key="explore"
+							onClick={() => navigate("explore")}
+							style={{
+								fontWeight: fontWeightStrong,
+								fontSize: 25,
+								padding: "25px 20px",
+								margin: "10px 0px",
+								marginTop: 15,
+								marginBottom: 15,
+							}}
+						>
+							{i18n.t("Explore")}
+						</Menu.Item>
+*/

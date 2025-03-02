@@ -53,7 +53,6 @@ const App = () => {
 									path=":journeyID"
 									element={<Journey />}
 								/>
-
 								<Route path="upcoming" />
 								<Route path="completed" />
 								<Route path="deleted" />

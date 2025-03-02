@@ -57,7 +57,7 @@ const ScrollableDiv = ({
 			style={{ ...style, position: "relative", height: height }}
 			className="scrollable-div"
 		>
-			{mediaViewerRef.current?.scrollLeft && (
+			{mediaViewerRef.current?.scrollLeft ? (
 				<Button
 					className="left-button"
 					icon={<NavigateBeforeRounded />}
@@ -74,7 +74,7 @@ const ScrollableDiv = ({
 						zIndex: 2,
 					}}
 				/>
-			)}
+			) : null}
 
 			<Box
 				width="100%"
@@ -96,7 +96,7 @@ const ScrollableDiv = ({
 			>
 				{children}
 			</Box>
-			{!mediaViewerRef.current?.scrollLeft && (
+			{!mediaViewerRef.current?.scrollLeft ? (
 				<Button
 					className="right-button"
 					icon={<NavigateNextRounded />}
@@ -113,7 +113,7 @@ const ScrollableDiv = ({
 						zIndex: 2,
 					}}
 				/>
-			)}
+			) : null}
 			{/*Box for left and right scroll buttons (only show for screens larger than or equal to md size)*/}
 		</Flex>
 	);

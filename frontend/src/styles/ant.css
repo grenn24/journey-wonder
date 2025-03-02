@@ -41,7 +41,7 @@
 
 
 .draggable-upload-image .ant-upload-drag,  .draggable-upload-image{
-    height:200px;
+    height:100%;
 	width:100%
 }
 
@@ -56,3 +56,12 @@
 .select-without-arrow .ant-select-selector {
 
 }
+
+.guest-nav-bar .ant-menu-item::after, .guest-nav-bar .ant-menu-submenu::after {
+	border-bottom: 0px !important;
+}
+
+.card-with-elevation {
+ box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.20) !important; 
+}
+

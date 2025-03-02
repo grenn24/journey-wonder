@@ -5,26 +5,28 @@ import { compressImageFile, fileToBase64Url } from "../../utilities/file";
 interface createJourneyState {
 	currentStage: number;
 	title: string;
-	selectedDestinations: {
+	description:string,
+	destinations: {
 		value: string;
 		name: string;
 		type: string;
-		id: number;
+		key: number;
 	}[];
 	startDate: string | null | undefined;
 	endDate: string | null | undefined;
 	image: [string, string] | null;
-	selectedTravellers: { email: string; permission: "Read" | "Edit" }[];
+	travellers: { email: string; permission: "Read" | "Edit" }[];
 	visibility: "Public" | "Travellers" | "Only Me";
 }
 const initialState: createJourneyState = {
 	currentStage: 0,
 	title: "",
-	selectedDestinations: [],
+	description:"",
+	destinations: [],
 	startDate: null,
 	endDate: null,
 	image: null,
-	selectedTravellers: [],
+	travellers: [],
 	visibility: "Travellers",
 };
 
@@ -59,13 +61,16 @@ export const createJourneySlice = createSlice({
 		setTitle: (state, action: PayloadAction<string>) => {
 			state.title = action.payload;
 		},
+		setDescription: (state, action: PayloadAction<string>) => {
+			state.description = action.payload;
+		},
 		setSelectedDestinations: (
 			state,
 			action: PayloadAction<
-				{ value: string; name: string; type: string; id: number }[]
+				{ value: string; name: string; type: string; key: number }[]
 			>
 		) => {
-			state.selectedDestinations = action.payload;
+			state.destinations = action.payload;
 		},
 		addSelectedDestination: (
 			state,
@@ -73,16 +78,17 @@ export const createJourneySlice = createSlice({
 				value: string;
 				name: string;
 				type: string;
-				id: number;
+				key: number;
 			}>
 		) => {
-			state.selectedDestinations = [
-					...state.selectedDestinations,
-					action.payload]
+			state.destinations = [
+				...state.destinations,
+				action.payload,
+			];
 		},
 		removeSelectedDestination: (state, action: PayloadAction<number>) => {
-			state.selectedDestinations = state.selectedDestinations.filter(
-				(value) => value.id !== action.payload
+			state.destinations = state.destinations.filter(
+				(value) => value.key !== action.payload
 			);
 		},
 		addTraveller: (
@@ -94,13 +100,13 @@ export const createJourneySlice = createSlice({
 		) => {
 			if (
 				!arrayContains(
-					state.selectedTravellers,
+					state.travellers,
 					action.payload,
 					(x, y) => x.email === y.email
 				)
 			) {
-				state.selectedTravellers = [
-					...state.selectedTravellers,
+				state.travellers = [
+					...state.travellers,
 					action.payload,
 				];
 			}
@@ -112,7 +118,7 @@ export const createJourneySlice = createSlice({
 				permission: "Read" | "Edit";
 			}>
 		) => {
-			state.selectedTravellers = state.selectedTravellers.filter(
+			state.travellers = state.travellers.filter(
 				(traveller) => traveller.email !== action.payload.email
 			);
 		},
@@ -137,10 +143,13 @@ export const createJourneySlice = createSlice({
 			state.startDate = null;
 		},
 		incrementStage: (state) => {
-			state.currentStage < 1 && state.currentStage++;
+			state.currentStage < 2 && state.currentStage++;
 		},
 		decrementStage: (state) => {
 			state.currentStage > 0 && state.currentStage--;
+		},
+		setStage: (state, action:PayloadAction<number>) => {
+			state.currentStage = action.payload;
 		},
 		setImage: (state, action: PayloadAction<[string, string] | null>) => {
 			state.image = action.payload;
@@ -169,6 +178,7 @@ export const createJourneySlice = createSlice({
 export const {
 	reset,
 	setTitle,
+	setDescription,
 	setSelectedDestinations,
 	addSelectedDestination,
 	removeSelectedDestination,
@@ -178,6 +188,7 @@ export const {
 	resetDates,
 	incrementStage,
 	decrementStage,
+	setStage,
 	setImage,
 	deleteImage,
 	addTraveller,

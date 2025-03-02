@@ -1,4 +1,4 @@
-import { PlusOutlined} from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import {
 	Button,
 	Flex,
@@ -9,20 +9,21 @@ import {
 	theme,
 	Tooltip,
 } from "antd";
-import { Content} from "antd/es/layout/layout";
-import { lazy, useMemo, useState } from "react";
+import { Content } from "antd/es/layout/layout";
+import { lazy, Suspense, useMemo, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import useBreakpoints from "../utilities/breakpoints";
 import useLeftMenuItems from "../features/user layout/menus/leftMenuItems";
 import UserHeader from "../features/user layout/Header";
 import MobileFooterMenu from "../features/user layout/MobileFooterMenu";
-import CreateModal from "../features/createJourney/CreateModal";
+import CreateModal from "../features/createJourney/CreateJourney";
 import i18next from "i18next";
 import { ChevronLeftRounded, ChevronRightRounded } from "@mui/icons-material";
 import GlobalError from "../pages/error/GlobalError";
 import { useAppSelector } from "../redux/store";
 import { setSplitterSize } from "../redux/slices/layout";
+import Loading from "../pages/Loading";
 
 const User = () => {
 	const dispatch = useDispatch();
@@ -30,7 +31,7 @@ const User = () => {
 		token: { colorBgContainer },
 	} = theme.useToken();
 
-	const {splitterSize} = useAppSelector((state) => state.layout);
+	const { splitterSize } = useAppSelector((state) => state.layout);
 	const breakpoints = useBreakpoints();
 	const leftMenuItems = useLeftMenuItems(splitterSize);
 
@@ -61,17 +62,19 @@ const User = () => {
 						document.documentElement.clientWidth - 280,
 					])
 			  );
-			  window.onresize=()=>dispatch(
-					setSplitterSize([
-						splitterSize[0],
-						document.documentElement.clientWidth - splitterSize[0],
-					]))
+	window.onresize = () =>
+		dispatch(
+			setSplitterSize([
+				splitterSize[0],
+				document.documentElement.clientWidth - splitterSize[0],
+			])
+		);
 
 	return (
-		<>
+		<Suspense fallback={<Loading />}>
 			<Layout style={{ height: "100dvh" }}>
 				<Splitter
-					onResize={(sizes)=>dispatch(setSplitterSize(sizes))}
+					onResize={(sizes) => dispatch(setSplitterSize(sizes))}
 					style={{ backgroundColor: colorBgContainer }}
 				>
 					{breakpoints.largerThan("md") && (
@@ -144,24 +147,32 @@ const User = () => {
 			{breakpoints.largerThan("md") && (
 				<Tooltip
 					title={i18next.t("Create a new journey")}
-					color="primary"
+					color="grey"
 					placement="left"
 					arrow={false}
 					styles={{ body: { position: "relative", right: 15 } }}
 				>
 					<FloatButton
-						style={{ width: 50, height: 50, right: 70, bottom: 70 }}
+						style={{
+							width: 50,
+							height: 50,
+							right: 70,
+							bottom: 70,
+						}}
 						icon={<PlusOutlined />}
 						onClick={() => setOpenCreateModal(true)}
 					/>
 				</Tooltip>
 			)}
-			<CreateModal
-				openCreateModal={openCreateModal}
-				setOpenCreateModal={setOpenCreateModal}
-			/>
+
+			<Suspense>
+				<CreateModal
+					openCreateModal={openCreateModal}
+					setOpenCreateModal={setOpenCreateModal}
+				/>
+			</Suspense>
 			<GlobalError />
-		</>
+		</Suspense>
 	);
 };
 

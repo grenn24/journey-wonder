@@ -54,7 +54,7 @@ const useProfileMenu = (
 	const dispatch = useDispatch();
 	return {
 		Home: () => (
-			<Menu>
+			<Menu >
 				<Menu.Item key={0} onClick={() => setOpenProfileMenu(false)}>
 					<Flex gap={18}>
 						<UserOutlined style={{ fontSize: fontSizeHeading5 }} />

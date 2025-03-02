@@ -1,7 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import authService from "../services/auth";
 
-
 /*
 interface Response<T> {
 	response: AxiosResponse<T>;
@@ -55,13 +54,9 @@ class ApiClient {
 							err.response.status,
 							err.response.data
 						);
-					return Promise.reject<{
-						body: string;
-						status: number;
-					}>({
-						body: err.response.data,
-						status: err.response.status,
-					});
+				} else if (err.name === "CanceledError") {
+					// Request aborted using AbortController signal
+					console.error("Request was aborted");
 				} else if (err.request) {
 					// Request was made but no response was received
 					console.error("No response from server:" + err.request);
@@ -72,6 +67,13 @@ class ApiClient {
 							err.message
 					);
 				}
+				return Promise.reject<{
+					body: string;
+					status: number;
+				}>({
+					body: err.response?.data,
+					status: err.response?.status,
+				});
 			}
 		);
 		this.client = client;
@@ -93,7 +95,7 @@ class ApiClient {
 			});
 			return response;
 		} catch (err: any) {
-			// Missing or invalid access token
+			// Missing or invalid access token (401 Unauthorised)
 			if (err.status === 401) {
 				try {
 					await authService.refreshAccessToken();
@@ -106,16 +108,16 @@ class ApiClient {
 								sessionStorage.getItem("X-Access-Token"),
 						},
 					});
-
 					return response;
 				} catch (err: any) {
 					// Missing or invalid refresh token
 					if (err.status === 400) {
 						window.location.href = "/guest";
 					}
+					throw err;
 				}
 			}
-			return Promise.reject(err);
+			throw err;
 		}
 	}
 
@@ -141,7 +143,7 @@ class ApiClient {
 			);
 			return response;
 		} catch (err: any) {
-			// Missing or invalid access token
+			// Missing or invalid access token (401 Unauthorised)
 			if (err.status === 401) {
 				try {
 					await authService.refreshAccessToken();
@@ -164,6 +166,7 @@ class ApiClient {
 					if (err.status === 400) {
 						window.location.href = "/guest";
 					}
+					throw err;
 				}
 			}
 			throw err;
@@ -192,7 +195,7 @@ class ApiClient {
 			);
 			return response;
 		} catch (err: any) {
-			// Missing or invalid access token
+			// Missing or invalid access token (401 Unauthorised)
 			if (err.status === 401) {
 				try {
 					await authService.refreshAccessToken();
@@ -215,9 +218,10 @@ class ApiClient {
 					if (err.status === 400) {
 						window.location.href = "/guest";
 					}
+					throw err;
 				}
 			}
-			return Promise.reject(err);
+			throw err;
 		}
 	}
 
@@ -237,7 +241,7 @@ class ApiClient {
 			});
 			return response;
 		} catch (err: any) {
-			// Missing or invalid access token
+			// Missing or invalid access token (401 Unauthorised)
 			if (err.status === 401) {
 				try {
 					await authService.refreshAccessToken();
@@ -256,9 +260,10 @@ class ApiClient {
 					if (err.status === 400) {
 						window.location.href = "/guest";
 					}
+					throw err;
 				}
 			}
-			return Promise.reject(err);
+			throw err;
 		}
 	}
 

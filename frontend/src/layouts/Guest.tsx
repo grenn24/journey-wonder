@@ -10,7 +10,6 @@ const Guest = () => {
 	return (
 		<Layout>
 			<GuestHeader />
-
 			<Content>
 				<Outlet />
 			</Content>

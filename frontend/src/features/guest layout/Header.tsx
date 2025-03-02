@@ -11,6 +11,7 @@ import MobileDrawerMenu from "./MobileDrawerMenu";
 import i18n from "../../i18n";
 import ExploreJourneysDrawer from "../../components/ExploreJourneysDrawer";
 import LanguageMenu from "../../components/LanguageMenu/LanguageMenu";
+import useTheme from "../../styles/useTheme";
 
 const options = [
 	{
@@ -35,8 +36,9 @@ const GuestHeader = () => {
 		useState(false);
 	const headerMenuItems = useHeaderMenuItems();
 	const {
-		token: { colorBgContainer },
+		token: { colorBgContainer, colorText },
 	} = theme.useToken();
+	const {algorithm} = useTheme();
 	const selectedItem =
 		location.pathname.split("/").slice(2).length !== 0
 			? location.pathname.split("/").slice(2)[0]
@@ -57,7 +59,7 @@ const GuestHeader = () => {
 					align="center"
 					style={{ width: 1350, height: "100%" }}
 				>
-					<Flex gap={20} align="center" style={{ height: "100%" }}>
+					<Flex gap={30} align="center" style={{ height: "100%" }}>
 						<a
 							href="/guest"
 							target="_self"
@@ -65,49 +67,36 @@ const GuestHeader = () => {
 							title="Journey Wonder"
 						>
 							<Image
-								width={45}
+								width={47}
 								src={journeyWonderIcon}
 								preview={false}
 							/>
 						</a>
 						{breakpoints.largerThan("md") && (
 							<Menu
+								className="guest-nav-bar"
 								mode="horizontal"
 								items={headerMenuItems}
 								selectedKeys={[selectedItem]}
 								disabledOverflow
+								style={{ border: 0 }}
 							/>
 						)}
 					</Flex>
 					<Flex gap={17} align="center" style={{ height: "100%" }}>
 						{breakpoints.largerThan("xl") ? (
 							<>
-								<AutoComplete
-									popupClassName="certain-category-search-dropdown"
-									popupMatchSelectWidth
-									style={{ width: 200, alignItems: "center" }}
-									options={options}
-								>
-									<Input
-										prefix={
-											<SearchOutlined
-												style={{ marginRight: 5 }}
-											/>
-										}
-										size="large"
-										placeholder={i18n.t(
-											"Ask JourneyWonder AI"
-										)}
-										variant="filled"
-									/>
-								</AutoComplete>
-								<LanguageMenu />
 								<Button
-									variant="text"
+		
+									variant="outlined"
 									color="default"
 									size="large"
 									onClick={() => navigate("account/log-in")}
-									style={{ fontWeight: "bold" }}
+									style={{
+										fontWeight: 600,
+										border: `1px solid ${colorText}`,
+										color:colorText
+									}}
 									iconPosition="end"
 									icon={
 										<ArrowForwardIosRounded
@@ -121,9 +110,9 @@ const GuestHeader = () => {
 								</Button>
 								<Button
 									variant="solid"
-									color="primary"
+									color="default"
 									size="large"
-									style={{ fontWeight: "bold" }}
+									style={{ fontWeight: 600 }}
 									iconPosition="end"
 									icon={
 										<ArrowForwardIosRounded
@@ -139,18 +128,10 @@ const GuestHeader = () => {
 							</>
 						) : (
 							<>
-								<Button
-									variant="filled"
-									color="default"
-									size="large"
-									icon={<SearchOutlined />}
-									onClick={() =>
-										setOpenExploreJourneysDrawer(true)
-									}
-								/>
+							
 								<Button
 									variant="solid"
-									color="primary"
+									color="default"
 									size="large"
 									icon={<MenuOutlined />}
 									onClick={() =>
@@ -174,3 +155,37 @@ const GuestHeader = () => {
 	);
 };
 export default GuestHeader;
+
+/*
+<AutoComplete
+									popupClassName="certain-category-search-dropdown"
+									popupMatchSelectWidth
+									style={{ width: 200, alignItems: "center" }}
+									options={options}
+								>
+									<Input
+										prefix={
+											<SearchOutlined
+												style={{ marginRight: 5 }}
+											/>
+										}
+										size="large"
+										placeholder={i18n.t(
+											"Ask JourneyWonder AI"
+										)}
+										variant="filled"
+									/>
+								</AutoComplete>
+*/
+
+/*
+	<Button
+									variant="filled"
+									color="default"
+									size="large"
+									icon={<SearchOutlined />}
+									onClick={() =>
+										setOpenExploreJourneysDrawer(true)
+									}
+								/>
+*/

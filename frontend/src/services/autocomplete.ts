@@ -4,10 +4,10 @@ import authService from "./auth";
 import Joi from "joi";
 
 interface Destination {
-    name:string;
-    id:number;
-    type:string;
-	value:string;
+	name: string;
+	key: number;
+	type: string;
+	value: string;
 }
 class AutocompleteService {
 	apiClient = createApiClient(
@@ -29,10 +29,16 @@ class AutocompleteService {
 		}
 	);
 
-	searchDestinations(query: string) : Promise<Destination[]> {
+	// abort all ongoing autocomplete requests
+	controller = new AbortController();
+	abort = () => this.controller.abort();
+
+	searchDestinations(query: string) {
+		const { signal } = this.controller;
 		const response = this.apiClient
-			.get<Destination[]>(`/destination?query=${query}`)
-			.then(({ data }) => data); 
+			.get<Destination[]>(`/destination?query=${query}`, { signal })
+			.then(({ data }) => data)
+			.catch(() => {});
 		return response;
 	}
 }

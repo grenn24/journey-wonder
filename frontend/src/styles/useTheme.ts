@@ -4,6 +4,8 @@ import { useAppSelector } from "../redux/store";
 import { getLanguageFont } from "../redux/slices/language";
 import { createTheme } from "@mui/material";
 
+
+
 const useTheme = () => {
 	const { globalTheme, globalLanguage } = useAppSelector((state) => ({
 		globalTheme: state.theme?.theme,
@@ -21,7 +23,7 @@ const useTheme = () => {
 		token: {
 			fontFamily: getLanguageFont(globalLanguage),
 			borderRadius: 20,
-			borderRadiusSM: 10,
+			borderRadiusSM: 15,
 			borderRadiusLG: 20,
 			fontWeightStrong: 600,
 			fontSizeHeading4: 19,

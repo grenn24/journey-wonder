@@ -36,6 +36,7 @@ const journeySchema = new mongoose.Schema({
 	},
 	description: {
 		type: String,
+		default: "",
 	},
 	destinations: {
 		type: [
@@ -112,7 +113,7 @@ journeySchema.statics.validate = validateJourney;
 export function validateJourney(journey: any) {
 	const journeySchema = Joi.object({
 		title: Joi.string().max(512).required(),
-		description: Joi.string(),
+		description: Joi.string().allow(""),
 		destinations: Joi.array()
 			.items(
 				Joi.object({

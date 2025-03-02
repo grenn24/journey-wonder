@@ -14,22 +14,15 @@ const useHeaderMenuItems =()=> {
 			label: i18n.t("Home"),
 			key: "home",
 			onClick: () => navigate(""),
+			
 			style: {
 				fontFamily: "Outfit",
 				fontWeight: 600,
 				fontSize: fontSizeHeading5,
+				padding: "0px 10px",
 			},
 		},
-		{
-			label: i18n.t("Explore"),
-			key: "explore",
-			onClick: () => navigate("explore"),
-			style: {
-				fontFamily: "Outfit",
-				fontWeight: 600,
-				fontSize: fontSizeHeading5,
-			},
-		},
+
 		{
 			label: i18n.t("JourneyWonder Pro"),
 			key: "pricing",
@@ -38,16 +31,18 @@ const useHeaderMenuItems =()=> {
 				fontFamily: "Outfit",
 				fontWeight: 600,
 				fontSize: fontSizeHeading5,
+				padding: "0px 10px",
 			},
 		},
 		{
-			label: i18n.t("About Us"),
+			label: i18n.t("About"),
 			key: "about",
 
 			style: {
 				fontFamily: "Outfit",
 				fontWeight: 600,
 				fontSize: fontSizeHeading5,
+				padding: "0px 10px",
 			},
 			children: [
 				{
@@ -64,3 +59,16 @@ const useHeaderMenuItems =()=> {
 		},
 	];}
 export default useHeaderMenuItems;
+
+/*
+{
+			label: i18n.t("Explore"),
+			key: "explore",
+			onClick: () => navigate("explore"),
+			style: {
+				fontFamily: "Outfit",
+				fontWeight: 600,
+				fontSize: fontSizeHeading5,
+			},
+		},
+*/

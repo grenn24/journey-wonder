@@ -170,7 +170,10 @@ const validateLogin = (login: any) => {
 	});
 	const result = loginSchema.validate(login);
 	if (result.error) {
-		throw new HttpError(result.error.details[0].message, "INVALID_FIELDS");
+		throw new HttpError(
+			result.error.details[0].message,
+			"INVALID_EMAIL_PASSWORD"
+		);
 	}
 };
 

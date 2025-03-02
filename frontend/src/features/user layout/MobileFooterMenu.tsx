@@ -1,8 +1,8 @@
 import { Menu } from "antd";
 import { Footer } from "antd/es/layout/layout";
-import {useState } from "react";
+import { useState } from "react";
 import useMobileFooterMenuItems from "./menus/mobileFooterMenuItems";
-import CreateModal from "../createJourney/CreateModal";
+import CreateModal from "../createJourney/CreateJourney";
 
 const MobileFooterMenu = () => {
 	const [openCreateModal, setOpenCreateModal] = useState(false);
