@@ -17,7 +17,7 @@ const Loading = () => {
 				backgroundColor: colorBgContainer,
 			}}
 		>
-			<img src={journeyWonderLogoLightMode} style={{width:125}}/>
+			<img src={journeyWonderLogoLightMode} style={{width:125}} draggable={false}/>
 			<Title level={4} style={{ fontFamily:"Outfit", position: "absolute", bottom: 20, display:"none" }}>
 				Journey Wonder
 			</Title>

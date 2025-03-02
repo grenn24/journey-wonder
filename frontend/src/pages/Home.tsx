@@ -17,19 +17,18 @@ const Home = () => {
 				})
 				.catch(({ status }) => {
 					if (status === 400) {
-						setIsAuthenticated(false);
 						navigate("/guest");
 					}
 				});
 		}
 		if (isAuthenticated) {
-			navigate("/user")
+			navigate("/user");
 		}
 	}, []);
 
 	if (isAuthenticated === null) {
 		return <Loading />;
-	} 
+	}
 };
 
 export default Home;

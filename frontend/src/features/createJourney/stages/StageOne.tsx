@@ -388,9 +388,13 @@ const StageOne = () => {
 										<Flex justify="space-between">
 											<DatePicker
 												variant="filled"
-												value={dayjs(
+												value={
 													journey?.startDate
-												)}
+														? dayjs(
+																journey?.startDate
+														  )
+														: null
+												}
 												placeholder="Start"
 												minDate={dayjs()}
 												maxDate={
@@ -414,7 +418,13 @@ const StageOne = () => {
 											/>
 											<DatePicker
 												variant="filled"
-												value={dayjs(journey?.endDate)}
+												value={
+													journey?.endDate
+														? dayjs(
+																journey?.endDate
+														  )
+														: null
+												}
 												placeholder="End"
 												minDate={
 													journey.startDate
