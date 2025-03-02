@@ -385,8 +385,9 @@ const StageOne = () => {
 										/>
 									</Flex>
 									<div onClick={(e) => e.stopPropagation()}>
-										<Flex gap={15}>
+										<Flex justify="space-between">
 											<DatePicker
+												variant="filled"
 												value={journey.startDate}
 												placeholder="Start"
 												minDate={dayjs()}
@@ -404,9 +405,9 @@ const StageOne = () => {
 												}
 												suffixIcon={false}
 												format="D MMMM YYYY"
-												
 											/>
 											<DatePicker
+												variant="filled"
 												value={journey.endDate}
 												placeholder="End"
 												minDate={
@@ -446,14 +447,16 @@ const StageOne = () => {
 									</Text>
 									{journey.startDate && journey.endDate && (
 										<Text
-											style={{ whiteSpace: "pre-wrap" }}
+											style={{
+												whiteSpace: "pre-wrap",
+											}}
 										>
 											{dayjs(journey.startDate).format(
-												"D MMMM YYYY"
+												"D/M/YYYY"
 											) +
 												"  -  " +
 												dayjs(journey.endDate).format(
-													"D MMMM YYYY"
+													"D/M/YYYY"
 												)}
 										</Text>
 									)}

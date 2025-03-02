@@ -61,8 +61,9 @@ const ScrollableDiv = ({
 				<Button
 					className="left-button"
 					icon={<NavigateBeforeRounded />}
-					variant="filled"
+					variant="solid"
 					color="default"
+					size="small"
 					onClick={(e) => {
 						e.stopPropagation();
 						scrollLeft();
@@ -70,7 +71,7 @@ const ScrollableDiv = ({
 					style={{
 						display: breakpoints.largerThan("md") ? "flex" : "none",
 						position: "absolute",
-						left: -42,
+						left: -15,
 						zIndex: 2,
 					}}
 				/>
@@ -100,8 +101,9 @@ const ScrollableDiv = ({
 				<Button
 					className="right-button"
 					icon={<NavigateNextRounded />}
-					variant="filled"
+					variant="solid"
 					color="default"
+					size="small"
 					onClick={(e) => {
 						e.stopPropagation();
 						scrollRight();
@@ -109,7 +111,7 @@ const ScrollableDiv = ({
 					style={{
 						display: breakpoints.largerThan("md") ? "flex" : "none",
 						position: "absolute",
-						right: -42,
+						right: -15,
 						zIndex: 2,
 					}}
 				/>

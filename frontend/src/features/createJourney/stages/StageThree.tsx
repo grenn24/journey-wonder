@@ -132,9 +132,9 @@ const StageThree = () => {
 						<Text>{i18n.t("Dates")}</Text>
 						<Text>
 							{" "}
-							{dayjs(journey.startDate).format("D MMMM YYYY") +
+							{dayjs(journey.startDate).format("D/M/YYYY") +
 								"  -  " +
-								dayjs(journey.endDate).format("D MMMM YYYY")}
+								dayjs(journey.endDate).format("D/M/YYYY")}
 						</Text>
 					</Flex>
 				</div>
@@ -329,8 +329,7 @@ const StageThree = () => {
 									height={35}
 									style={{
 										display:
-											journey.travellers
-												.length === 0
+											journey.travellers.length === 0
 												? "none"
 												: "flex",
 									}}
@@ -420,8 +419,7 @@ const StageThree = () => {
 
 									<Text>
 										{journey.visibility !== "Only Me"
-											? journey.travellers
-													?.length +
+											? journey.travellers?.length +
 											  " " +
 											  i18n.t("Travellers")
 											: i18n.t("Only Me")}

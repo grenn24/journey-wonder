@@ -18,6 +18,7 @@ import {
 	LockRounded,
 	PeopleAltRounded,
 	PublicRounded,
+	WestRounded,
 } from "@mui/icons-material";
 import {
 	decrementStage,
@@ -43,8 +44,8 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 	const { fontSizeHeading5, colorPrimaryBorder } = token;
 
 	const dispatch = useAppDispatch();
-	const { createJourney, user } = useAppSelector((state) => ({
-		createJourney: state.createJourney,
+	const { journey, user } = useAppSelector((state) => ({
+		journey: state.createJourney,
 		user: state.user,
 	}));
 	const [openModalCloseConfirmation, setOpenModalCloseConfirmation] =
@@ -61,33 +62,32 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 		1000000
 	);
 
-	const createItinerary = async () => {
+	const createJourney = async () => {
 		openUploadingSnackbar();
-		const journey = {
+
+		journeyService
+			.createJourney( {
 			...createJourney,
 			author: user.userID,
-			destinations: createJourney.destinations.map((destination) => ({
+			destinations: journey.destinations.map((destination) => ({
 				name: destination.name,
 				type: destination.type,
 			})),
 			travellers: [
-				...createJourney.travellers,
+				...journey.travellers,
 				{
 					email: user.email,
 					permission: "Edit",
 				},
 			],
-			image: createJourney.image
+			image: journey.image
 				? await base64UrlToFile(
-						createJourney.image[0],
-						createJourney.image[1]
+						journey.image[0],
+						journey.image[1]
 				  )
 				: null,
 			currentStage: undefined,
-		};
-
-		journeyService
-			.createJourney(journey)
+		})
 			.then(() => {
 				closeUploadingSnackbar();
 				dispatch(reset());
@@ -109,29 +109,20 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 				centered
 				title={
 					<>
-						<Flex justify="space-between" align="center">
+						<Flex justify="space-between" align="center" style={{height:30}}>
 							<Button
 								variant="text"
-								color="primary"
-								icon={
-									<ArrowBackRounded
-										style={{ marginTop: 3.7 }}
-									/>
-								}
-								iconPosition="start"
+								color="default"
+								size="large"
 								style={{
-									fontSize: fontSizeHeading5,
-									paddingLeft: 7,
-									paddingRight: 7,
 									display:
-										createJourney.currentStage !== 0
+										journey.currentStage !== 0
 											? "flex"
 											: "none",
 								}}
 								onClick={() => dispatch(decrementStage())}
-							>
-								{i18n.t("Back")}
-							</Button>
+								icon={<WestRounded style={{ fontSize: 30 }} />}
+							></Button>
 							<Title
 								style={{
 									fontSize: 22,
@@ -140,21 +131,27 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 									userSelect: "none",
 								}}
 							>
-								{stageNames[createJourney.currentStage]}
+								{stageNames[journey.currentStage]}
 							</Title>
 							<Button
+								variant="text"
+								color="default"
+								size="large"
 								style={{
-									opacity: 0,
-									width: 80,
-									cursor: "default",
+									display:
+										journey.currentStage !== 0
+											? "flex"
+											: "none",
+											opacity:0
 								}}
+								onClick={() => dispatch(decrementStage())}
+								icon={<WestRounded style={{ fontSize: 30 }} />}
 							></Button>
 						</Flex>
 						<Divider
 							variant="dashed"
 							style={{
-								marginBottom: 15,
-								marginTop: 15,
+								margin: "10px 0px",
 								borderColor: colorPrimaryBorder,
 								borderWidth: 1.3,
 							}}
@@ -180,7 +177,7 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 				}}
 				footer={
 					<Flex justify="center" align="center">
-						{createJourney.currentStage !== stages.length - 1 ? (
+						{journey.currentStage !== stages.length - 1 ? (
 							<Button
 								block
 								color="primary"
@@ -188,10 +185,10 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 								size="middle"
 								onClick={() => dispatch(incrementStage())}
 								disabled={
-									!createJourney.title ||
-									!createJourney.startDate ||
-									!createJourney.endDate ||
-									createJourney.destinations.length === 0
+									!journey.title ||
+									!journey.startDate ||
+									!journey.endDate ||
+									journey.destinations.length === 0
 								}
 								style={{
 									fontSize: 19,
@@ -205,7 +202,7 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 								color="primary"
 								variant="solid"
 								size="middle"
-								onClick={() => createItinerary()}
+								onClick={() => createJourney()}
 								style={{
 									fontSize: 19,
 								}}
@@ -216,7 +213,7 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 					</Flex>
 				}
 			>
-				{createElement(stages[createJourney.currentStage])}
+				{createElement(stages[journey.currentStage])}
 			</Modal>
 			<Modal
 				centered
