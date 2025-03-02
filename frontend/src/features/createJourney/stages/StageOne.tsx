@@ -388,18 +388,24 @@ const StageOne = () => {
 										<Flex justify="space-between">
 											<DatePicker
 												variant="filled"
-												value={journey.startDate}
+												value={dayjs(
+													journey?.startDate
+												)}
 												placeholder="Start"
 												minDate={dayjs()}
 												maxDate={
 													journey.endDate
-														? dayjs(journey.endDate)
+														? dayjs(
+																journey?.endDate
+														  )
 														: undefined
 												}
 												onChange={(value) =>
 													dispatch(
 														setStartDate(
-															value ? value : null
+															value
+																? value.toISOString()
+																: null
 														)
 													)
 												}
@@ -408,19 +414,21 @@ const StageOne = () => {
 											/>
 											<DatePicker
 												variant="filled"
-												value={journey.endDate}
+												value={dayjs(journey?.endDate)}
 												placeholder="End"
 												minDate={
 													journey.startDate
 														? dayjs(
-																journey.startDate
+																journey?.startDate
 														  )
 														: dayjs()
 												}
 												onChange={(value) =>
 													dispatch(
 														setEndDate(
-															value ? value : null
+															value
+																? value.toISOString()
+																: null
 														)
 													)
 												}
@@ -451,11 +459,11 @@ const StageOne = () => {
 												whiteSpace: "pre-wrap",
 											}}
 										>
-											{dayjs(journey.startDate).format(
+											{dayjs(journey.startDate)?.format(
 												"D/M/YYYY"
 											) +
 												"  -  " +
-												dayjs(journey.endDate).format(
+												dayjs(journey.endDate)?.format(
 													"D/M/YYYY"
 												)}
 										</Text>

@@ -5,8 +5,6 @@ import {
 	theme,
 	Typography,
 	Divider,
-	Select,
-	Tooltip,
 } from "antd";
 import { createElement, memo, useState } from "react";
 import i18n from "../../i18n.ts";
@@ -198,7 +196,7 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 										!journey.title ||
 										!journey.startDate ||
 										!journey.endDate ||
-										journey.destinations.length === 0
+										journey.destinations?.length === 0
 									}
 									style={{
 										fontSize: 19,
