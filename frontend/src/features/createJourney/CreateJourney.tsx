@@ -100,171 +100,182 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 	};
 
 	return (
-		<>
+		<div>
 			{snackbarContext}
 
-			<Modal
-				open={openCreateModal}
-				setOpen={() => setOpenModalCloseConfirmation(true)}
-				centered
-				title={
-					<>
-						<Flex justify="space-between" align="center" style={{height:30}}>
-							<Button
-								variant="text"
-								color="default"
-								size="large"
-								style={{
-									display:
-										journey.currentStage !== 0
-											? "flex"
-											: "none",
-								}}
-								onClick={() => dispatch(decrementStage())}
-								icon={<WestRounded style={{ fontSize: 30 }} />}
-							></Button>
-							<Title
-								style={{
-									fontSize: 22,
-									fontWeight: 600,
-									marginBottom: 0,
-									userSelect: "none",
-								}}
+				<Modal
+					open={openCreateModal}
+					setOpen={() => setOpenModalCloseConfirmation(true)}
+					centered
+					title={
+						<>
+							<Flex
+								justify="space-between"
+								align="center"
+								style={{ height: 30 }}
 							>
-								{stageNames[journey.currentStage]}
-							</Title>
-							<Button
-								variant="text"
-								color="default"
-								size="large"
+								<Button
+									variant="text"
+									color="default"
+									size="large"
+									style={{
+										display:
+											journey.currentStage !== 0
+												? "flex"
+												: "none",
+									}}
+									onClick={() => dispatch(decrementStage())}
+									icon={
+										<WestRounded style={{ fontSize: 30 }} />
+									}
+								></Button>
+								<Title
+									style={{
+										fontSize: 22,
+										fontWeight: 600,
+										marginBottom: 0,
+										userSelect: "none",
+									}}
+								>
+									{stageNames[journey.currentStage]}
+								</Title>
+								<Button
+									variant="text"
+									color="default"
+									size="large"
+									style={{
+										display:
+											journey.currentStage !== 0
+												? "flex"
+												: "none",
+										opacity: 0,
+									}}
+									onClick={() => dispatch(decrementStage())}
+									icon={
+										<WestRounded style={{ fontSize: 30 }} />
+									}
+								></Button>
+							</Flex>
+							<Divider
+								variant="dashed"
 								style={{
-									display:
-										journey.currentStage !== 0
-											? "flex"
-											: "none",
-											opacity:0
+									margin: "10px 0px",
+									borderColor: colorPrimaryBorder,
+									borderWidth: 1.3,
 								}}
-								onClick={() => dispatch(decrementStage())}
-								icon={<WestRounded style={{ fontSize: 30 }} />}
-							></Button>
+							/>
+						</>
+					}
+					style={{
+						header: {
+							padding: "0px 0px",
+						},
+						body: {
+							padding: "5px 6px",
+							height: 370,
+							width:"102%",
+							transform: "translateX(-1%)",
+							overflow: "auto",
+						},
+						footer: {
+							padding: "5px 5px",
+						},
+						wrapper: {
+							backdropFilter: `blur(5px)`,
+							background: "rgba(0, 0, 0, 0.3)",
+						},
+					}}
+					footer={
+						<Flex justify="center" align="center">
+							{journey.currentStage !== stages.length - 1 ? (
+								<Button
+									block
+									color="primary"
+									variant="solid"
+									size="middle"
+									onClick={() => dispatch(incrementStage())}
+									disabled={
+										!journey.title ||
+										!journey.startDate ||
+										!journey.endDate ||
+										journey.destinations.length === 0
+									}
+									style={{
+										fontSize: 19,
+									}}
+								>
+									{i18n.t("Next")}
+								</Button>
+							) : (
+								<Button
+									block
+									color="primary"
+									variant="solid"
+									size="middle"
+									onClick={() => createJourney()}
+									style={{
+										fontSize: 19,
+									}}
+								>
+									{i18n.t("Create")}
+								</Button>
+							)}
 						</Flex>
-						<Divider
-							variant="dashed"
-							style={{
-								margin: "10px 0px",
-								borderColor: colorPrimaryBorder,
-								borderWidth: 1.3,
+					}
+				>
+					{createElement(stages[journey.currentStage])}
+				</Modal>
+				<Modal
+					centered
+					open={openModalCloseConfirmation}
+					setOpen={setOpenModalCloseConfirmation}
+					title={i18n.t("Heading Somewhere?")}
+					footer={[
+						<Button
+							onClick={() => setOpenModalCloseConfirmation(false)}
+							color="default"
+							variant="filled"
+							key="cancel"
+						>
+							{i18n.t("Cancel")}
+						</Button>,
+						<Button
+							onClick={() => {
+								dispatch(reset());
+								setOpenModalCloseConfirmation(false);
+								setOpenCreateModal(false);
 							}}
-						/>
+							color="danger"
+							variant="filled"
+							key="save"
+						>
+							{i18n.t("Discard")}
+						</Button>,
+						<Button
+							onClick={() => {
+								setOpenModalCloseConfirmation(false);
+								setOpenCreateModal(false);
+							}}
+							color="primary"
+							variant="filled"
+							key="discard"
+						>
+							{i18n.t("Save")}
+						</Button>,
+					]}
+				>
+					<>
+						<Text>
+							{i18n.t(
+								"Save your current changes so that you can continue later"
+							)}
+						</Text>
+						<br />
+						<br />
 					</>
-				}
-				style={{
-					header: {
-						padding: "0px 0px",
-					},
-					body: {
-						padding: "5px 7px",
-						height: 370,
-						overflow: "auto",
-					},
-					footer: {
-						padding: "5px 5px",
-					},
-					wrapper: {
-						backdropFilter: `blur(5px)`,
-						background: "rgba(0, 0, 0, 0.3)",
-					},
-				}}
-				footer={
-					<Flex justify="center" align="center">
-						{journey.currentStage !== stages.length - 1 ? (
-							<Button
-								block
-								color="primary"
-								variant="solid"
-								size="middle"
-								onClick={() => dispatch(incrementStage())}
-								disabled={
-									!journey.title ||
-									!journey.startDate ||
-									!journey.endDate ||
-									journey.destinations.length === 0
-								}
-								style={{
-									fontSize: 19,
-								}}
-							>
-								{i18n.t("Next")}
-							</Button>
-						) : (
-							<Button
-								block
-								color="primary"
-								variant="solid"
-								size="middle"
-								onClick={() => createJourney()}
-								style={{
-									fontSize: 19,
-								}}
-							>
-								{i18n.t("Create")}
-							</Button>
-						)}
-					</Flex>
-				}
-			>
-				{createElement(stages[journey.currentStage])}
-			</Modal>
-			<Modal
-				centered
-				open={openModalCloseConfirmation}
-				setOpen={setOpenModalCloseConfirmation}
-				title={i18n.t("Heading Somewhere?")}
-				footer={[
-					<Button
-						onClick={() => setOpenModalCloseConfirmation(false)}
-						color="default"
-						variant="filled"
-						key="cancel"
-					>
-						{i18n.t("Cancel")}
-					</Button>,
-					<Button
-						onClick={() => {
-							dispatch(reset());
-							setOpenModalCloseConfirmation(false);
-							setOpenCreateModal(false);
-						}}
-						color="danger"
-						variant="filled"
-						key="save"
-					>
-						{i18n.t("Discard")}
-					</Button>,
-					<Button
-						onClick={() => {
-							setOpenModalCloseConfirmation(false);
-							setOpenCreateModal(false);
-						}}
-						color="primary"
-						variant="filled"
-						key="discard"
-					>
-						{i18n.t("Save")}
-					</Button>,
-				]}
-			>
-				<>
-					<Text>
-						{i18n.t(
-							"Save your current changes so that you can continue later"
-						)}
-					</Text>
-					<br />
-					<br />
-				</>
-			</Modal>
-		</>
+				</Modal>
+	
+		</div>
 	);
 };
 

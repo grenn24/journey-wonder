@@ -62,6 +62,9 @@
 }
 
 .card-with-elevation {
- box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.20) !important; 
+ box-shadow: 0px 4px 6px 1px rgba(0, 0, 0, 0.15) !important; 
 }
 
+.ant-modal-content {
+	padding:20px 18px !important;
+}

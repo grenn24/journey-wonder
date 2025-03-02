@@ -94,17 +94,19 @@ const StageThree = () => {
 					},
 				}}
 				style={{ borderColor: colorBorder, userSelect: "none" }}
-				className="card-with-elevation"
+		
 				title={
 					<Flex justify="space-between" align="center">
-						{i18n.t("Core Details")}
+						{i18n.t("Journey Details")}
 						<Button
+						title="Edit"
 							type="text"
 							onClick={() => dispatch(setStage(0))}
 							icon={<EditRounded fontSize="small" />}
 						/>
 					</Flex>
 				}
+				variant="outlined"
 			>
 				<div>
 					<Flex gap={15} align="center" style={{ marginBottom: 15 }}>
@@ -158,6 +160,7 @@ const StageThree = () => {
 					userSelect: "none",
 				}}
 				className="card-with-elevation"
+				variant="borderless"
 			>
 				<AnimatePresence>
 					{isTravellersExpanded ? (
@@ -448,6 +451,7 @@ const StageThree = () => {
 					userSelect: "none",
 				}}
 				className="card-with-elevation"
+				variant="borderless"
 			>
 				<AnimatePresence>
 					{isVisibilityExpanded ? (
@@ -611,8 +615,10 @@ const StageThree = () => {
 					borderColor: colorBorder,
 					cursor: "pointer",
 					userSelect: "none",
+					marginBottom: 13,
 				}}
 				className="card-with-elevation"
+				variant="borderless"
 			>
 				<AnimatePresence>
 					{isDescriptionExpanded ? (
