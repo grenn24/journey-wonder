@@ -609,108 +609,58 @@ const StageOne = () => {
 											fullscreen={false}
 											onPanelChange={() => {}}
 											value={calendarValue}
-											onChange={(date)=>setCalendarValue(date)}
-											fullCellRender={(date) => (
-												<Button
-													type={
-														date.isSame(
-															dayjs(
-																journey.startDate
-															)
-														) ||
-														date.isSame(
-															dayjs(
-																journey.endDate
-															)
-														) ||
-														(date.isAfter(
-															dayjs(
-																journey.startDate
-															)
-														) &&
-															date.isBefore(
+											onChange={(date) =>
+												setCalendarValue(date)
+											}
+											fullCellRender={(date, info) =>
+												calendarMode === "month" ? (
+													<Button
+														type={
+															date.isSame(
+																dayjs(
+																	journey.startDate
+																)
+															) ||
+															date.isSame(
 																dayjs(
 																	journey.endDate
 																)
-															))
-															? "primary"
-															: "text"
-													}
-													disabled={date.isBefore(
-														dayjs(),
-														"day") || date.month() !== calendarValue.month()
-													}
-													style={{
-														width: 40,
-														height: 40,
-														fontSize: 18,
-														margin: 0,
-													}}
-													onClick={() => {
-														if (
-															date.isSame(
-																journey.startDate
-															)
-														) {
-															dispatch(
-																setStartDate(
-																	null
+															) ||
+															(date.isAfter(
+																dayjs(
+																	journey.startDate
 																)
-															);
-															dispatch(
-																setEndDate(
-																	null
-																)
-															);
-														} else if (
-															date.isSame(
-																journey.endDate
-															)
-														) {
-															dispatch(
-																setEndDate(null)
-															);
-														} else if (
-															!journey.startDate
-														) {
-															// Case 1: If no start date is set, set the selected date as the start date
-															dispatch(
-																setStartDate(
-																	date.toISOString()
-																)
-															);
-														} else if (
-															!journey.endDate
-														) {
-															// Case 2: If start date is set but no end date, determine whether to set start or end
-															if (
+															) &&
 																date.isBefore(
+																	dayjs(
+																		journey.endDate
+																	)
+																))
+																? "primary"
+																: "text"
+														}
+														disabled={date.isBefore(
+															dayjs(),
+															"day"
+														)}
+														style={{
+															width: 40,
+															height: 40,
+															fontSize: 18,
+															margin: 0,
+															opacity:
+																date.month() !==
+																calendarValue.month()     ? 0.4 : 1
+														}}
+														onClick={() => {
+															if (
+																date.isSame(
 																	journey.startDate
 																)
 															) {
 																dispatch(
 																	setStartDate(
-																		date.toISOString()
-																	)
-																);
-															} else {
-																dispatch(
-																	setEndDate(
-																		date.toISOString()
-																	)
-																);
-															}
-														} else {
-															// Case 3: Both start and end dates are set
-															if (
-																date.isBefore(
-																	journey.startDate
-																)
-															) {
-																// If selected date is before start date, update start and reset end date
-																dispatch(
-																	setStartDate(
-																		date.toISOString()
+																		null
 																	)
 																);
 																dispatch(
@@ -719,30 +669,120 @@ const StageOne = () => {
 																	)
 																);
 															} else if (
-																date.isAfter(
+																date.isSame(
 																	journey.endDate
 																)
 															) {
-																// If selected date is after end date, update end date
 																dispatch(
 																	setEndDate(
-																		date.toISOString()
+																		null
 																	)
 																);
-															} else {
-																// If selected date is between start and end dates, update start date
+															} else if (
+																!journey.startDate
+															) {
+																// Case 1: If no start date is set, set the selected date as the start date
 																dispatch(
 																	setStartDate(
 																		date.toISOString()
 																	)
 																);
+															} else if (
+																!journey.endDate
+															) {
+																// Case 2: If start date is set but no end date, determine whether to set start or end
+																if (
+																	date.isBefore(
+																		journey.startDate
+																	)
+																) {
+																	dispatch(
+																		setStartDate(
+																			date.toISOString()
+																		)
+																	);
+																} else {
+																	dispatch(
+																		setEndDate(
+																			date.toISOString()
+																		)
+																	);
+																}
+															} else {
+																// Case 3: Both start and end dates are set
+																if (
+																	date.isBefore(
+																		journey.startDate
+																	)
+																) {
+																	// If selected date is before start date, update start and reset end date
+																	dispatch(
+																		setStartDate(
+																			date.toISOString()
+																		)
+																	);
+																	dispatch(
+																		setEndDate(
+																			null
+																		)
+																	);
+																} else if (
+																	date.isAfter(
+																		journey.endDate
+																	)
+																) {
+																	// If selected date is after end date, update end date
+																	dispatch(
+																		setEndDate(
+																			date.toISOString()
+																		)
+																	);
+																} else {
+																	// If selected date is between start and end dates, update start date
+																	dispatch(
+																		setStartDate(
+																			date.toISOString()
+																		)
+																	);
+																}
 															}
+														}}
+													>
+														{date.date()}
+													</Button>
+												) : (
+													<Button
+														style={{
+															fontSize: 18,
+															margin: 0,
+														}}
+														type={
+															calendarValue.month() ===
+															date.month()
+																? "primary"
+																: "text"
 														}
-													}}
-												>
-													{date.date()}
-												</Button>
-											)}
+														onClick={() => {
+															setCalendarMode(
+																"month"
+															);
+															setCalendarValue(
+																calendarValue
+																	.clone()
+																	.month(
+																		date.month()
+																	)
+															);
+														}}
+													>
+														{
+															monthOptions[
+																date.month()
+															].label
+														}
+													</Button>
+												)
+											}
 										/>
 									</div>
 								</Flex>
