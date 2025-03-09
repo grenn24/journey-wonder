@@ -1,8 +1,8 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import "./styles/app.css";
+import "./assets/styles/app.css";
 import "@ant-design/v5-patch-for-react-19";
 import { ConfigProvider } from "antd";
-import useTheme from "./styles/useTheme";
+import useTheme from "./assets/styles/useTheme";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 
 import { lazy } from "react";
@@ -13,7 +13,7 @@ import Pricing from "./pages/guest/Pricing";
 import GuestHome from "./pages/guest/Home";
 import Mission from "./pages/user/Mission";
 import Creators from "./pages/user/Creators";
-const Login = lazy(() => import("./pages/Log-In"));
+import Login from "./pages/Log-In";
 const Home = lazy(() => import("./pages/Home"));
 const UserHome = lazy(() => import("./pages/user/Home"));
 const NotFound = lazy(() => import("./pages/error/NotFound"));
@@ -27,7 +27,12 @@ const App = () => {
 			<BrowserRouter>
 				<Routes>
 					{/*Non-protected routes*/}
-					<Route index element={<Home />} />
+					<Route
+						index
+						element={
+						<Home />
+						}
+					/>
 					<Route path="guest" element={<Guest />}>
 						<Route index element={<GuestHome />} />
 						<Route path="about" />

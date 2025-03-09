@@ -65,7 +65,7 @@ const CreateModal = ({ openCreateModal, setOpenCreateModal }: Prop) => {
 
 		journeyService
 			.createJourney( {
-			...createJourney,
+			...journey,
 			author: user.userID,
 			destinations: journey.destinations.map((destination) => ({
 				name: destination.name,

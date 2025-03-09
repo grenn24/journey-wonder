@@ -1,7 +1,7 @@
 import {Flex, theme } from "antd";
 
 import { JSX, useRef} from "react";
-import "../../styles/image.css"
+import "../../assets/styles/image.css"
 interface Prop {
 	image: string | File;
 	buttons?: JSX.Element[];

@@ -21,7 +21,7 @@ import { useNavigate } from "react-router-dom";
 import i18next from "i18next";
 import ExploreJourneysDrawer from "../../components/ExploreJourneysDrawer";
 import NotificationButton from "./NotificationButton";
-import useTheme from "../../styles/useTheme";
+import useTheme from "../../assets/styles/useTheme";
 
 const { Text } = Typography;
 const UserHeader = () => {
@@ -68,7 +68,7 @@ const UserHeader = () => {
 				<Flex
 					justify="space-between"
 					align="center"
-					style={{ width: "100%", height:"100%" }}
+					style={{ width: "100%", height: "100%" }}
 				>
 					<a
 						href="/user"

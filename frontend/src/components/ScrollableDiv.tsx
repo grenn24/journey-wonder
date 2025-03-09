@@ -5,7 +5,7 @@ import {
 } from "@mui/icons-material";
 import { Button, Flex } from "antd";
 import React, { JSX, useRef, useState } from "react";
-import "../styles/scrollableDiv.css";
+import "../assets/styles/scrollableDiv.css";
 import useBreakpoints from "../utilities/breakpoints";
 
 interface Prop {

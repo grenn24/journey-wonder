@@ -13,10 +13,12 @@ const Home = () => {
 			authService
 				.refreshAccessToken()
 				.then(() => {
+					setIsAuthenticated(true);
 					navigate("/user");
 				})
 				.catch(({ status }) => {
 					if (status === 400) {
+						setIsAuthenticated(false);
 						navigate("/guest");
 					}
 				});
@@ -24,10 +26,14 @@ const Home = () => {
 		if (isAuthenticated) {
 			navigate("/user");
 		}
-	}, []);
+	}, [isAuthenticated]);
 
 	if (isAuthenticated === null) {
 		return <Loading />;
+	} else if (isAuthenticated) {
+		navigate("/user");
+	} else {
+		navigate("/guest");
 	}
 };
 

@@ -10,7 +10,7 @@ import {
 	Typography,
 } from "antd";
 import { useState } from "react";
-import "../styles/ant.css";
+import "../assets/styles/ant.css";
 import { AppleFilled } from "@ant-design/icons";
 import authService from "../services/auth";
 import { useNavigate } from "react-router-dom";

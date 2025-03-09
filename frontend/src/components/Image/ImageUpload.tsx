@@ -4,7 +4,7 @@ import {
 	UploadListType,
 } from "antd/es/upload/interface";
 import React, { JSX, useState } from "react";
-import "../../styles/ant.css";
+import "../../assets/styles/ant.css";
 import { AnimatePresence, motion } from "motion/react";
 
 interface CustomImageRenderProp {

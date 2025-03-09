@@ -1,7 +1,7 @@
 import {  NotificationsNoneRounded } from "@mui/icons-material";
 import { Button, Empty, Flex, Popover, Typography } from "antd";
 import { useState } from "react";
-import "../../styles/ant.css";
+import "../../assets/styles/ant.css";
 import CloseButton from "../../components/CloseButton";
 import i18n from "../../i18n";
 

@@ -1,8 +1,0 @@
-.buttons-container {
-    opacity:0;
-    transition:opacity 0.3s ease-in-out
-}
-
-.buttons-container:hover {
-    opacity:1
-}

@@ -11,7 +11,7 @@ import MobileDrawerMenu from "./MobileDrawerMenu";
 import i18n from "../../i18n";
 import ExploreJourneysDrawer from "../../components/ExploreJourneysDrawer";
 import LanguageMenu from "../../components/LanguageMenu/LanguageMenu";
-import useTheme from "../../styles/useTheme";
+import useTheme from "../../assets/styles/useTheme";
 
 const options = [
 	{
@@ -38,7 +38,7 @@ const GuestHeader = () => {
 	const {
 		token: { colorBgContainer, colorText },
 	} = theme.useToken();
-	const {algorithm} = useTheme();
+	const { algorithm } = useTheme();
 	const selectedItem =
 		location.pathname.split("/").slice(2).length !== 0
 			? location.pathname.split("/").slice(2)[0]
@@ -87,7 +87,6 @@ const GuestHeader = () => {
 						{breakpoints.largerThan("xl") ? (
 							<>
 								<Button
-		
 									variant="outlined"
 									color="default"
 									size="large"
@@ -95,7 +94,7 @@ const GuestHeader = () => {
 									style={{
 										fontWeight: 600,
 										border: `1px solid ${colorText}`,
-										color:colorText
+										color: colorText,
 									}}
 									iconPosition="end"
 									icon={
@@ -128,7 +127,6 @@ const GuestHeader = () => {
 							</>
 						) : (
 							<>
-							
 								<Button
 									variant="solid"
 									color="default"

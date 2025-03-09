@@ -22,7 +22,7 @@ import {
 	setDescription,
 	setStage,
 } from "../../../redux/slices/createJourney";
-import "../../../styles/ant.css";
+import "../../../assets/styles/ant.css";
 import {
 	AddRounded,
 	CheckRounded,
@@ -59,9 +59,10 @@ const StageThree = () => {
 		"Edit" | "Read"
 	>("Edit");
 	const [isValidEmail, setIsValidEmail] = useState(false);
-	const { journey, name } = useAppSelector((state) => ({
+	const { journey, name, travellers } = useAppSelector((state) => ({
 		journey: state.createJourney,
 		name: state.user?.name,
+		travellers: state.createJourney.travellers
 	}));
 
 	const [isTravellersExpanded, setIsTravellersExpanded] = useState(false);
@@ -332,7 +333,7 @@ const StageThree = () => {
 									height={35}
 									style={{
 										display:
-											journey.travellers.length === 0
+											journey.travellers?.length === 0
 												? "none"
 												: "flex",
 									}}
@@ -684,7 +685,7 @@ const StageThree = () => {
 										{i18n.t("Description")}
 									</Text>
 									<Text>
-										{journey.description.length > 35
+										{journey.description?.length > 35
 											? journey.description.slice(0, 35) +
 											  "..."
 											: journey.description}

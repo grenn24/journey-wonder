@@ -25,7 +25,7 @@ import {
 	PanoramaRounded,
 	VisibilityRounded,
 } from "@mui/icons-material";
-import "../../../styles/ant.css";
+import "../../../assets/styles/ant.css";
 import ScrollableDiv from "../../../components/ScrollableDiv";
 import userService from "../../../services/user";
 import { AnimatePresence, motion } from "motion/react";
@@ -70,7 +70,7 @@ const StageTwo = () => {
 		visibility === "Only Me" && setIsTravellersExpanded(false);
 	}, [visibility]);
 	return (
-		<>
+		<div style={{height:"100%", overflow:"hidden"}}>
 			<ImageUpload
 				className="draggable-upload-image"
 				aspectRatio={21 / 9}
@@ -111,7 +111,7 @@ const StageTwo = () => {
 				}
 				acceptedFileTypes="image/jpeg, image/png, image/gif"
 			/>
-		</>
+		</div>
 	);
 };
 

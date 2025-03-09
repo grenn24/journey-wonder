@@ -11,6 +11,8 @@ import {
 	Input,
 	Card,
 	Select,
+	Calendar,
+	Segmented,
 } from "antd";
 import {
 	addSelectedDestination,
@@ -22,11 +24,17 @@ import {
 } from "../../../redux/slices/createJourney";
 import CloseButton from "../../../components/CloseButton";
 import dayjs from "dayjs";
-import "../../../styles/ant.css";
+import "../../../assets/styles/ant.css";
 import { AnimatePresence, motion } from "motion/react";
 import i18n from "../../../i18n";
 import autocompleteService from "../../../services/autocomplete";
-import { ExpandLessRounded, ExpandMoreRounded } from "@mui/icons-material";
+import {
+	ArrowDropDownRounded,
+	ExpandLessRounded,
+	ExpandMoreRounded,
+	KeyboardArrowLeftRounded,
+	KeyboardArrowRightRounded,
+} from "@mui/icons-material";
 
 interface Destination {
 	name: string;
@@ -35,7 +43,7 @@ interface Destination {
 	value: string;
 }
 const { RangePicker } = DatePicker;
-const { Text } = Typography;
+const { Text, Title } = Typography;
 const StageOne = () => {
 	const { token } = theme.useToken();
 	const { colorBorder } = token;
@@ -50,7 +58,7 @@ const StageOne = () => {
 		!journey.title ||
 			!journey.startDate ||
 			!journey.endDate ||
-			journey.destinations.length === 0
+			journey.destinations?.length === 0
 			? true
 			: false
 	);
@@ -59,6 +67,9 @@ const StageOne = () => {
 
 	const [destinations, setDestinations] = useState<Destination[]>([]);
 	const [isSearching, setIsSearching] = useState(false);
+
+	const [calendarMode, setCalendarMode] = useState<"month" | "year">("month");
+	const [calendarValue, setCalendarValue] = useState(journey.startDate ? dayjs(journey.startDate) : dayjs());
 
 	useEffect(() => {
 		autocompleteService.abort();
@@ -73,6 +84,21 @@ const StageOne = () => {
 				}
 			});
 	}, [destinationSearchValue]);
+
+	const monthOptions = [
+		{ label: "January", value: 0 },
+		{ label: "February", value: 1 },
+		{ label: "March", value: 2 },
+		{ label: "April", value: 3 },
+		{ label: "May", value: 4 },
+		{ label: "June", value: 5 },
+		{ label: "July", value: 6 },
+		{ label: "August", value: 7 },
+		{ label: "September", value: 8 },
+		{ label: "October", value: 9 },
+		{ label: "November", value: 10 },
+		{ label: "December", value: 11 },
+	];
 
 	return (
 		<Flex vertical gap={20}>
@@ -385,67 +411,339 @@ const StageOne = () => {
 										/>
 									</Flex>
 									<div onClick={(e) => e.stopPropagation()}>
-										<Flex justify="space-between">
-											<DatePicker
-												variant="filled"
-												value={
-													journey?.startDate
-														? dayjs(
-																journey?.startDate
-														  )
-														: null
+										<Calendar
+											disabledDate={(date) =>
+												date.isBefore(dayjs(), "day")
+											}
+											headerRender={({
+												value,
+												type,
+												onChange,
+											}) => {
+												const currentMonthIndex =
+													value.month();
+												const currentYear =
+													value.year();
+												const yearOptions: Object[] =
+													[];
+												for (
+													let i = value.year() - 5;
+													i <= value.year() + 5;
+													i++
+												) {
+													yearOptions.push({
+														label: i.toString(),
+														value: i,
+													});
 												}
-												placeholder="Start"
-												minDate={dayjs()}
-												maxDate={
-													journey.endDate
-														? dayjs(
-																journey?.endDate
-														  )
-														: undefined
-												}
-												onChange={(value) =>
-													dispatch(
-														setStartDate(
-															value
-																? value.toISOString()
-																: null
-														)
-													)
-												}
-												suffixIcon={false}
-												format="D MMMM YYYY"
-											/>
-											<DatePicker
-												variant="filled"
-												value={
-													journey?.endDate
-														? dayjs(
-																journey?.endDate
-														  )
-														: null
-												}
-												placeholder="End"
-												minDate={
-													journey.startDate
-														? dayjs(
-																journey?.startDate
-														  )
-														: dayjs()
-												}
-												onChange={(value) =>
-													dispatch(
-														setEndDate(
-															value
-																? value.toISOString()
-																: null
-														)
-													)
-												}
-												suffixIcon={false}
-												format="D MMMM YYYY"
-											/>
-										</Flex>
+												return (
+													<Flex vertical gap={15}>
+														<Flex
+															justify="space-between"
+															align="center"
+														>
+															<Segmented
+																options={[
+																	{
+																		label: "Month",
+																		value: "month" as typeof calendarMode,
+																	},
+																	{
+																		label: "Year",
+																		value: "year" as typeof calendarMode,
+																	},
+																]}
+																value={
+																	calendarMode
+																}
+																onChange={(
+																	value
+																) => {
+																	setCalendarMode(
+																		value
+																	);
+																}}
+															/>
+															<Flex gap={7}>
+																<Select
+																	variant="filled"
+																	options={
+																		monthOptions
+																	}
+																	value={
+																		currentMonthIndex
+																	}
+																	onChange={(
+																		newMonthIndex
+																	) =>
+																		onChange(
+																			value
+																				.clone()
+																				.month(
+																					newMonthIndex
+																				)
+																		)
+																	}
+																	suffixIcon={
+																		<ArrowDropDownRounded />
+																	}
+																	dropdownStyle={{
+																		width: 115,
+																	}}
+																	placement="bottomRight"
+																/>
+																<Select
+																	variant="filled"
+																	options={
+																		yearOptions
+																	}
+																	value={
+																		currentYear
+																	}
+																	onChange={(
+																		newYear
+																	) =>
+																		onChange(
+																			value
+																				.clone()
+																				.year(
+																					newYear
+																				)
+																		)
+																	}
+																	suffixIcon={
+																		<ArrowDropDownRounded />
+																	}
+																/>
+															</Flex>
+														</Flex>
+														<Flex
+															justify="space-between"
+															align="center"
+														>
+															<Title
+																level={4}
+																style={{
+																	whiteSpace:
+																		"pre-wrap",
+																}}
+															>
+																{calendarMode ===
+																"month"
+																	? value.format(
+																			"MMMM  YYYY"
+																	  )
+																	: value.format(
+																			"YYYY"
+																	  )}
+															</Title>
+															<Flex gap={5}>
+																<Button
+																	icon={
+																		<KeyboardArrowLeftRounded
+																			style={{
+																				fontSize: 30,
+																			}}
+																		/>
+																	}
+																	variant="text"
+																	color="default"
+																	onClick={() => {
+																		const newDate =
+																			calendarMode ===
+																			"month"
+																				? value
+																						.clone()
+																						.month(
+																							value.month() -
+																								1
+																						)
+																				: value
+																						.clone()
+																						.year(
+																							value.year() -
+																								1
+																						);
+																		onChange(
+																			newDate
+																		);
+																	}}
+																/>
+																<Button
+																	icon={
+																		<KeyboardArrowRightRounded
+																			style={{
+																				fontSize: 30,
+																			}}
+																		/>
+																	}
+																	variant="text"
+																	color="default"
+																	onClick={() => {
+																		const newDate =
+																			calendarMode ===
+																			"month"
+																				? value
+																						.clone()
+																						.month(
+																							value.month() +
+																								1
+																						)
+																				: value
+																						.clone()
+																						.year(
+																							value.year() +
+																								1
+																						);
+																		onChange(
+																			newDate
+																		);
+																	}}
+																/>
+															</Flex>
+														</Flex>
+													</Flex>
+												);
+											}}
+											mode={calendarMode}
+											fullscreen={false}
+											onPanelChange={() => {}}
+											value={calendarValue}
+											onChange={(date)=>setCalendarValue(date)}
+											fullCellRender={(date) => (
+												<Button
+													type={
+														date.isSame(
+															dayjs(
+																journey.startDate
+															)
+														) ||
+														date.isSame(
+															dayjs(
+																journey.endDate
+															)
+														) ||
+														(date.isAfter(
+															dayjs(
+																journey.startDate
+															)
+														) &&
+															date.isBefore(
+																dayjs(
+																	journey.endDate
+																)
+															))
+															? "primary"
+															: "text"
+													}
+													disabled={date.isBefore(
+														dayjs(),
+														"day") || date.month() !== calendarValue.month()
+													}
+													style={{
+														width: 40,
+														height: 40,
+														fontSize: 18,
+														margin: 0,
+													}}
+													onClick={() => {
+														if (
+															date.isSame(
+																journey.startDate
+															)
+														) {
+															dispatch(
+																setStartDate(
+																	null
+																)
+															);
+															dispatch(
+																setEndDate(
+																	null
+																)
+															);
+														} else if (
+															date.isSame(
+																journey.endDate
+															)
+														) {
+															dispatch(
+																setEndDate(null)
+															);
+														} else if (
+															!journey.startDate
+														) {
+															// Case 1: If no start date is set, set the selected date as the start date
+															dispatch(
+																setStartDate(
+																	date.toISOString()
+																)
+															);
+														} else if (
+															!journey.endDate
+														) {
+															// Case 2: If start date is set but no end date, determine whether to set start or end
+															if (
+																date.isBefore(
+																	journey.startDate
+																)
+															) {
+																dispatch(
+																	setStartDate(
+																		date.toISOString()
+																	)
+																);
+															} else {
+																dispatch(
+																	setEndDate(
+																		date.toISOString()
+																	)
+																);
+															}
+														} else {
+															// Case 3: Both start and end dates are set
+															if (
+																date.isBefore(
+																	journey.startDate
+																)
+															) {
+																// If selected date is before start date, update start and reset end date
+																dispatch(
+																	setStartDate(
+																		date.toISOString()
+																	)
+																);
+																dispatch(
+																	setEndDate(
+																		null
+																	)
+																);
+															} else if (
+																date.isAfter(
+																	journey.endDate
+																)
+															) {
+																// If selected date is after end date, update end date
+																dispatch(
+																	setEndDate(
+																		date.toISOString()
+																	)
+																);
+															} else {
+																// If selected date is between start and end dates, update start date
+																dispatch(
+																	setStartDate(
+																		date.toISOString()
+																	)
+																);
+															}
+														}
+													}}
+												>
+													{date.date()}
+												</Button>
+											)}
+										/>
 									</div>
 								</Flex>
 							</motion.div>
