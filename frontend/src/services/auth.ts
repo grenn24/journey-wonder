@@ -2,11 +2,13 @@ import { Dispatch } from "@reduxjs/toolkit";
 import createApiClient from "../utilities/apiClient";
 import {
 	setEmail,
+	setFreeTrialUsed,
 	setMembershipTier,
 	setName,
 	setUserID,
 } from "../redux/slices/user";
 import { useGoogleLogin } from "@react-oauth/google";
+import { UserType } from "../../../backend/models/user";
 
 class AuthService {
 	apiClient = createApiClient("/auth"); // api client for auth routes
@@ -33,6 +35,7 @@ class AuthService {
 								dispatch(
 									setMembershipTier(data.membershipTier)
 								);
+								dispatch(setFreeTrialUsed(data.freeTrialUsed));
 								sessionStorage.setItem(
 									"X-Access-Token",
 									headers["x-access-token"]
@@ -47,38 +50,39 @@ class AuthService {
 	}
 
 	signUp(body: Object, dispatch: Dispatch) {
-			return new Promise((resolve, reject) => {
-				grecaptcha.ready(() => {
-					grecaptcha
-						.execute(import.meta.env.VITE_RECAPTCHA_SITE_KEY, {
-							action: "submit",
-						})
-						.then((token) => {
-							// submit login request to backend server
-							this.apiClient
-								.post<Object, any>("/sign-up", {
-									...body,
-									recaptchaToken: token,
-								})
-								.then((res) => {
-									const { headers, data } = res;
-									dispatch(setUserID(data._id));
-									dispatch(setName(data.name));
-									dispatch(setEmail(data.email));
-									dispatch(
-										setMembershipTier(data.membershipTier)
-									);
-									sessionStorage.setItem(
-										"X-Access-Token",
-										headers["x-access-token"]
-									);
+		return new Promise((resolve, reject) => {
+			grecaptcha.ready(() => {
+				grecaptcha
+					.execute(import.meta.env.VITE_RECAPTCHA_SITE_KEY, {
+						action: "submit",
+					})
+					.then((token) => {
+						// submit login request to backend server
+						this.apiClient
+							.post<Object, any>("/sign-up", {
+								...body,
+								recaptchaToken: token,
+							})
+							.then((res) => {
+								const { headers, data } = res;
+								dispatch(setUserID(data._id));
+								dispatch(setName(data.name));
+								dispatch(setEmail(data.email));
+								dispatch(
+									setMembershipTier(data.membershipTier)
+								);
+								dispatch(setFreeTrialUsed(data.freeTrialUsed));
+								sessionStorage.setItem(
+									"X-Access-Token",
+									headers["x-access-token"]
+								);
 
-									resolve(res);
-								})
-								.catch((err) => reject(err));
-						});
-				});
+								resolve(res);
+							})
+							.catch((err) => reject(err));
+					});
 			});
+		});
 	}
 
 	logout() {
@@ -111,24 +115,30 @@ class AuthService {
 		return response;
 	}
 
-	googleLogin() {
-		return new Promise<void>((resolve, reject) => {
-			const login = useGoogleLogin({
-				onSuccess: (tokenResponse) => {
-					this.apiClient
-						.get("/oauth?provider=google", {
-							headers: {
-								Authorization:
-									"Bearer " + tokenResponse.access_token,
-							},
-						})
-						.then(() => resolve())
-						.catch((err) => reject(err));
-				},
-				onError: (err) => reject(err),
+	googleLogin(accessToken: string, dispatch: Dispatch) {
+		const response = this.apiClient
+			.post<{},any>(
+				"/oauth?provider=google",
+			{},
+				{
+					headers: {
+						Authorization: "Bearer " + accessToken,
+					},
+				}
+			)
+			.then(({headers, data}) => {
+
+				dispatch(setUserID(data._id));
+				dispatch(setName(data.name));
+				dispatch(setEmail(data.email));
+				dispatch(setMembershipTier(data.membershipTier));
+				dispatch(setFreeTrialUsed(data.freeTrialUsed));
+				sessionStorage.setItem(
+					"X-Access-Token",
+					headers["x-access-token"]
+				);
 			});
-			login();
-		});
+		return response;
 	}
 }
 

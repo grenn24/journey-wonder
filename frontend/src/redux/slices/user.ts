@@ -4,13 +4,15 @@ interface userSliceState {
 	userID: string;
 	name: string;
 	email: string;
-	membershipTier: "Free" | "Basic" | "Premium" | undefined;
+	membershipTier: "Free" | "Lite" | "Pro" | undefined;
+	freeTrialUsed: boolean;
 }
 const initialState: userSliceState = {
 	userID: "",
 	name: "",
 	email: "",
 	membershipTier: undefined,
+	freeTrialUsed: false,
 };
 export const userSlice = createSlice({
 	// Name of slice
@@ -32,15 +34,18 @@ export const userSlice = createSlice({
 		},
 		setMembershipTier: (
 			state,
-			action: PayloadAction<"Free" | "Basic" | "Premium">
+			action: PayloadAction<"Free" | "Lite" | "Pro">
 		) => {
 			state.membershipTier = action.payload;
+		},
+		setFreeTrialUsed: (state, action: PayloadAction<boolean>) => {
+			state.freeTrialUsed = action.payload;
 		},
 	},
 });
 
 // Action creators are automatically generated for each reducer function using create slice
-export const { reset, setUserID, setName, setEmail, setMembershipTier } =
+export const { reset, setUserID, setName, setEmail, setMembershipTier, setFreeTrialUsed } =
 	userSlice.actions;
 
 const userSliceReducer = userSlice.reducer;

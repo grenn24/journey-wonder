@@ -31,6 +31,7 @@ import { useDispatch } from "react-redux";
 import { Language, setLanguage } from "../../../redux/slices/language";
 import { setTheme, Theme } from "../../../redux/slices/theme";
 import i18next from "i18next";
+import { useNavigate } from "react-router-dom";
 
 const { Text,Title} = Typography;
 
@@ -52,6 +53,7 @@ const useProfileMenu = (
 		})
 	);
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	return {
 		Home: () => (
 			<Menu >
@@ -111,7 +113,11 @@ const useProfileMenu = (
 					</Flex>
 				</Menu.Item>
 				<Menu.Divider style={{ borderWidth: 50 }} />
-				<Menu.Item key={3} onClick={() => setOpenProfileMenu(false)}>
+				<Menu.Item key={3} onClick={() =>{ setOpenProfileMenu(false);
+					navigate("/user/pricing")
+				}
+				
+				}>
 					<Flex gap={18}>
 						<StarOutlined style={{ fontSize: fontSizeHeading5 }} />
 						<Text

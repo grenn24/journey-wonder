@@ -25,13 +25,28 @@ class JourneyService {
 		return response;
 	}
 
+	updateJourney(journey: any, journeyID: string) {
+		const response = this.apiClient
+			.put<JourneyType, JourneyType>(`/${journeyID}`, journey, {
+				headers: { "Content-Type": "multipart/form-data" },
+			})
+			.then(({ data }) => {
+				//const image = data?.image as any;
+				//const file = bufferToFile(image.data, "image.png", "image/png");
+				//data.image = URL.createObjectURL(file) as any;
+				return data;
+			});;
+
+		return response;
+	}
+
 	getJourneyByID(journeyID: string) {
 		const response = this.apiClient
 			.get<JourneyType>(`/${journeyID}`)
 			.then(({ data }) => {
-				const image = data?.image as any;
-				const file = bufferToFile(image.data, "image.png", "image/png");
-				data.image = URL.createObjectURL(file) as any;
+				//const image = data?.image as any;
+				//const file = bufferToFile(image.data, "image.png", "image/png");
+				//data.image = URL.createObjectURL(file) as any;
 				return data;
 			});
 		return response;

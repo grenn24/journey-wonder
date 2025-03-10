@@ -25,7 +25,7 @@ import { useAppSelector } from "../redux/store";
 import { setSplitterSize } from "../redux/slices/layout";
 import Loading from "../pages/Loading";
 
-const User = () => {
+const UserLayout = () => {
 	const dispatch = useDispatch();
 	const {
 		token: { colorBgContainer },
@@ -176,4 +176,4 @@ const User = () => {
 	);
 };
 
-export default User;
+export default UserLayout;

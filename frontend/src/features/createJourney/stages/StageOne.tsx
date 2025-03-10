@@ -70,7 +70,9 @@ const StageOne = () => {
 	const [isSearching, setIsSearching] = useState(false);
 
 	const [calendarMode, setCalendarMode] = useState<"month" | "year">("month");
-	const [calendarValue, setCalendarValue] = useState(journey.startDate ? dayjs(journey.startDate) : dayjs());
+	const [calendarValue, setCalendarValue] = useState(
+		journey.startDate ? dayjs(journey.startDate) : dayjs()
+	);
 
 	useEffect(() => {
 		autocompleteService.abort();
@@ -147,9 +149,7 @@ const StageOne = () => {
 										>
 											{i18n.t("Title")}
 										</Text>
-										<ExpandLessRounded
-											style={{ fontSize: 25 }}
-										/>
+										<ExpandLessRounded style={{ fontSize: 25 }} />
 									</Flex>
 									<Input
 										variant="borderless"
@@ -157,12 +157,9 @@ const StageOne = () => {
 										placeholder={i18n.t("My trip to...")}
 										value={journey.title}
 										onClick={(e) => e.stopPropagation()}
-										onChange={(e) =>
-											dispatch(setTitle(e.target.value))
-										}
+										onChange={(e) => dispatch(setTitle(e.target.value))}
 										onKeyDown={(e) =>
-											e.key === "Enter" &&
-											setIsTitleExpanded(false)
+											e.key === "Enter" && setIsTitleExpanded(false)
 										}
 										required
 										style={{
@@ -177,9 +174,7 @@ const StageOne = () => {
 													dispatch(setTitle(""));
 												}}
 												style={{
-													opacity: journey.title
-														? 1
-														: 0,
+													opacity: journey.title ? 1 : 0,
 													cursor: "pointer",
 												}}
 											/>
@@ -198,9 +193,7 @@ const StageOne = () => {
 						>
 							<Flex gap={10} align="center">
 								<Flex justify="space-between" flex={1}>
-									<Text style={{ fontWeight: 600 }}>
-										{i18n.t("Title")}
-									</Text>
+									<Text style={{ fontWeight: 600 }}>{i18n.t("Title")}</Text>
 									<Text>{journey.title}</Text>
 								</Flex>
 								<ExpandMoreRounded style={{ fontSize: 25 }} />
@@ -251,9 +244,7 @@ const StageOne = () => {
 									>
 										{i18n.t("Destination")}
 									</Text>
-									<ExpandLessRounded
-										style={{ fontSize: 25 }}
-									/>
+									<ExpandLessRounded style={{ fontSize: 25 }} />
 								</Flex>
 								<div onClick={(e) => e.stopPropagation()}>
 									<Select
@@ -261,14 +252,10 @@ const StageOne = () => {
 										mode="multiple"
 										style={{ width: "100%" }}
 										size="large"
-										placeholder={i18n.t(
-											"Japan, China, USA..."
-										)}
+										placeholder={i18n.t("Japan, China, USA...")}
 										value={journey.destinations}
 										options={destinations}
-										onSearch={(value) =>
-											setDestinationSearchValue(value)
-										}
+										onSearch={(value) => setDestinationSearchValue(value)}
 										onKeyDown={(e) => {
 											if (e.key === "Enter") {
 												setDestinationSearchValue("");
@@ -281,14 +268,11 @@ const StageOne = () => {
 													align="center"
 													style={{ height: 32 }}
 												>
-													<Text>
-														{option.data.name}
-													</Text>
+													<Text>{option.data.name}</Text>
 													<Tag
 														bordered={false}
 														style={{
-															backgroundColor:
-																token.colorBgTextActive,
+															backgroundColor: token.colorBgTextActive,
 														}}
 													>
 														{option.data.type}
@@ -298,11 +282,7 @@ const StageOne = () => {
 										)}
 										labelRender={(label) => (
 											<Text style={{ fontSize: 15 }}>
-												{
-													label.value
-														.toString()
-														.split(";")[0]
-												}
+												{label.value.toString().split(";")[0]}
 											</Text>
 										)}
 										onSelect={(_: any, option) => {
@@ -315,9 +295,7 @@ const StageOne = () => {
 										}}
 										onDeselect={(value: any, _: any) => {
 											dispatch(
-												removeSelectedDestination(
-													Number(value.split(";")[1])
-												)
+												removeSelectedDestination(Number(value.split(";")[1]))
 											);
 										}}
 										searchValue={destinationSearchValue}
@@ -329,9 +307,7 @@ const StageOne = () => {
 												: "Try typing something"
 										}
 										suffixIcon={false}
-										removeIcon={
-											<CloseButton variant="link" />
-										}
+										removeIcon={<CloseButton variant="link" />}
 									/>
 								</div>
 							</Flex>
@@ -354,8 +330,7 @@ const StageOne = () => {
 										{i18n.t("Destination")}
 									</Text>
 									<Text>
-										{journey.destinations?.length}{" "}
-										{i18n.t("Places")}
+										{journey.destinations?.length} {i18n.t("Places")}
 									</Text>
 								</Flex>
 								<ExpandMoreRounded style={{ fontSize: 25 }} />
@@ -407,26 +382,15 @@ const StageOne = () => {
 										>
 											{i18n.t("Dates")}
 										</Text>
-										<ExpandLessRounded
-											style={{ fontSize: 25 }}
-										/>
+										<ExpandLessRounded style={{ fontSize: 25 }} />
 									</Flex>
 									<div onClick={(e) => e.stopPropagation()}>
 										<Calendar
-											disabledDate={(date) =>
-												date.isBefore(dayjs(), "day")
-											}
-											headerRender={({
-												value,
-												type,
-												onChange,
-											}) => {
-												const currentMonthIndex =
-													value.month();
-												const currentYear =
-													value.year();
-												const yearOptions: Object[] =
-													[];
+											disabledDate={(date) => date.isBefore(dayjs(), "day")}
+											headerRender={({ value, type, onChange }) => {
+												const currentMonthIndex = value.month();
+												const currentYear = value.year();
+												const yearOptions: Object[] = [];
 												for (
 													let i = value.year() - 5;
 													i <= value.year() + 5;
@@ -439,10 +403,7 @@ const StageOne = () => {
 												}
 												return (
 													<Flex vertical gap={15}>
-														<Flex
-															justify="space-between"
-															align="center"
-														>
+														<Flex justify="space-between" align="center">
 															<Segmented
 																options={[
 																	{
@@ -454,40 +415,20 @@ const StageOne = () => {
 																		value: "year" as typeof calendarMode,
 																	},
 																]}
-																value={
-																	calendarMode
-																}
-																onChange={(
-																	value
-																) => {
-																	setCalendarMode(
-																		value
-																	);
+																value={calendarMode}
+																onChange={(value) => {
+																	setCalendarMode(value);
 																}}
 															/>
 															<Flex gap={7}>
 																<Select
 																	variant="filled"
-																	options={
-																		monthOptions
+																	options={monthOptions}
+																	value={currentMonthIndex}
+																	onChange={(newMonthIndex) =>
+																		onChange(value.clone().month(newMonthIndex))
 																	}
-																	value={
-																		currentMonthIndex
-																	}
-																	onChange={(
-																		newMonthIndex
-																	) =>
-																		onChange(
-																			value
-																				.clone()
-																				.month(
-																					newMonthIndex
-																				)
-																		)
-																	}
-																	suffixIcon={
-																		<ArrowDropDownRounded />
-																	}
+																	suffixIcon={<ArrowDropDownRounded />}
 																	dropdownStyle={{
 																		width: 115,
 																	}}
@@ -495,48 +436,25 @@ const StageOne = () => {
 																/>
 																<Select
 																	variant="filled"
-																	options={
-																		yearOptions
+																	options={yearOptions}
+																	value={currentYear}
+																	onChange={(newYear) =>
+																		onChange(value.clone().year(newYear))
 																	}
-																	value={
-																		currentYear
-																	}
-																	onChange={(
-																		newYear
-																	) =>
-																		onChange(
-																			value
-																				.clone()
-																				.year(
-																					newYear
-																				)
-																		)
-																	}
-																	suffixIcon={
-																		<ArrowDropDownRounded />
-																	}
+																	suffixIcon={<ArrowDropDownRounded />}
 																/>
 															</Flex>
 														</Flex>
-														<Flex
-															justify="space-between"
-															align="center"
-														>
+														<Flex justify="space-between" align="center">
 															<Title
 																level={4}
 																style={{
-																	whiteSpace:
-																		"pre-wrap",
+																	whiteSpace: "pre-wrap",
 																}}
 															>
-																{calendarMode ===
-																"month"
-																	? value.format(
-																			"MMMM  YYYY"
-																	  )
-																	: value.format(
-																			"YYYY"
-																	  )}
+																{calendarMode === "month"
+																	? value.format("MMMM  YYYY")
+																	: value.format("YYYY")}
 															</Title>
 															<Flex gap={5}>
 																<Button
@@ -551,23 +469,10 @@ const StageOne = () => {
 																	color="default"
 																	onClick={() => {
 																		const newDate =
-																			calendarMode ===
-																			"month"
-																				? value
-																						.clone()
-																						.month(
-																							value.month() -
-																								1
-																						)
-																				: value
-																						.clone()
-																						.year(
-																							value.year() -
-																								1
-																						);
-																		onChange(
-																			newDate
-																		);
+																			calendarMode === "month"
+																				? value.clone().month(value.month() - 1)
+																				: value.clone().year(value.year() - 1);
+																		onChange(newDate);
 																	}}
 																/>
 																<Button
@@ -582,23 +487,10 @@ const StageOne = () => {
 																	color="default"
 																	onClick={() => {
 																		const newDate =
-																			calendarMode ===
-																			"month"
-																				? value
-																						.clone()
-																						.month(
-																							value.month() +
-																								1
-																						)
-																				: value
-																						.clone()
-																						.year(
-																							value.year() +
-																								1
-																						);
-																		onChange(
-																			newDate
-																		);
+																			calendarMode === "month"
+																				? value.clone().month(value.month() + 1)
+																				: value.clone().year(value.year() + 1);
+																		onChange(newDate);
 																	}}
 																/>
 															</Flex>
@@ -610,141 +502,57 @@ const StageOne = () => {
 											fullscreen={false}
 											onPanelChange={() => {}}
 											value={calendarValue}
-											onChange={(date) =>
-												setCalendarValue(date)
-											}
+											onChange={(date) => setCalendarValue(date)}
 											fullCellRender={(date, info) =>
 												calendarMode === "month" ? (
 													<Button
 														type={
-															date.isSame(
-																dayjs(
-																	journey.startDate
-																)
-															) ||
-															date.isSame(
-																dayjs(
-																	journey.endDate
-																)
-															) ||
-															(date.isAfter(
-																dayjs(
-																	journey.startDate
-																)
-															) &&
-																date.isBefore(
-																	dayjs(
-																		journey.endDate
-																	)
-																))
+															date.isSame(dayjs(journey.startDate)) ||
+															date.isSame(dayjs(journey.endDate)) ||
+															(date.isAfter(dayjs(journey.startDate)) &&
+																date.isBefore(dayjs(journey.endDate)))
 																? "primary"
 																: "text"
 														}
-														disabled={date.isBefore(
-															dayjs(),
-															"day"
-														)}
+														disabled={date.isBefore(dayjs(), "day")}
 														style={{
 															width: 40,
 															height: 40,
 															fontSize: 18,
 															margin: 0,
 															opacity:
-																date.month() !==
-																calendarValue.month()     ? 0.4 : 1
+																date.month() !== calendarValue.month()
+																	? 0.4
+																	: 1,
 														}}
 														onClick={() => {
-															if (
-																date.isSame(
-																	journey.startDate
-																)
-															) {
-																dispatch(
-																	setStartDate(
-																		null
-																	)
-																);
-																dispatch(
-																	setEndDate(
-																		null
-																	)
-																);
-															} else if (
-																date.isSame(
-																	journey.endDate
-																)
-															) {
-																dispatch(
-																	setEndDate(
-																		null
-																	)
-																);
-															} else if (
-																!journey.startDate
-															) {
+															if (date.isSame(journey.startDate)) {
+																dispatch(setStartDate(null));
+																dispatch(setEndDate(null));
+															} else if (date.isSame(journey.endDate)) {
+																dispatch(setEndDate(null));
+															} else if (!journey.startDate) {
 																// Case 1: If no start date is set, set the selected date as the start date
-																dispatch(
-																	setStartDate(
-																		date.toISOString()
-																	)
-																);
-															} else if (
-																!journey.endDate
-															) {
+																dispatch(setStartDate(date.toISOString()));
+															} else if (!journey.endDate) {
 																// Case 2: If start date is set but no end date, determine whether to set start or end
-																if (
-																	date.isBefore(
-																		journey.startDate
-																	)
-																) {
-																	dispatch(
-																		setStartDate(
-																			date.toISOString()
-																		)
-																	);
+																if (date.isBefore(journey.startDate)) {
+																	dispatch(setStartDate(date.toISOString()));
 																} else {
-																	dispatch(
-																		setEndDate(
-																			date.toISOString()
-																		)
-																	);
+																	dispatch(setEndDate(date.toISOString()));
 																}
 															} else {
 																// Case 3: Both start and end dates are set
-																if (
-																	date.isBefore(
-																		journey.startDate
-																	)
-																) {
+																if (date.isBefore(journey.startDate)) {
 																	// If selected date is before start date, update start and reset end date
-																	dispatch(
-																		setStartDate(
-																			date.toISOString()
-																		)
-																	);
-																	dispatch(
-																		setEndDate(
-																			null
-																		)
-																	);
-																} else if (
-																	date.isAfter(
-																		journey.endDate
-																	)
-																) {
+																	dispatch(setStartDate(date.toISOString()));
+																	dispatch(setEndDate(null));
+																} else if (date.isAfter(journey.endDate)) {
 																	// If selected date is after end date, update end date
-																	dispatch(
-																		setEndDate(
-																			date.toISOString()
-																		)
-																	);
+																	dispatch(setEndDate(date.toISOString()));
 																} else {
 																	// If selected date is between start and end dates, update start date
-																	dispatch(
-																		setStartDate(
-																			date.toISOString()
-																		)
-																	);
+																	dispatch(setStartDate(date.toISOString()));
 																}
 															}
 														}}
@@ -758,38 +566,41 @@ const StageOne = () => {
 															margin: 0,
 														}}
 														type={
-															calendarValue.month() ===
-															date.month()
+															calendarValue.month() === date.month()
 																? "primary"
 																: "text"
 														}
 														onClick={() => {
-															setCalendarMode(
-																"month"
-															);
+															setCalendarMode("month");
 															setCalendarValue(
-																calendarValue
-																	.clone()
-																	.month(
-																		date.month()
-																	)
+																calendarValue.clone().month(date.month())
 															);
 														}}
 													>
-														{
-															monthOptions[
-																date.month()
-															].label
-														}
+														{monthOptions[date.month()].label}
 													</Button>
 												)
 											}
-											
 										/>
-										<Flex justify="space-between"><Button onClick={()=>{
-											dispatch(setStartDate(null));
-											dispatch(setEndDate(null));
-										}}>Reset</Button><Button onClick={()=>setCalendarValue(dayjs())}>Today</Button></Flex>
+										<Flex justify="space-between">
+											<Button
+												variant="text"
+												color="primary"
+												onClick={() => {
+													dispatch(setStartDate(null));
+													dispatch(setEndDate(null));
+												}}
+											>
+												Reset
+											</Button>
+											<Button
+												variant="text"
+												color="primary"
+												onClick={() => setCalendarValue(dayjs())}
+											>
+												Today
+											</Button>
+										</Flex>
 									</div>
 								</Flex>
 							</motion.div>
@@ -804,22 +615,16 @@ const StageOne = () => {
 						>
 							<Flex gap={10} align="center">
 								<Flex justify="space-between" flex={1}>
-									<Text style={{ fontWeight: 600 }}>
-										{i18n.t("Dates")}
-									</Text>
+									<Text style={{ fontWeight: 600 }}>{i18n.t("Dates")}</Text>
 									{journey.startDate && journey.endDate && (
 										<Text
 											style={{
 												whiteSpace: "pre-wrap",
 											}}
 										>
-											{dayjs(journey.startDate)?.format(
-												"D/M/YYYY"
-											) +
+											{dayjs(journey.startDate)?.format("D/M/YYYY") +
 												"  -  " +
-												dayjs(journey.endDate)?.format(
-													"D/M/YYYY"
-												)}
+												dayjs(journey.endDate)?.format("D/M/YYYY")}
 										</Text>
 									)}
 								</Flex>

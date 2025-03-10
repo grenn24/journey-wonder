@@ -5,7 +5,7 @@ import { Outlet} from "react-router-dom";
 import { Content } from "antd/es/layout/layout";
 import GuestHeader from "../features/guest layout/Header";
 
-const Guest = () => {
+const GuestLayout = () => {
 
 	return (
 		<Layout>
@@ -17,4 +17,4 @@ const Guest = () => {
 	);
 };
 
-export default Guest;
+export default GuestLayout;

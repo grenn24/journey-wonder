@@ -22,6 +22,7 @@ import journeyWonderIcon from "../assets/images/journey-wonder-icon/svg/journey-
 import LanguageMenu from "../components/LanguageMenu/LanguageMenu";
 import useSnackbar from "../components/useSnackbar";
 import ThemeMenu from "../components/ThemeMenu";
+import { useGoogleLogin } from "@react-oauth/google";
 
 const { Title, Text, Link } = Typography;
 const SignUp = () => {
@@ -45,6 +46,15 @@ const SignUp = () => {
 		i18n.t("An internal server error occurred. Please try again later."),
 		"error"
 	);
+
+	const googleLogin = useGoogleLogin({
+		onSuccess: (tokenResponse) => {
+			authService
+				.googleLogin(tokenResponse.access_token,dispatch)
+				.then(() => navigate("/user"))
+				.catch(() => openErrorSnackbar());
+		},
+	});
 
 	const handleFormSubmit = (body: Object) => {
 	
@@ -170,7 +180,7 @@ const SignUp = () => {
 									fontWeight: fontWeightStrong,
 									borderRadius: 10,
 								}}
-								onClick={() => authService.googleLogin()}
+								onClick={() => googleLogin()}
 							>
 								{i18n.t("Google")}
 							</Button>

@@ -23,6 +23,7 @@ import LanguageMenu from "../components/LanguageMenu/LanguageMenu";
 import journeyWonderIcon from "../assets/images/journey-wonder-icon/svg/journey-wonder-icon-white-background-normal.svg";
 import useSnackbar from "../components/useSnackbar";
 import ThemeMenu from "../components/ThemeMenu";
+import { useGoogleLogin } from "@react-oauth/google";
 
 const { Title, Link } = Typography;
 const Login = () => {
@@ -40,7 +41,13 @@ const Login = () => {
 		i18n.t("An internal server error occurred. Please try again later."),
 		"error"
 	);
-
+	const googleLogin = useGoogleLogin({
+		onSuccess: (tokenResponse) => {
+			authService
+				.googleLogin(tokenResponse.access_token,dispatch)
+				.then(() => navigate("/user")).catch(()=>openErrorSnackbar());
+		},
+	});
 	const handleFormSubmit = (body: Object) => {
 		setLoading(true);
 		authService
@@ -67,8 +74,7 @@ const Login = () => {
 							},
 						]);
 					}
-					if (body?.status==="SUSPICIOUS_ACTIVITY_DETECTED") {
-
+					if (body?.status === "SUSPICIOUS_ACTIVITY_DETECTED") {
 					}
 				} else {
 					openErrorSnackbar();
@@ -151,7 +157,7 @@ const Login = () => {
 									fontWeight: fontWeightStrong,
 									borderRadius: 10,
 								}}
-								onClick={() => authService.googleLogin()}
+								onClick={() => googleLogin()}
 							>
 								{i18n.t("Google")}
 							</Button>
@@ -330,7 +336,6 @@ const Login = () => {
 								href="https://policies.google.com/privacy"
 								target="_blank"
 							>
-								
 								Privacy Policy
 							</a>{" "}
 							and{" "}

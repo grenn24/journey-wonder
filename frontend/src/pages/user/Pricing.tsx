@@ -26,7 +26,7 @@ import {
 } from "antd";
 import { useState } from "react";
 import useBreakpoints from "../../utilities/breakpoints";
-
+import { useAppSelector } from "../../redux/store";
 const { Title, Text } = Typography;
 const Pricing = () => {
 	const {
@@ -34,6 +34,10 @@ const Pricing = () => {
 	} = theme.useToken();
 	const [type, setType] = useState<"Annually" | "Monthly">("Annually");
 	const breakpoints = useBreakpoints();
+	const { membershipTier, freeTrialUsed } = useAppSelector((state) => ({
+		membershipTier: state.user.membershipTier,
+		freeTrialUsed: state.user.freeTrialUsed,
+	}));
 	return (
 		<>
 			<title>Pricing | Journey Wonder</title>
@@ -43,14 +47,15 @@ const Pricing = () => {
 			></meta>
 			<div
 				style={{
-					width: "100dvw",
+					width: "100%",
 					height: "100%",
 					backgroundColor: colorBgContainer,
 					position: "relative",
-					top: 70,
 				}}
 			>
 				<Flex vertical align="center">
+					<br />
+					<br />
 					<br />
 					<Title style={{ fontSize: 55, whiteSpace: "nowrap" }}>
 						Plan like a Pro
@@ -240,8 +245,26 @@ const Pricing = () => {
 												variant="solid"
 												color="primary"
 												style={{ fontWeight: 500 }}
+												disabled={
+													membershipTier === "Pro"
+												}
+												onClick={() =>
+													freeTrialUsed
+														? window.open(
+																"https://buy.stripe.com/bIYcOSgs7dGUadi007",
+																"_blank"
+														  )
+														: window.open(
+																"https://buy.stripe.com/6oEcOSgs78mA99e4gj",
+																"_blank"
+														  )
+												}
 											>
-												Get started for free
+												{membershipTier !== "Pro"
+													? freeTrialUsed
+														? "Upgrade"
+														: "Upgrade for free"
+													: "Current"}
 											</Button>
 											<Text
 												style={{
@@ -401,8 +424,28 @@ const Pricing = () => {
 												variant="solid"
 												color="primary"
 												style={{ fontWeight: 500 }}
+												disabled={
+													membershipTier === "Lite"
+												}
+												onClick={() =>
+													freeTrialUsed
+														? window.open(
+																"https://buy.stripe.com/bIYeX0a3J5ao4SYfZ3",
+																"_blank"
+														  )
+														: window.open(
+																"https://buy.stripe.com/cN2dSWb7NbyM2KQ7st",
+																"_blank"
+														  )
+												}
 											>
-												Get started for free
+												{membershipTier !== "Lite"
+													? membershipTier === "Pro"
+														? "Change"
+														: freeTrialUsed
+														? "Upgrade"
+														: "Upgrade for free"
+													: "Current"}
 											</Button>
 											<Text
 												style={{
@@ -559,8 +602,26 @@ const Pricing = () => {
 												variant="solid"
 												color="primary"
 												style={{ fontWeight: 500 }}
+												disabled={
+													membershipTier === "Pro"
+												}
+												onClick={() =>
+													freeTrialUsed
+														? window.open(
+																"https://buy.stripe.com/3cs16acbR32g71628e",
+																"_blank"
+														  )
+														: window.open(
+																"https://buy.stripe.com/5kAg147VBeKYbhm9AC",
+																"_blank"
+														  )
+												}
 											>
-												Get started for free
+												{membershipTier !== "Pro"
+													? freeTrialUsed
+														? "Upgrade"
+														: "Upgrade for free"
+													: "Current"}
 											</Button>
 											<Text
 												style={{
@@ -717,8 +778,28 @@ const Pricing = () => {
 												variant="solid"
 												color="primary"
 												style={{ fontWeight: 500 }}
+												disabled={
+													membershipTier === "Lite"
+												}
+												onClick={() =>
+													freeTrialUsed
+														? window.open(
+																"https://buy.stripe.com/5kA8yC2Bh8mA3OUfZ2",
+																"_blank"
+														  )
+														: window.open(
+																"https://buy.stripe.com/cN2aGKa3JauI1GM8ww",
+																"_blank"
+														  )
+												}
 											>
-												Get started for free
+												{membershipTier !== "Lite"
+													? membershipTier === "Pro"
+														? "Change"
+														: freeTrialUsed
+														? "Upgrade"
+														: "Upgrade for free"
+													: "Current"}
 											</Button>
 											<Text
 												style={{
