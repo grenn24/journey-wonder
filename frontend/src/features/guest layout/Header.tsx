@@ -52,6 +52,10 @@ const GuestHeader = () => {
 					display: "flex",
 					justifyContent: "center",
 					height: 70,
+					position:"fixed",
+					top:0,
+					zIndex:5,
+					width:"100%"
 				}}
 			>
 				<Flex
@@ -128,10 +132,10 @@ const GuestHeader = () => {
 						) : (
 							<>
 								<Button
-									variant="solid"
+									variant="text"
 									color="default"
 									size="large"
-									icon={<MenuOutlined />}
+									icon={<MenuOutlined style={{fontSize:20}}/>}
 									onClick={() =>
 										setOpenMobileDrawerMenu(true)
 									}

@@ -39,7 +39,10 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 		<Drawer
 			title={
 				<Flex justify="space-between" align="center">
-					<CloseButton variant="filled" handleButtonClick={()=>setOpenMobileDrawerMenu(false)} />
+					<CloseButton
+						variant="filled"
+						handleButtonClick={() => setOpenMobileDrawerMenu(false)}
+					/>
 					<Flex gap={15} justify="flex-end">
 						<ThemeMenu placement="bottom" />
 						<LanguageMenu placement="bottomRight" />
@@ -80,7 +83,7 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 							style={{
 								fontWeight: fontWeightStrong,
 								fontSize: 25,
-								padding: "25px 20px",
+								padding: "25px 25px",
 								margin: "10px 0px",
 								marginTop: 15,
 								marginBottom: 15,
@@ -88,7 +91,7 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 						>
 							{i18n.t("Home")}
 						</Menu.Item>
-		
+
 						<Menu.Divider dashed style={{ borderWidth: 1.5 }} />
 						<Menu.Item
 							key="pricing"
@@ -96,7 +99,7 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 							style={{
 								fontWeight: fontWeightStrong,
 								fontSize: 25,
-								padding: "25px 20px",
+								padding: "25px 25px",
 								margin: "10px 0px",
 								marginTop: 15,
 								marginBottom: 15,
@@ -111,7 +114,9 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 								fontWeight: fontWeightStrong,
 								fontSize: 25,
 								padding: "10px 0px",
+						
 							}}
+							
 						>
 							<Menu.Item
 								key="mission"
@@ -119,7 +124,7 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 								style={{
 									fontWeight: fontWeightStrong,
 									fontSize: fontSizeHeading4,
-									padding: "25px 50px",
+									padding: "25px 40px",
 									margin: "10px 0px",
 								}}
 							>
@@ -131,7 +136,7 @@ const MobileDrawerMenu = ( {openMobileDrawerMenu, setOpenMobileDrawerMenu}: Prop
 								style={{
 									fontWeight: fontWeightStrong,
 									fontSize: fontSizeHeading4,
-									padding: "25px 50px",
+									padding: "25px 40px",
 									margin: "10px 0px",
 								}}
 							>

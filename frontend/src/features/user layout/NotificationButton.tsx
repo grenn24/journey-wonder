@@ -4,11 +4,13 @@ import { useState } from "react";
 import "../../assets/styles/ant.css";
 import CloseButton from "../../components/CloseButton";
 import i18n from "../../i18n";
+import useBreakpoints from "../../utilities/breakpoints";
 
 const { Text, Title } = Typography;
 const NotificationButton = () => {
 	const [openNotificationPopover, setOpenNotificationPopover] =
 		useState(false);
+		const breakpoints = useBreakpoints();
 	return (
 		<Popover
 			content={
@@ -32,9 +34,10 @@ const NotificationButton = () => {
 				</Flex>
 			}
 			style={{ padding: "20px" }}
+			styles={{ body: { marginRight:breakpoints.smallerThan("sm") ? 10 : 10, width:breakpoints.smallerThan("sm") ? 350 : undefined} }}
 			className="ant-popover-inner "
 			trigger="click"
-			placement="bottomRight"
+			placement="bottom"
 			open={openNotificationPopover}
 			onOpenChange={(value: boolean) => setOpenNotificationPopover(value)}
 		>

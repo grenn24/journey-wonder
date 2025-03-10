@@ -35,6 +35,7 @@ import {
 	KeyboardArrowLeftRounded,
 	KeyboardArrowRightRounded,
 } from "@mui/icons-material";
+import { set } from "mongoose";
 
 interface Destination {
 	name: string;
@@ -783,7 +784,12 @@ const StageOne = () => {
 													</Button>
 												)
 											}
+											
 										/>
+										<Flex justify="space-between"><Button onClick={()=>{
+											dispatch(setStartDate(null));
+											dispatch(setEndDate(null));
+										}}>Reset</Button><Button onClick={()=>setCalendarValue(dayjs())}>Today</Button></Flex>
 									</div>
 								</Flex>
 							</motion.div>
